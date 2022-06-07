@@ -102,7 +102,6 @@
       language: "tr",
       allowClear: true
     }
-
     let product_id_validator = {
       validators: {
         notEmpty: {

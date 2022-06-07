@@ -23,17 +23,17 @@ class InvoiceProductObserver
         $invoiceProduct->tax,
         $kdv_price,
         $invoiceProduct->safe->currency->code,
-        $invoiceProduct->sub_product->product->name
+        $invoiceProduct->incoming_waybill_product->product->name
       ),
       'price' => ($invoiceProduct->price - ((float)$commisionPrice + $kdv_price)),
       'normal_price' => $invoiceProduct->price,
       'safe_id' => $invoiceProduct->safe_id,
-      'enter_date' => $invoiceProduct->invoice->invoice_date,
-      'input' => AppHelper::CASH_REGISTER,
+      'date' => $invoiceProduct->invoice->invoice_date,
+      'process_type' => AppHelper::CASH_REGISTER,
       'cash_register_id' => $invoiceProduct->cash_register_id,
     ]);
-    $subProduct = $invoiceProduct->sub_product;
-    $subProduct->product->productLog()->create([
+    $incoming_waybill_product = $invoiceProduct->incoming_waybill_product;
+    $incoming_waybill_product->product->productLog()->create([
       'content' => sprintf(
         "%s %s  %%%s komisyonlu (%d %s) ve %%%s KDV'li (%d %s) %s değerinde bu ürün satıldı",
         $invoiceProduct->price,
@@ -44,22 +44,22 @@ class InvoiceProductObserver
         $invoiceProduct->tax,
         $kdv_price,
         $invoiceProduct->safe->currency->code,
-        $invoiceProduct->sub_product->product->name
+        $invoiceProduct->incoming_waybill_product->product->name
       ),
-      'product_id' => $subProduct->product->id,
-      'waybill_id' => $subProduct->waybill->id,
-      'enter_date' => $subProduct->waybill->waybill_date
+      'product_id' => $incoming_waybill_product->product->id,
+      'waybill_id' => $incoming_waybill_product->waybill->id,
+      'date' => $incoming_waybill_product->waybill->date
     ]);
-    $invoiceProduct->sub_product->updateQuietly(['sold' => true, 'date_of_sale' => $invoiceProduct->invoice->invoice_date]);
+    $invoiceProduct->incoming_waybill_product->updateQuietly(['sold' => true, 'date_of_sale' => $invoiceProduct->invoice->invoice_date]);
     $invoiceProduct->safe_log()->associate($safe_log)->save();
   }
 
   public function deleted(InvoiceProduct $invoiceProduct)
   {
-    $subProduct = $invoiceProduct->sub_product;
-    $subProduct->updateQuietly(['sold' => false,'rebate' => false, 'date_of_sale' => null]);
-    if ($subProduct->product->productLog()->exists()){
-      $subProduct->product->productLog->delete();
+    $incoming_waybill_product = $invoiceProduct->incoming_waybill_product;
+    $incoming_waybill_product->updateQuietly(['sold' => false,'rebate' => false, 'date_of_sale' => null]);
+    if ($incoming_waybill_product->product->productLog()->exists()){
+      $incoming_waybill_product->product->productLog->delete();
     }
     if ($invoiceProduct->safe_log()->exists())
       $invoiceProduct->safe_log->delete();

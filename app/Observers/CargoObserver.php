@@ -16,8 +16,8 @@ class CargoObserver
         'cash_register_id' => 1,
         'commission' => 0,
         'safe_id' => $cargo->safe_id,
-        'input' => AppHelper::OUTPUT,
-        'enter_date' => $cargo->date_of_paid,
+        'process_type' => AppHelper::OUTPUT,
+        'date' => $cargo->date_of_paid,
       ]);
       $cargo->updateQuietly(['safe_log_id' => $safe_log->id]);
     }
@@ -38,8 +38,8 @@ class CargoObserver
         'cash_register_id' => 1,
         'commission' => 0,
         'safe_id' => $cargo->safe_id,
-        'input' => AppHelper::OUTPUT,
-        'enter_date' => $cargo->date_of_paid,
+        'process_type' => AppHelper::OUTPUT,
+        'date' => $cargo->date_of_paid,
       ]);
       $cargo->safe_log()->associate($safe_log)->saveQuietly();
     }

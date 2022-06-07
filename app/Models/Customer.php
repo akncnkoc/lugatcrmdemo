@@ -68,6 +68,12 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Query\Builder|Customer withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Customer withoutTrashed()
  * @mixin Eloquent
+ * @property int|null $country_id
+ * @property int|null $county_id
+ * @property int|null $district_id
+ * @method static Builder|Customer whereCountryId($value)
+ * @method static Builder|Customer whereCountyId($value)
+ * @method static Builder|Customer whereDistrictId($value)
  */
 class Customer extends Model
 {

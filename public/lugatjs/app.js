@@ -92,6 +92,8 @@ toastr.options = {
   "hideMethod": "fadeOut"
 };
 
+moment.locale('tr');
+
 var Defaults = $.fn.select2.amd.require('select2/defaults');
 
 $.extend(Defaults.defaults, {

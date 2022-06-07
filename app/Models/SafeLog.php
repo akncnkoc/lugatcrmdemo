@@ -46,6 +46,12 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @method static \Illuminate\Database\Query\Builder|SafeLog withoutTrashed()
  * @mixin Eloquent
  * @property-read \App\Models\CashRegister|null $cash_register
+ * @property string $normal_price
+ * @property int $process_type
+ * @property string|null $date
+ * @method static Builder|SafeLog whereDate($value)
+ * @method static Builder|SafeLog whereNormalPrice($value)
+ * @method static Builder|SafeLog whereProcessType($value)
  */
 class SafeLog extends Model
 {

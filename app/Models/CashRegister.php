@@ -25,6 +25,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|CashRegister withTrashed()
  * @method static \Illuminate\Database\Query\Builder|CashRegister withoutTrashed()
  * @mixin \Eloquent
+ * @property string|null $created_at
+ * @property string|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegister whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CashRegister whereUpdatedAt($value)
  */
 class CashRegister extends Model
 {

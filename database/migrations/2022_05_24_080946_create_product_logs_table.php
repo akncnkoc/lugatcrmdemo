@@ -12,7 +12,7 @@ return new class extends Migration {
       $table->id();
       $table->text('content')->default('');
       $table->dateTime('date')->default(now())->nullable();
-      $table->enum('process_type', [AppHelper::PRODUCt_IN, AppHelper::PRODUCt_OUT, AppHelper::PRODUCt_REBATE, AppHelper::PRODUCt_SOLD]);
+      $table->enum('process_type', [AppHelper::PRODUCT_IN, AppHelper::PRODUCT_OUT, AppHelper::PRODUCT_REBATE, AppHelper::PRODUCT_SOLD]);
       $table->foreignId('product_id');
       $table->foreignId('waybill_id');
       $table->timestamps();

@@ -5,4 +5,3 @@
 @yield('scripts')
 <script src="{{asset("lugatjs/app.js")}}"></script>
 @stack('customscripts')
-<script src="{{asset("js/custom/widgets.js")}}"></script>

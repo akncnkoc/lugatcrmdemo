@@ -52,6 +52,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @method static Builder|InvoiceProduct whereCargoId($value)
  * @property int $product_id
  * @method static Builder|InvoiceProduct whereProductId($value)
+ * @property-read \App\Models\IncomingWaybillProduct|null $incoming_waybill_product
  */
 class InvoiceProduct extends Model
 {
@@ -63,15 +64,6 @@ class InvoiceProduct extends Model
   {
     parent::boot();
     InvoiceProduct::observe(InvoiceProductObserver::class);
-    static::saving(function (Model $model) {
-      static::$logAttributes = array_keys($model->getDirty());
-    });
-    static::updating(function (Model $model) {
-      static::$logAttributes = array_keys($model->getDirty());
-    });
-    static::deleting(function (InvoiceProduct $model) {
-      static::$logAttributes = array_keys($model->getDirty());
-    });
   }
 
   public function invoice()
@@ -79,9 +71,9 @@ class InvoiceProduct extends Model
     return $this->belongsTo(Invoice::class, 'invoice_id');
   }
 
-  public function sub_product()
+  public function incoming_waybill_product()
   {
-    return $this->belongsTo(SubProduct::class, 'product_code', 'product_code');
+    return $this->belongsTo(IncomingWaybillProduct::class, 'product_code', 'product_code');
   }
 
   public function safe()

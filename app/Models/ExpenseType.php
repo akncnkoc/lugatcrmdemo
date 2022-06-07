@@ -31,6 +31,7 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Query\Builder|ExpenseType withTrashed()
  * @method static \Illuminate\Database\Query\Builder|ExpenseType withoutTrashed()
  * @mixin Eloquent
+ * @method static \Database\Factories\ExpenseTypeFactory factory(...$parameters)
  */
 class ExpenseType extends Model
 {

@@ -65,9 +65,6 @@ class Invoice extends Model
   {
     parent::boot();
     Invoice::observe(InvoiceObserver::class);
-    static::addGlobalScope('order', function (Builder $builder) {
-      $builder->orderBy('id', 'desc');
-    });
   }
 
 

@@ -63,6 +63,10 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property string|null $photo_path
  * @method static Builder|Product wherePhotoPath($value)
  * @property-read \App\Models\ProductLog $productLog
+ * @property string $buy_price
+ * @property-read Collection|\App\Models\IncomingWaybillProduct[] $incoming_waybill_products
+ * @property-read int|null $incoming_waybill_products_count
+ * @method static Builder|Product whereBuyPrice($value)
  */
 class Product extends Model
 {

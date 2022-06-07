@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\AppHelper;
 use App\Http\Requests\ProductRequest;
+use App\Models\IncomingWaybillProduct;
 use App\Models\Product;
 use DB;
 use Illuminate\Database\Eloquent\Builder;

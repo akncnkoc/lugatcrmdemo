@@ -34,6 +34,12 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|StaffPayment whereStaffPaymentTypeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StaffPayment whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string|null $date
+ * @property string|null $description
+ * @property string|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder|StaffPayment whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StaffPayment whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StaffPayment whereDescription($value)
  */
 class StaffPayment extends Model
 {

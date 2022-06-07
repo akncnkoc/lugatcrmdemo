@@ -52,6 +52,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Models\AmountTypes $amount_type
  * @property string|null $future_shipping_date
  * @method static \Illuminate\Database\Eloquent\Builder|Cargo whereFutureShippingDate($value)
+ * @property string|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Cargo whereDeletedAt($value)
  */
 class Cargo extends Model
 {

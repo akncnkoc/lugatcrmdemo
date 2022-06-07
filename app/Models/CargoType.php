@@ -16,6 +16,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|CargoType whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CargoType whereName($value)
  * @mixin \Eloquent
+ * @property string|null $created_at
+ * @property string|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|CargoType whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CargoType whereUpdatedAt($value)
  */
 class CargoType extends Model
 {

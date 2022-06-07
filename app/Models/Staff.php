@@ -57,6 +57,8 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @method static \Illuminate\Database\Query\Builder|Staff withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Staff withoutTrashed()
  * @mixin Eloquent
+ * @property int $gender
+ * @method static Builder|Staff whereGender($value)
  */
 class Staff extends Model
 {

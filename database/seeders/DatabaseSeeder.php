@@ -30,8 +30,6 @@ class DatabaseSeeder extends Seeder
       ExpenseTypeSeeder::class,
       StaffRoleSeeder::class,
       VariantSeeder::class,
-//      CompanyInformationSeeder::class,
-//      GeneralSettingSeeder::class,
       SafeSeeder::class,
       SupplierSeeder::class,
       ProductTypeSeeder::class,
@@ -41,8 +39,8 @@ class DatabaseSeeder extends Seeder
       IncomingWaybillSeeder::class,
       CashRegisterSeeder::class,
       StaffPaymentTypeSeeder::class,
-//      InvoiceSeeder::class,
-      ExpenseSeeder::class
+      ExpenseSeeder::class,
+      InvoiceSeeder::class
     ]);
   }
 }

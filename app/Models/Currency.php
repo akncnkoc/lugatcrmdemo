@@ -13,6 +13,28 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Currency newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Currency query()
  * @mixin \Eloquent
+ * @property int $id
+ * @property string $name
+ * @property string $code
+ * @property string $unit
+ * @property float $forex_buy
+ * @property float $forex_sell
+ * @property float $banknote_buy
+ * @property float $banknote_sell
+ * @property int $primary
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Currency whereBanknoteBuy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Currency whereBanknoteSell($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Currency whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Currency whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Currency whereForexBuy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Currency whereForexSell($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Currency whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Currency whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Currency wherePrimary($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Currency whereUnit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Currency whereUpdatedAt($value)
  */
 class Currency extends Model
 {

@@ -39,6 +39,12 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @method static Builder|ProductLog withTrashed()
  * @method static Builder|ProductLog withoutTrashed()
  * @mixin Eloquent
+ * @property string|null $date
+ * @property string $process_type
+ * @property int $waybill_id
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductLog whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductLog whereProcessType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductLog whereWaybillId($value)
  */
 class ProductLog extends Model
 {

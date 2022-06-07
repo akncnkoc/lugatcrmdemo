@@ -45,6 +45,9 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @method static \Illuminate\Database\Query\Builder|Expense withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Expense withoutTrashed()
  * @mixin Eloquent
+ * @property string $date
+ * @method static \Database\Factories\ExpenseFactory factory(...$parameters)
+ * @method static Builder|Expense whereDate($value)
  */
 class Expense extends Model
 {

@@ -28,10 +28,10 @@ class ProductLogController extends Controller
           return AppHelper::convertDate($row->date);
         })
         ->editColumn('process_type', function ($row){
-          if ($row->process_type == AppHelper::PRODUCt_IN) return "Giriş";
-          if ($row->process_type == AppHelper::PRODUCt_OUT) return "Çıkış";
-          if ($row->process_type == AppHelper::PRODUCt_REBATE) return "İade";
-          if ($row->process_type == AppHelper::PRODUCt_SOLD) return "Satılmış";
+          if ($row->process_type == AppHelper::PRODUCT_IN) return "Giriş";
+          if ($row->process_type == AppHelper::PRODUCT_OUT) return "Çıkış";
+          if ($row->process_type == AppHelper::PRODUCT_REBATE) return "İade";
+          if ($row->process_type == AppHelper::PRODUCT_SOLD) return "Satılmış";
         })
 //        ->filter(function (Builder $query) use ($request) {
 //          if (!empty($request->get('name'))) {

@@ -45,6 +45,8 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @method static \Illuminate\Database\Query\Builder|SupplierRegularPaymentPeriod withTrashed()
  * @method static \Illuminate\Database\Query\Builder|SupplierRegularPaymentPeriod withoutTrashed()
  * @mixin Eloquent
+ * @property string $date
+ * @method static Builder|SupplierRegularPaymentPeriod whereDate($value)
  */
 class SupplierRegularPaymentPeriod extends Model
 {

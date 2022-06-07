@@ -1,24 +1,18 @@
 <?php
-
-
 namespace App;
-
-
 use App\Models\Currency;
 use App\Models\CurrencyType;
 use Illuminate\Support\Carbon;
 use function App\Http\Controllers\recexpand;
-
 class AppHelper
 {
   public const OUTPUT = 0;
   public const INPUT = 1;
   public const CASH_REGISTER = 3;
-
-  public const PRODUCt_IN = 1;
-  public const PRODUCt_OUT = 2;
-  public const PRODUCt_REBATE = 3;
-  public const PRODUCt_SOLD = 4;
+  public const PRODUCT_IN = 1;
+  public const PRODUCT_OUT = 2;
+  public const PRODUCT_REBATE = 3;
+  public const PRODUCT_SOLD = 4;
 
 
 
@@ -132,7 +126,6 @@ class AppHelper
     return preg_match('/^[0-9]{' . $minDigits . ',' . $maxDigits . '}\z/', $s);
   }
 
-
   public static function formatFileSizeUnits($bytes, $getNumber = false)
   {
     if ($bytes >= 1073741824) $bytes = !$getNumber ? number_format($bytes / 1073741824, 2) . ' GB' : number_format($bytes / 1073741824, 2);
@@ -154,7 +147,6 @@ class AppHelper
   {
     return (strlen($string) > $length) ? substr($string, 0, $length - strlen($dots)) . $dots : $string;
   }
-
 
   public static function searchedDates($type = 'total' | 'today' | 'this_week' | 'this_month' | 'six_month' | 'year')
   {

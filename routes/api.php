@@ -18,6 +18,11 @@ Route::prefix('product')->group(function () {
   Route::post('delete', [\App\Http\Controllers\ProductController::class, 'delete'])->name('product.delete');
 });
 
+Route::prefix('product-report')->group(function () {
+  Route::post('report', [\App\Http\Controllers\ProductReportController::class, 'report'])->name('product-report.report');
+});
+
+
 Route::prefix('product_log')->group(function () {
   Route::post('table/{product_id?}', [\App\Http\Controllers\ProductLogController::class, 'table'])->name('product_log.table');
 });

@@ -27,8 +27,7 @@ class ProductSeeder extends Seeder
         'name' => $faker->productName,
         'model_code' => $faker->numberBetween(1, 9999),
         'buy_price' => $faker->numberBetween(100, 1000),
-        'buy_price_safe_id' => Safe::inRandomOrder()
-          ->first()->id,
+        'buy_price_safe_id' => Safe::inRandomOrder()->first()->id,
         'sale_price' => $faker->numberBetween(200, 1000),
         'sale_price_safe_id' => Safe::inRandomOrder()
           ->first()->id,

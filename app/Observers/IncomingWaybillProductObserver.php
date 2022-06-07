@@ -34,7 +34,7 @@ class IncomingWaybillProductObserver
       'product_id' => $waybillProduct->product->id,
       'waybill_id' => $waybillProduct->waybill->id,
       'date' => $waybillProduct->waybill->waybill_date,
-      'process_type' => AppHelper::PRODUCt_IN
+      'process_type' => AppHelper::PRODUCT_IN
     ]);
   }
 
@@ -45,7 +45,7 @@ class IncomingWaybillProductObserver
       'product_id' => $waybillProduct->product->id,
       'waybill_id' => $waybillProduct->waybill->id,
       'date' => $waybillProduct->waybill->waybill_date,
-      'process_type' => AppHelper::PRODUCt_IN
+      'process_type' => AppHelper::PRODUCT_IN
     ]);
   }
 }

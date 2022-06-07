@@ -1,7 +1,7 @@
 <div class="card shadow-sm" id="@if($target){{ $target }}@endif">
   @isset($header)
     <div class="card-header">
-      @if ($title)
+      @if (isset($title))
         <h3 class="card-title">{{ $title }}</h3>
       @endif
       @isset($toolbar)

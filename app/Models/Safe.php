@@ -42,6 +42,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @mixin Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\SafeLog[] $safe_logs
  * @property-read int|null $safe_logs_count
+ * @method static \Database\Factories\SafeFactory factory(...$parameters)
  */
 class Safe extends Model
 {

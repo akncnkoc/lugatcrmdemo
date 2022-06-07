@@ -113,8 +113,8 @@ class CurrencyController extends Controller
 
   public function curlGetFileContents($URL) {
     $c = curl_init();
-    curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($c, CURLOPT_URL, $URL);
+    curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
     $contents = curl_exec($c);
     curl_close($c);
     if ($contents) {

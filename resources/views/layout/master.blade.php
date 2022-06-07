@@ -3,7 +3,7 @@
     @include('layout.aside.base')
     <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
       @include('layout.header.base')
-      <div class="content d-flex flex-column flex-column-fluid overflow-hidden" id="kt_content">
+      <div class="content d-flex flex-column flex-column-fluid " id="kt_content">
         @include('layout.toolbar.toolbar')
         <div class="post d-flex flex-column-fluid" id="kt_post">
           @include('layout._content')

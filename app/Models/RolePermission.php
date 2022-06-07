@@ -13,6 +13,16 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|RolePermission newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|RolePermission query()
  * @mixin \Eloquent
+ * @property int $id
+ * @property int $role_id
+ * @property int $permission_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|RolePermission whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RolePermission whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RolePermission wherePermissionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RolePermission whereRoleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RolePermission whereUpdatedAt($value)
  */
 class RolePermission extends Model
 {

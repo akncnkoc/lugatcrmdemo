@@ -23,6 +23,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|RegularPayment whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RegularPayment whereRegularPaymentTypeId($value)
  * @mixin \Eloquent
+ * @property string|null $created_at
+ * @property string|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|RegularPayment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RegularPayment whereUpdatedAt($value)
  */
 class RegularPayment extends Model
 {

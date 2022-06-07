@@ -46,6 +46,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|SubProduct whereSold($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SubProduct whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property int $waybill_id
+ * @property-read \App\Models\Waybill|null $waybill
+ * @method static \Illuminate\Database\Eloquent\Builder|SubProduct whereWaybillId($value)
  */
 class SubProduct extends Model
 {

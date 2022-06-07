@@ -49,6 +49,10 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Query\Builder|SupplierPayment withTrashed()
  * @method static \Illuminate\Database\Query\Builder|SupplierPayment withoutTrashed()
  * @mixin Eloquent
+ * @property int $payable
+ * @property string|null $date
+ * @method static Builder|SupplierPayment whereDate($value)
+ * @method static Builder|SupplierPayment wherePayable($value)
  */
 class SupplierPayment extends Model
 {

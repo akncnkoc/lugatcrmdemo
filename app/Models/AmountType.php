@@ -13,6 +13,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|AmountType newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AmountType query()
  * @mixin \Eloquent
+ * @property int $id
+ * @property string $name
+ * @method static \Illuminate\Database\Eloquent\Builder|AmountType whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AmountType whereName($value)
  */
 class AmountType extends Model
 {
