@@ -1,9 +1,12 @@
 <?php
+
 namespace App;
+
 use App\Models\Currency;
 use App\Models\CurrencyType;
 use Illuminate\Support\Carbon;
 use function App\Http\Controllers\recexpand;
+
 class AppHelper
 {
   public const OUTPUT = 0;
@@ -13,27 +16,6 @@ class AppHelper
   public const PRODUCT_OUT = 2;
   public const PRODUCT_REBATE = 3;
   public const PRODUCT_SOLD = 4;
-
-
-
-  public static function currencyToDecimal($value): float
-  {
-    $value = trim($value);
-    $value = preg_replace('/(\d)(\s)(\d)/', '$1$3', $value);
-    if (strpos($value, '.') !== false && strpos($value, ',') !== false) {
-      if (strrpos($value, '.') < strpos($value, ',')) {
-        $value = str_replace('.', '', $value);
-      }
-    }
-    if (strpos($value, ',') !== false && strpos($value, '.') !== false) {
-      if (strrpos($value, ',') < strpos($value, '.')) {
-        $value = str_replace(',', '', $value);
-      }
-    }
-    $value = str_replace(',', '.', $value);
-    $value = preg_replace('/[^\d\.]/', '', $value);
-    return (float)$value;
-  }
 
   public static function changeEnvironmentVariable($key, $value)
   {
@@ -64,8 +46,27 @@ class AppHelper
 
   public static function convertedPrice($model, $primaryCurrency, $column = "price")
   {
-    $convertedRate = $model->safe->currency->banknote_selling / $primaryCurrency->banknote_selling;
-    return round($model->$column * $convertedRate, 2);
+    $convertedRate = $model->safe->currency->banknote_sell / $primaryCurrency->banknote_sell;
+    return round(self::currencyToDecimal($model->$column) * $convertedRate,2);
+  }
+
+  public static function currencyToDecimal($value): float
+  {
+    $value = trim($value);
+    $value = preg_replace('/(\d)(\s)(\d)/', '$1$3', $value);
+    if (strpos($value, '.') !== false && strpos($value, ',') !== false) {
+      if (strrpos($value, '.') < strpos($value, ',')) {
+        $value = str_replace('.', '', $value);
+      }
+    }
+    if (strpos($value, ',') !== false && strpos($value, '.') !== false) {
+      if (strrpos($value, ',') < strpos($value, '.')) {
+        $value = str_replace(',', '', $value);
+      }
+    }
+    $value = str_replace(',', '.', $value);
+    $value = preg_replace('/[^\d\.]/', '', $value);
+    return (float)$value;
   }
 
   public static function group_by($key, $data)
@@ -148,7 +149,8 @@ class AppHelper
     return (strlen($string) > $length) ? substr($string, 0, $length - strlen($dots)) . $dots : $string;
   }
 
-  public static function searchedDates($type = 'total' | 'today' | 'this_week' | 'this_month' | 'six_month' | 'year')
+  public static function searchedDates($type = 'total' | 'today' | 'this_week' | 'this_month' | 'six_month' | 'year'
+  | 'last_year')
   {
     $searchedDates = [];
     switch ($type) {
@@ -198,6 +200,16 @@ class AppHelper
           ->startOfYear()
           ->toDateTimeString();
         $searchedDates[] = Carbon::now()
+          ->endOfYear()
+          ->toDateTimeString();
+        break;
+      case 'last_year':
+        $searchedDates[] = Carbon::now()
+          ->subYears()
+          ->startOfYear()
+          ->toDateTimeString();
+        $searchedDates[] = Carbon::now()
+          ->subYears()
           ->endOfYear()
           ->toDateTimeString();
         break;
@@ -269,5 +281,14 @@ class AppHelper
     }
 
     return sprintf("%s'%s", $word, $possessive);
+  }
+
+  public static function getAllMonths(): mixed
+  {
+    $month = [];
+    for ($m = 1; $m <= 12; $m++) {
+      $month[] = Carbon::now()->month($m)->getTranslatedMonthName();
+    }
+    return $month;
   }
 }

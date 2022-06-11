@@ -29,7 +29,7 @@ class InvoiceProductObserver
       'normal_price' => $invoiceProduct->price,
       'safe_id' => $invoiceProduct->safe_id,
       'date' => $invoiceProduct->invoice->invoice_date,
-      'process_type' => AppHelper::CASH_REGISTER,
+      'process_type' => AppHelper::INPUT,
       'cash_register_id' => $invoiceProduct->cash_register_id,
     ]);
     $incoming_waybill_product = $invoiceProduct->incoming_waybill_product;

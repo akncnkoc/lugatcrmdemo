@@ -17,10 +17,14 @@ class ExpenseTest extends DuskTestCase
     $this->browse(function (Browser $browser) {
       $browser->visitRoute('expense.index')
         ->assertSee('Gider Listesi')
+        ->storeConsoleLog('expense_index_log')
         ->pause(2000);
     });
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function test_user_can_add_expense(): void
   {
     $this->browse(function (Browser $browser) {
@@ -48,6 +52,9 @@ class ExpenseTest extends DuskTestCase
     });
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function test_user_can_update_expense(): void
   {
     $this->browse(function (Browser $browser) {

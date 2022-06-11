@@ -18,7 +18,7 @@ class ExpenseSeeder extends Seeder
   public function run()
   {
     $faker = Factory::create('tr_TR');
-    foreach (range(1,10) as $expense){
+    foreach (range(1,80) as $expense){
       Expense::create([
         'price' => $faker->numberBetween(200,500),
         'safe_id' => Safe::inRandomOrder()->first()->id,

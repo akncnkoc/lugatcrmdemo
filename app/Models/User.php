@@ -15,6 +15,7 @@ use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -70,6 +71,7 @@ class User extends Authenticatable
   use HasFactory, Notifiable;
   use SoftDeletes;
   use HasPermissionsTrait;
+  use HasApiTokens;
 
   protected static $logAttributes = [];
   protected static function boot()

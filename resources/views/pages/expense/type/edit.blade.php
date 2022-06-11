@@ -1,11 +1,11 @@
 <x-modal.modal id="expense_type_edit_modal">
-  <x-slot name="title">Gider Tipi Düzenle</x-slot>
+  <x-slot name="title">@lang('pages/expense.expense_type_edit')</x-slot>
   <x-slot name="body">
     <x-form.form id="expense_type_edit_form">
       <div class="row row-cols-1">
-        <x-form.input name="name" label="Ad (Ünvan)" placeholder="Ad (Ünvan)" required />
+        <x-form.input name="name" :label="__('globals/words.name')" :placeholder="__('globals/words.name')" required />
       </div>
-      <x-form.button>Kaydet</x-form.button>
+      <x-form.button>@lang('globals/words.save')</x-form.button>
     </x-form.form>
   </x-slot>
 </x-modal.modal>
@@ -37,11 +37,11 @@
       name: {
         validators: {
           notEmpty: {
-            message: "Ad doldurulması zorunludur"
+            message: "@lang('globals/validation_messages.required', ['field_name' => __('globals/words.name')])"
           },
           stringLength:{
             min: 3,
-            message: "Ad en az 3 harf'den oluşmak zorundadır."
+            message: "@lang('globals/validation_messages.min', ['field_name' => __('globals/words.name'), 'min' => 3])"
           }
         }
       }
@@ -58,10 +58,10 @@
         success: function(data) {
           $("#expense_type_edit_modal").modal("hide");
           initExpenseTypeData();
-          toastr.success("Başarılı!");
+          toastr.success("@lang('globals/success_messages.success', ['attr' => __('globals/words.expense_type')])");
         },
         error: function(err) {
-          toastr.error("Bir sorun var daha sonra tekrar deneyin!");
+          toastr.error("@lang('globals/error_messages.edit_error', ['attr' => __('globals/words.expense_type')])");
         }
       });
     });

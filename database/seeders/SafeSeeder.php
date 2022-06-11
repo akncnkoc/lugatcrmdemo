@@ -19,7 +19,7 @@ class SafeSeeder extends Seeder
       if ($currencyType->id == 13 || $currencyType->id == 4 || $currencyType->id == 1)
         Safe::create([
           'currency_id' => $currencyType->id,
-          'name' => $currencyType->name,
+          'name' => $currencyType->name. " Kasası",
           'total' => 0,
         ]);
     }

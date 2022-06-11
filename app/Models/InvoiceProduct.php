@@ -56,8 +56,6 @@ use Spatie\Activitylog\Traits\LogsActivity;
  */
 class InvoiceProduct extends Model
 {
-
-  protected static $logAttributes = [];
   protected $guarded = [];
 
   protected static function boot()

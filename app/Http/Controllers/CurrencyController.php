@@ -36,7 +36,7 @@ class CurrencyController extends Controller
       foreach ($xml->children() as $children) {
         $Unit = (string)$children->Unit;
         $CurrencyCode = (string)$children->attributes()->CurrencyCode;
-        $CurrencyName = (string)$children->Isim;
+        $CurrencyName = ucwords(mb_strtolower((string)$children->Isim, "UTF-8"));
         $ForexBuying = (string)$children->ForexBuying;
         $ForexSelling = (string)$children->ForexSelling;
         $BanknoteBuying = (string)$children->BanknoteBuying;

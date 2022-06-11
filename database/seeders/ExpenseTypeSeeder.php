@@ -15,23 +15,10 @@ class ExpenseTypeSeeder extends Seeder
   public function run()
   {
     $expense_types = [
-      'Fatura Elektrik',
-      'Fatura İnternet',
-      'Fatura Telefon',
-      'Fatura Su',
-      'Hamal',
-      'Muhasebe',
-      'Bağkur Ödemesi',
-      'SSK Ödemesi',
-      'Stopaj Ödemesi',
-      'Vergi Ödemesi',
-      'Mutfak Market',
-      'Mutfak Çay Kahve',
-      'Müşteri Rehber',
-      'Müşteri Yemek',
-      'Ofis Kırtasiye',
-      'Temizlik Malzemesi',
-      'Yemek Personel',
+      'Fatura',
+      'Mutfak, Market',
+      'Vergi Ödemeleri',
+      'SSK Ödemeleri'
     ];
     foreach ($expense_types as $expense_type) {
       ExpenseType::create([

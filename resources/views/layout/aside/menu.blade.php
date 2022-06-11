@@ -13,25 +13,37 @@
     data-kt-menu-expand="false">
     <div class="menu-item">
       <a class="menu-link"
-         href="{{route('safe.index')}}"
-         title="Şirket içi giderlerini ekleyebileceğin, seçtiğin zaman aralığına göre giderlerinin raporunu görebileciğin bir modül"
+         href="{{route('dashboard.index')}}"
+         title="@lang('layout/aside/menu.homepage_hint_title')"
          data-bs-toggle="tooltip"
          data-bs-trigger="hover"
          data-bs-custom-class="tooltip-dark"
          data-bs-dismiss="click"
          data-bs-placement="right">
-        <span class="menu-title">Kasa</span>
+        <span class="menu-title">@lang('layout/aside/menu.homepage')</span>
+      </a>
+    </div>
+    <div class="menu-item">
+      <a class="menu-link"
+         href="{{route('safe.index')}}"
+         title="@lang('layout/aside/menu.safe_hint_title')"
+         data-bs-toggle="tooltip"
+         data-bs-trigger="hover"
+         data-bs-custom-class="tooltip-dark"
+         data-bs-dismiss="click"
+         data-bs-placement="right">
+        <span class="menu-title">@lang('layout/aside/menu.safe')</span>
       </a>
     </div>
     <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
       <span class="menu-link">
-        <span class="menu-title">Ürün</span>
+        <span class="menu-title">@lang('layout/aside/menu.product')</span>
         <span class="menu-arrow"></span>
       </span>
       <div class="menu-sub menu-sub-accordion">
         <div class="menu-item">
           <a class="menu-link" href="{{route('product.index')}}"
-             title="Şirket içi giderlerini ekleyebileceğin, seçtiğin zaman aralığına göre giderlerinin raporunu görebileciğin bir modül"
+             title="@lang('layout/aside/menu.product_hint_title')"
              data-bs-toggle="tooltip"
              data-bs-trigger="hover"
              data-bs-custom-class="tooltip-dark"
@@ -40,7 +52,7 @@
             <span class="menu-bullet">
               <span class="bullet bullet-dot"></span>
             </span>
-            <span class="menu-title">Ürünler</span>
+            <span class="menu-title">@lang('layout/aside/menu.products')</span>
           </a>
         </div>
         <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
@@ -48,7 +60,7 @@
             <span class="menu-bullet">
               <span class="bullet bullet-dot"></span>
             </span>
-            <span class="menu-title">İrsaliye</span>
+            <span class="menu-title">@lang('layout/aside/menu.waybill')</span>
             <span class="menu-arrow"></span>
           </span>
           <div class="menu-sub menu-sub-accordion">
@@ -57,7 +69,7 @@
                 <span class="menu-bullet">
                   <span class="bullet bullet-dot"></span>
                 </span>
-                <span class="menu-title">Gelen İrsaliye</span>
+                <span class="menu-title">@lang('layout/aside/menu.incoming_waybill')</span>
               </a>
             </div>
             <div class="menu-item">
@@ -65,7 +77,7 @@
                 <span class="menu-bullet">
                   <span class="bullet bullet-dot"></span>
                 </span>
-                <span class="menu-title">Giden İrsaliye</span>
+                <span class="menu-title">@lang('layout/aside/menu.outgoing_waybill')</span>
               </a>
             </div>
           </div>
@@ -75,61 +87,61 @@
     <div class="menu-item">
       <a class="menu-link"
          href="{{route('supplier.index')}}"
-         title="update******"
+         title="@lang('layout/aside/menu.supplier_hint_title')"
          data-bs-toggle="tooltip"
          data-bs-trigger="hover"
          data-bs-custom-class="tooltip-dark"
          data-bs-dismiss="click"
          data-bs-placement="right">
-        <span class="menu-title">Tedarikçi</span>
+        <span class="menu-title">@lang('layout/aside/menu.supplier')</span>
+      </a>
+    </div>
+    <div class="menu-item">
+      <a class="menu-link"
+         href="{{route('customer.index')}}"
+         title="@lang('layout/aside/menu.customer_hint_title')"
+         data-bs-toggle="tooltip"
+         data-bs-trigger="hover"
+         data-bs-custom-class="tooltip-dark"
+         data-bs-dismiss="click"
+         data-bs-placement="right">
+        <span class="menu-title">@lang('layout/aside/menu.customer')</span>
       </a>
     </div>
     <div class="menu-item">
       <a class="menu-link"
          href="{{route('staff.index')}}"
-         title="update******"
+         title="@lang('layout/aside/menu.staff_hint_title')"
          data-bs-toggle="tooltip"
          data-bs-trigger="hover"
          data-bs-custom-class="tooltip-dark"
          data-bs-dismiss="click"
          data-bs-placement="right">
-        <span class="menu-title">Müşteri</span>
-      </a>
-    </div>
-    <div class="menu-item">
-      <a class="menu-link"
-         href="{{route('staff.index')}}"
-         title="update******"
-         data-bs-toggle="tooltip"
-         data-bs-trigger="hover"
-         data-bs-custom-class="tooltip-dark"
-         data-bs-dismiss="click"
-         data-bs-placement="right">
-        <span class="menu-title">Personel</span>
+        <span class="menu-title">@lang('layout/aside/menu.staff')</span>
       </a>
     </div>
     <div class="menu-item">
       <a class="menu-link"
          href="{{route('expense.index')}}"
-         title="Şirket içi giderlerini ekleyebileceğin, seçtiğin zaman aralığına göre giderlerinin raporunu görebileciğin bir modül"
+         title="@lang('layout/aside/menu.expense_hint_title')"
          data-bs-toggle="tooltip"
          data-bs-trigger="hover"
          data-bs-custom-class="tooltip-dark"
          data-bs-dismiss="click"
          data-bs-placement="right">
-        <span class="menu-title">Gider</span>
+        <span class="menu-title">@lang('layout/aside/menu.expense')</span>
       </a>
     </div>
     <div class="menu-item">
       <a class="menu-link"
          href="{{route('roleandtype.index')}}"
-         title="Şirket içi giderlerini ekleyebileceğin, seçtiğin zaman aralığına göre giderlerinin raporunu görebileciğin bir modül"
+         title="@lang('layout/aside/menu.type_and_role_hint_title')"
          data-bs-toggle="tooltip"
          data-bs-trigger="hover"
          data-bs-custom-class="tooltip-dark"
          data-bs-dismiss="click"
          data-bs-placement="right">
-        <span class="menu-title">Tip & Rol</span>
+        <span class="menu-title">@lang('layout/aside/menu.type_and_role')</span>
       </a>
     </div>
   </div>

@@ -2,6 +2,7 @@
 <meta name="description" content="Lügat App for Content Management System">
 <meta name="Lügat CMS" content="CMS">
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="csrf-token" content="{{csrf_token()}}" />
 <title>Lügat CRM</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
 @stack('customstyles')

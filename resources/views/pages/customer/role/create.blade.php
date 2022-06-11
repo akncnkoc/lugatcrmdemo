@@ -1,11 +1,14 @@
 <x-modal.modal id="customer_role_create_modal">
-  <x-slot name="title">Müşteri Rolü Ekle</x-slot>
+  <x-slot name="title">@lang('pages/customer.customer_role_add')</x-slot>
   <x-slot name="body">
     <x-form.form id="customer_role_create_form">
       <div class="row row-cols-1">
-        <x-form.input name="name" label="Ad" placeholder="Ad" required />
+        <x-form.input name="name"
+                      :label="__('globals/words.name')"
+                      :placeholder="__('globals/words.name')"
+                      required />
       </div>
-      <x-form.button>Kaydet</x-form.button>
+      <x-form.button>@lang('globals/words.save')</x-form.button>
     </x-form.form>
   </x-slot>
 </x-modal.modal>
@@ -15,11 +18,11 @@
       name: {
         validators: {
           notEmpty: {
-            message: "Ad doldurulması zorunludur"
+            message: "@lang('globals/validation_messages.required', ['field_name'  => __('globals/words.name')])"
           },
           stringLength: {
             min: 3,
-            message: "Ad en az 3 harf'den oluşmak zorundadır."
+            message: "@lang('globals/validation_messages.min', ['field_name' => __('globals/words.name'), 'min' => 3])"
           }
         }
       }
@@ -29,13 +32,13 @@
         url: "{{ route('customer_role.store') }}",
         type: "POST",
         data: data,
-        success: function(data) {
+        success: function (data) {
           $("#customer_role_create_modal").modal("hide");
           initCustomerRoleData();
-          toastr.success("Başarılı!");
+          toastr.success("@lang('globals/success_messages.success', ['attr' => __('globals/words.customer_role')])");
         },
-        error: function(err) {
-          toastr.error("Bir sorun var daha sonra tekrar deneyin!");
+        error: function (err) {
+          toastr.error("@lang('globals/error_messages.save_error', ['attr' => __('globals/words.customer_role')])");
         }
       });
     });

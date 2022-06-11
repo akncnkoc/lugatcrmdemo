@@ -1,24 +1,38 @@
 <x-modal.modal id="edit_modal">
-  <x-slot name="title">Gider Düzenle</x-slot>
+  <x-slot name="title">@lang('pages/customer.customer_edit')</x-slot>
   <x-slot name="body">
     <x-form.form id="edit_form">
       <div class="row row-cols-2">
-        <x-form.input name="name" label="Ad (Ünvan)" placeholder="Ad (Ünvan)" required />
-        <x-form.input name="surname" label="Soyad" placeholder="Soyad" />
+        <x-form.input name="name"
+                      :label="__('globals/words.name')"
+                      :placeholder="__('globals/words.name')"
+                      required />
+        <x-form.input name="surname"
+                      :label="__('globals/words.surname')"
+                      :placeholder="__('globals/words.surname')" />
       </div>
       <div class="row row-cols-2">
-        <x-form.input name="email" label="Email" placeholder="Email" />
-        <x-form.input name="phone" label="Telefon" placeholder="Telefon" />
+        <x-form.input name="email" :label="__('globals/words.email')" :placeholder="__('globals/words.email')" />
+        <x-form.input name="phone" :label="__('globals/words.phone')" :placeholder="__('globals/words.phone')" />
       </div>
       <div class="row row-cols-2">
-        <x-form.select name="customer_role_id" label="Rol" placeholder="Rol" editing :asyncload="route('customer_role.select')" parent="#edit_modal" required />
+        <x-form.select name="customer_role_id"
+                       :label="__('globals/words.role')"
+                       :placeholder="__('globals/words.role')"
+                       editing
+                       :asyncload="route('customer_role.select')"
+                       parent="#edit_modal"
+                       required />
         <div class="d-flex align-items-center">
-          <x-form.radio label="Cinsiyet" name="gender" hint="Eğer müşteri bir firma yada tüzel kişiyşe diğeri seçin" :items="['Erkek' => 1, 'Kadın' => 2, 'Diğer' => 3]" />
+          <x-form.radio :label="__('globals/words.gender')"
+                        name="gender"
+                        hint="@lang('pages/customer.customer_gender_hint')"
+                        :items="[__('globals/words.male') => 1, __('globals/words.female') => 2, __('globals/words.other')=> 3]" />
         </div>
       </div>
-      <x-form.textarea name="address" label="Açık Adres" />
-      <x-form.textarea name="comment" label="Yorum" />
-      <x-form.button>Kaydet</x-form.button>
+      <x-form.textarea name="address" :label="__('globals/words.address')" />
+      <x-form.textarea name="comment" :label="__('globals/words.comment')" />
+      <x-form.button>@lang('globals/words.save')</x-form.button>
     </x-form.form>
   </x-slot>
 </x-modal.modal>
@@ -27,7 +41,7 @@
   <script>
     var id;
     var blockUI = new KTBlockUI(document.querySelector("#edit_modal_target"));
-    $("#edit_modal").on('shown.bs.modal', function(e) {
+    $("#edit_modal").on('shown.bs.modal', function (e) {
       id = $(e.target).data('editId');
       $.ajax({
         url: "{{ route('customer.get') }}",
@@ -38,7 +52,7 @@
         beforeSend: () => {
           blockUI.block();
         },
-        success: function(data) {
+        success: function (data) {
           $(editForm).find('input[name="name"]').val(data.name);
           $(editForm).find('input[name="surname"]').val(data.surname);
           $(editForm).find('input[name="email"]').val(data.email);
@@ -61,18 +75,18 @@
       name: {
         validators: {
           notEmpty: {
-            message: "Ad doldurulması zorunludur"
+            message: "@lang('globals/validation_messages.required', ['field_name' => __('globals/words.name')])"
           },
-          stringLength:{
+          stringLength: {
             min: 3,
-            message: "Ad en az 3 harf'den oluşmak zorundadır."
+            message: "@lang('globals/validation_messages.required', ['field_name' => __('globals/words.name')])"
           }
         }
       },
       customer_role_id: {
-        validators:{
-          notEmpty:{
-            message: "Rol seçilmesi zorunludur."
+        validators: {
+          notEmpty: {
+            message: "@lang('globals/validation_messages.required', ['field_name' => __('globals/words.role')])"
           }
         }
       }
@@ -86,19 +100,18 @@
         url: "{{ route('customer.update') }}",
         type: "POST",
         data: data,
-        success: function(data) {
+        success: function (data) {
           $("#edit_modal").modal("hide");
-          table.ajax.reload(null,false);
-          toastr.success("Başarılı!");
+          table.ajax.reload(null, false);
+          toastr.success("@lang('globals/success_messages.success', ['attr' => __('globals/words.customer')])");
         },
-        error: function(err) {
-          toastr.error("Bir sorun var daha sonra tekrar deneyin!");
+        error: function (err) {
+          toastr.error("@lang('globals/error_messages.save_error', ['attr' => __('globals/words.customer')])");
         }
       });
     }, () => {
-      console.log("invalidated")
     }, (form, validator) => {
-      $(form).find('.customer_role_id_edit_select').on('change', function() {
+      $(form).find('.customer_role_id_edit_select').on('change', function () {
         validator.revalidateField('customer_role_id');
       });
     });
