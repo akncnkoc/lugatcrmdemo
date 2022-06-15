@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -44,7 +45,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  */
 class Supplier extends Model
 {
-  use SoftDeletes;
+  use SoftDeletes, HasFactory;
   protected $guarded = [];
 
   protected static function boot()

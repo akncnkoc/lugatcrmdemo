@@ -35,12 +35,11 @@
           dateFormat: "d-m-Y",
           "locale": "tr",
           allowInput: true,
+          altInput: true,
         })
 
         $(".datetime-picker").each(function (index, item) {
-          $(item).flatpickr({
-            altInput: true,
-          });
+          $(item).flatpickr();
         });
         $(".money_input").each(function (index, item) {
           $(item).maskMoney({thousands: ".", decimal: ",", allowZero: true, affixesStay: false, allowNegative: false});

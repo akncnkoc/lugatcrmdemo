@@ -54,7 +54,7 @@
       <div class="card card-flush">
         <div class="card-header pt-9">
           <h3 class="card-title align-items-start flex-column">
-            <span class="card-label fw-bolder text-dark">@lang('pages/dashboard.safe_staticstics')</span>
+            <span class="card-label fw-bolder text-dark">@lang('pages/dashboard.safe_statistics')</span>
             <span class="text-gray-400 pt-2 fw-bold fs-6">@lang('pages/dashboard.this_year_safe_inputs')</span>
           </h3>
         </div>
@@ -67,7 +67,7 @@
       <div class="card card-flush">
         <div class="card-header pt-9">
           <h3 class="card-title align-items-start flex-column">
-            <span class="card-label fw-bolder text-dark">@lang('pages/dashboard.expense_staticstics')</span>
+            <span class="card-label fw-bolder text-dark">@lang('pages/dashboard.expense_statistics')</span>
             <span class="text-gray-400 pt-2 fw-bold fs-6">@lang('pages/dashboard.this_year_expense_total')</span>
           </h3>
         </div>

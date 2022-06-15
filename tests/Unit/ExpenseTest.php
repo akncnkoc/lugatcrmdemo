@@ -9,12 +9,13 @@ use Tests\TestCase;
 
 class ExpenseTest extends TestCase
 {
-//  use DatabaseTransactions;
 
-  public function test_can_create_expense()
+  public function test_user_can_create_expense()
   {
-    $safe = Safe::factory()->create();
-    $expense_type = ExpenseType::factory()->create();
+    $safe = Safe::factory()
+      ->create();
+    $expense_type = ExpenseType::factory()
+      ->create();
     $data = [
       'price' => $this->faker->numberBetween(10, 50),
       'safe_id' => $safe->id,
@@ -26,11 +27,14 @@ class ExpenseTest extends TestCase
       ->assertStatus(200);
   }
 
-  public function test_can_update_expense()
+  public function test_user_can_update_expense()
   {
-    $expense = Expense::factory()->create();
-    $safe = Safe::factory()->create();
-    $expense_type = ExpenseType::factory()->create();
+    $expense = Expense::factory()
+      ->create();
+    $safe = Safe::factory()
+      ->create();
+    $expense_type = ExpenseType::factory()
+      ->create();
     $data = [
       'price' => $this->faker->numberBetween(10, 50),
       'safe_id' => $safe->id,
@@ -42,16 +46,18 @@ class ExpenseTest extends TestCase
       ->assertStatus(200);
   }
 
-  public function test_can_delete_expense()
+  public function test_user_can_delete_expense()
   {
-    $expense = Expense::factory()->create();
+    $expense = Expense::factory()
+      ->create();
     $this->post(route('expense.delete'), ['id' => $expense->id])
       ->assertStatus(200);
   }
 
-  public function test_can_list_expense()
+  public function test_user_can_list_expense()
   {
-    $expense = Expense::factory()->create();
+    $expense = Expense::factory()
+      ->create();
 
     $this->post(route('expense.get'), ['id' => $expense->id])
       ->assertStatus(200)

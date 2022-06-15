@@ -119,7 +119,11 @@
                 window.location.href = "{{route('dashboard.index')}}"
               },
               error: function (err) {
-                toastr.error("@lang('globals/errors.login_error')")
+                if(err.status === 500){
+                  toastr.error("@lang('globals/error_messages.server_error')")
+                }else {
+                  toastr.error("@lang('globals/error_messages.login_error')")
+                }
               },
               complete: function () {
                 submitButton.setAttribute('data-kt-indicator', 'off');

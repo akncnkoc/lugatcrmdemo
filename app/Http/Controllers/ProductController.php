@@ -21,13 +21,7 @@ class ProductController extends Controller
   public function get(Request $request)
   {
     try {
-      if ($request->ajax()) {
-        try {
-          return response()->json(Product::with('buy_price_safe', 'sale_price_safe', 'product_type', 'suppliers.supplier')->find($request->get('id')));
-        } catch (\Exception $e) {
-          return response()->json(false, 500);
-        }
-      }
+      return response()->json(Product::with('buy_price_safe', 'sale_price_safe', 'product_type', 'suppliers.supplier')->find($request->get('id')));
     } catch (\Throwable $th) {
       return response()->json(false, 500);
     }

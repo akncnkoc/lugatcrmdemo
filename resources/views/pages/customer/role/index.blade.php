@@ -51,14 +51,6 @@
             data: {
               id: id
             },
-            beforeSend: function () {
-              Swal.fire({
-                text: "@lang('pages/customer.customer_role_removing_text')",
-                icon: "info",
-                buttonsStyling: false,
-                showConfirmButton: false,
-              })
-            },
             success: function (data) {
               Swal.close();
               Swal.fire({

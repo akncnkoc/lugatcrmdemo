@@ -52,25 +52,12 @@ class SupplierRegularPaymentPeriod extends Model
 {
   use SoftDeletes;
 
-  protected static $logAttributes = [];
   protected $guarded = [];
 
   protected static function boot()
   {
     parent::boot();
     SupplierRegularPaymentPeriod::observe(SupplierRegularPaymentPeriodObserver::class);
-    static::addGlobalScope('order', function (Builder $builder) {
-      $builder->orderBy('id', 'desc');
-    });
-    static::saving(function (Model $model) {
-      static::$logAttributes = array_keys($model->getDirty());
-    });
-    static::updating(function (Model $model) {
-      static::$logAttributes = array_keys($model->getDirty());
-    });
-    static::deleting(function (Model $model) {
-      static::$logAttributes = array_keys($model->getDirty());
-    });
   }
 
   public function safe_log()

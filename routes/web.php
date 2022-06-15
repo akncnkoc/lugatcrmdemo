@@ -14,26 +14,96 @@ use App\Http\Controllers\StaffController;
 use App\Http\Controllers\StaffPaymentController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplierPaymentController;
+use App\Http\Controllers\SupplierRegularPaymentController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth:sanctum'])->group(function (){
-  Route::redirect('/', '/dashboard');
-  Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
-  Route::get('/product', [ProductController::class, 'index'])->name('product.index');
-  Route::get('/product/incoming_waybill', [IncomingWaybillController::class, 'index'])->name('incoming-waybill.index');
-  Route::get('/product/outgoing_waybill', [OutgoingWaybillController::class, 'index'])->name('outgoing-waybill.index');
-  Route::get('/product/{product_id?}/log', [ProductLogController::class, 'index'])->name('product.log.index');
-  Route::get('/product/{product_id?}/report', [ProductReportController::class, 'index'])->name('product.report.index');
-  Route::get('/safe', [SafeController::class, 'index'])->name('safe.index');
-  Route::get('/expense', [ExpenseController::class, 'index'])->name('expense.index');
-  Route::get('/customer', [CustomerController::class, 'index'])->name('customer.index');
-  Route::get('/supplier', [SupplierController::class, 'index'])->name('supplier.index');
-  Route::get('/supplier/{supplier_id?}/payment', [SupplierPaymentController::class, 'index'])->name('supplier.payment.index');
-  Route::get('/staff', [StaffController::class, 'index'])->name('staff.index');
-  Route::get('/staff/{id?}/payment', [StaffPaymentController::class, 'index'])->name('staff.payment.index');
-  Route::get('/roleandtype', fn() => view('pages.roleandtype.index'))->name('roleandtype.index');
-});
+Route::middleware(['auth:sanctum'])
+  ->group(function () {
+    Route::redirect('/', '/dashboard');
+    Route::get('/dashboard', [
+      DashboardController::class,
+      'index'
+    ])
+      ->name('dashboard.index');
+    Route::get('/product', [
+      ProductController::class,
+      'index'
+    ])
+      ->name('product.index');
+    Route::get('/product/incoming_waybill', [
+      IncomingWaybillController::class,
+      'index'
+    ])
+      ->name('incoming-waybill.index');
+    Route::get('/product/outgoing_waybill', [
+      OutgoingWaybillController::class,
+      'index'
+    ])
+      ->name('outgoing-waybill.index');
+    Route::get('/product/{product_id?}/log', [
+      ProductLogController::class,
+      'index'
+    ])
+      ->name('product.log.index');
+    Route::get('/product/{product_id?}/report', [
+      ProductReportController::class,
+      'index'
+    ])
+      ->name('product.report.index');
+    Route::get('/safe', [
+      SafeController::class,
+      'index'
+    ])
+      ->name('safe.index');
+    Route::get('/expense', [
+      ExpenseController::class,
+      'index'
+    ])
+      ->name('expense.index');
+    Route::get('/customer', [
+      CustomerController::class,
+      'index'
+    ])
+      ->name('customer.index');
+    Route::get('/supplier', [
+      SupplierController::class,
+      'index'
+    ])
+      ->name('supplier.index');
+    Route::get('/supplier/{supplier_id?}/payment', [
+      SupplierPaymentController::class,
+      'index'
+    ])
+      ->name('supplier.payment.index');
+    Route::get('/supplier/{supplier_id?}/regularpayment', [
+      SupplierRegularPaymentController::class,
+      'index'
+    ])
+      ->name('supplier.regularpayment.index');
+    Route::get('/staff', [
+      StaffController::class,
+      'index'
+    ])
+      ->name('staff.index');
+    Route::get('/staff/{id?}/payment', [
+      StaffPaymentController::class,
+      'index'
+    ])
+      ->name('staff.payment.index');
+    Route::get('/roleandtype', fn() => view('pages.roleandtype.index'))
+      ->name('roleandtype.index');
+    Route::get('/locale/{locale}', function ($locale) {
+      app()->setLocale($locale);
+      session()->put('locale', $locale);
+      return redirect()->back();
+    });
+  });
 
-Route::prefix('user')->group(function(){
-  Route::get('login', [AuthController::class, 'login'])->name('auth.login');
-});
+Route::prefix('user')
+  ->group(function () {
+    Route::get('login', [
+      AuthController::class,
+      'login'
+    ])
+      ->name('auth.login');
+  });

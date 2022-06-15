@@ -8,7 +8,7 @@
   </div>
   @if(!$template)
     <div class="form-group">
-      <a href="javascript:;" data-repeater-create class="btn btn-light-primary">
+      <a href="javascript:;" data-repeater-create class="btn btn-info fs-5">
         <i class="la la-plus"></i>
         {{$buttonText}}
       </a>

@@ -9,15 +9,11 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ProductTypeFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition()
-    {
-        return [
-            //
-        ];
-    }
+  public function definition()
+  {
+    return [
+      'name' => $this->faker->colorName,
+      'initial_code' => 1
+    ];
+  }
 }

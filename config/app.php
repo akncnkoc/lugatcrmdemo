@@ -9,11 +9,15 @@ return [
   'url' => env('APP_URL', 'http://localhost'),
   'asset_url' => env('ASSET_URL'),
   'timezone' => 'UTC',
-  'locale' => 'en',
-  'fallback_locale' => 'en',
-  'faker_locale' => 'en_US',
+  'locale' => 'tr',
+  'fallback_locale' => 'tr',
+  'faker_locale' => 'tr_TR',
   'key' => env('APP_KEY'),
   'cipher' => 'AES-256-CBC',
+  'available_locales' => [
+    'tr',
+    'en'
+  ],
   'maintenance' => [
     'driver' => 'file',
     // 'store'  => 'redis',
