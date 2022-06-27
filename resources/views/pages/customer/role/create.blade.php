@@ -6,7 +6,7 @@
         <x-form.input name="name"
                       :label="__('globals/words.name')"
                       :placeholder="__('globals/words.name')"
-                      required />
+                      required/>
       </div>
       <x-form.button>@lang('globals/words.save')</x-form.button>
     </x-form.form>
@@ -14,7 +14,7 @@
 </x-modal.modal>
 @push('customscripts')
   <script>
-    validateForm("customer_role_create_form", {
+    validateBasicForm("customer_role_create_form", {
       name: {
         validators: {
           notEmpty: {

@@ -8,11 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * App\Models\Currency
  *
- * @method static \Database\Factories\CurrencyFactory factory(...$parameters)
- * @method static \Illuminate\Database\Eloquent\Builder|Currency newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Currency newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Currency query()
- * @mixin \Eloquent
  * @property int $id
  * @property string $name
  * @property string $code
@@ -24,6 +19,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $primary
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Database\Factories\CurrencyFactory factory(...$parameters)
+ * @method static \Illuminate\Database\Eloquent\Builder|Currency newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Currency newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Currency query()
  * @method static \Illuminate\Database\Eloquent\Builder|Currency whereBanknoteBuy($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Currency whereBanknoteSell($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Currency whereCode($value)
@@ -35,9 +34,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Currency wherePrimary($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Currency whereUnit($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Currency whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class Currency extends Model
 {
   use HasFactory;
+
   protected $guarded = [];
 }

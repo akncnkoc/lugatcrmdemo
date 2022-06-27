@@ -4,7 +4,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 9.13.0.
+ * Generated for Laravel 9.16.0.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -2770,6 +2770,7 @@
      *
      * @method static \Illuminate\Broadcasting\Broadcasters\Broadcaster channel(string $channel, callable|string  $callback, array $options = [])
      * @method static mixed auth(\Illuminate\Http\Request $request)
+     * @method static void resolveAuthenticatedUserUsing(Closure $callback)
      * @see \Illuminate\Contracts\Broadcasting\Factory
      */ 
         class Broadcast {
@@ -6500,6 +6501,19 @@
                         return $instance->isDirectory($directory);
         }
                     /**
+         * Determine if the given path is a directory that does not contain any other files or directories.
+         *
+         * @param string $directory
+         * @param bool $ignoreDotFiles
+         * @return bool 
+         * @static 
+         */ 
+        public static function isEmptyDirectory($directory, $ignoreDotFiles = false)
+        {
+                        /** @var \Illuminate\Filesystem\Filesystem $instance */
+                        return $instance->isEmptyDirectory($directory, $ignoreDotFiles);
+        }
+                    /**
          * Determine if the given path is readable.
          *
          * @param string $path
@@ -7239,7 +7253,7 @@
      * @method static \Illuminate\Http\Client\PendingRequest contentType(string $contentType)
      * @method static \Illuminate\Http\Client\PendingRequest dd()
      * @method static \Illuminate\Http\Client\PendingRequest dump()
-     * @method static \Illuminate\Http\Client\PendingRequest retry(int $times, int $sleep = 0, ?callable $when = null, bool $throw = true)
+     * @method static \Illuminate\Http\Client\PendingRequest retry(int $times, int $sleepMilliseconds = 0, ?callable $when = null, bool $throw = true)
      * @method static \Illuminate\Http\Client\PendingRequest sink(string|resource $to)
      * @method static \Illuminate\Http\Client\PendingRequest stub(callable $callback)
      * @method static \Illuminate\Http\Client\PendingRequest timeout(int $seconds)
@@ -7256,6 +7270,7 @@
      * @method static \Illuminate\Http\Client\PendingRequest withoutVerifying()
      * @method static \Illuminate\Http\Client\PendingRequest throw(callable $callback = null)
      * @method static \Illuminate\Http\Client\PendingRequest throwIf($condition)
+     * @method \Illuminate\Http\Client\PendingRequest throwUnless($condition)
      * @method static array pool(callable $callback)
      * @method static \Illuminate\Http\Client\Response delete(string $url, array $data = [])
      * @method static \Illuminate\Http\Client\Response get(string $url, array|string|null $query = null)
@@ -9590,6 +9605,7 @@
          *
          * @param int $status
          * @return \Illuminate\Http\RedirectResponse 
+         * @deprecated Will be removed in a future Laravel version.
          * @static 
          */ 
         public static function home($status = 302)
@@ -9642,7 +9658,7 @@
                     /**
          * Create a new redirect response to the previously intended location.
          *
-         * @param string $default
+         * @param mixed $default
          * @param int $status
          * @param array $headers
          * @param bool|null $secure
@@ -10219,6 +10235,7 @@
                     /**
          * Gets the Session.
          *
+         * @throws SessionNotFoundException When session is not set properly
          * @static 
          */ 
         public static function getSession()
@@ -16454,7 +16471,573 @@
      
 }
 
-        namespace Spatie\LaravelIgnition\Facades { 
+        namespace ArielMejiaDev\LarapexCharts\Facades { 
+            /**
+     * 
+     *
+     */ 
+        class LarapexChart {
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function pieChart()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->pieChart();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function donutChart()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->donutChart();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function radialChart()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->radialChart();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function polarAreaChart()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->polarAreaChart();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function lineChart()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->lineChart();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function areaChart()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->areaChart();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function barChart()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->barChart();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function horizontalBarChart()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->horizontalBarChart();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function heatMapChart()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->heatMapChart();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function radarChart()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->radarChart();
+        }
+                    /**
+         * 
+         *
+         * @deprecated deprecated since version 2.0
+         * @param null $type
+         * @return \ArielMejiaDev\LarapexCharts\LarapexChart 
+         * @static 
+         */ 
+        public static function setType($type = null)
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->setType($type);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setFontFamily($fontFamily)
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->setFontFamily($fontFamily);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setFontColor($fontColor)
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->setFontColor($fontColor);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setDataset($dataset)
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->setDataset($dataset);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setHeight($height)
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->setHeight($height);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setWidth($width)
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->setWidth($width);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setColors($colors)
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->setColors($colors);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setHorizontal($horizontal)
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->setHorizontal($horizontal);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setTitle($title)
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->setTitle($title);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setSubtitle($subtitle, $position = 'left')
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->setSubtitle($subtitle, $position);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setLabels($labels)
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->setLabels($labels);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setXAxis($categories)
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->setXAxis($categories);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setGrid($transparent = true, $color = '#e5e5e5', $opacity = 0.1)
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->setGrid($transparent, $color, $opacity);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setMarkers($colors = [], $width = 4, $hoverSize = 7)
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->setMarkers($colors, $width, $hoverSize);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setStroke($width, $colors = [])
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->setStroke($width, $colors);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setToolbar($show, $zoom = true)
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->setToolbar($show, $zoom);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setDataLabels($enabled = true)
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->setDataLabels($enabled);
+        }
+                    /**
+         * 
+         *
+         * @param array $array
+         * @return array|false|string 
+         * @static 
+         */ 
+        public static function transformLabels($array)
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->transformLabels($array);
+        }
+                    /**
+         * 
+         *
+         * @return mixed 
+         * @static 
+         */ 
+        public static function container()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->container();
+        }
+                    /**
+         * 
+         *
+         * @return mixed 
+         * @static 
+         */ 
+        public static function script()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->script();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function cdn()
+        {
+                        return \ArielMejiaDev\LarapexCharts\LarapexChart::cdn();
+        }
+                    /**
+         * 
+         *
+         * @return false|string 
+         * @static 
+         */ 
+        public static function id()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->id();
+        }
+                    /**
+         * 
+         *
+         * @return mixed 
+         * @static 
+         */ 
+        public static function title()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->title();
+        }
+                    /**
+         * 
+         *
+         * @return mixed 
+         * @static 
+         */ 
+        public static function subtitle()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->subtitle();
+        }
+                    /**
+         * 
+         *
+         * @return mixed 
+         * @static 
+         */ 
+        public static function subtitlePosition()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->subtitlePosition();
+        }
+                    /**
+         * 
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function type()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->type();
+        }
+                    /**
+         * 
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function fontFamily()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->fontFamily();
+        }
+                    /**
+         * 
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function foreColor()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->foreColor();
+        }
+                    /**
+         * 
+         *
+         * @return mixed 
+         * @static 
+         */ 
+        public static function labels()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->labels();
+        }
+                    /**
+         * 
+         *
+         * @return mixed 
+         * @static 
+         */ 
+        public static function dataset()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->dataset();
+        }
+                    /**
+         * 
+         *
+         * @return int 
+         * @static 
+         */ 
+        public static function height()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->height();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function width()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->width();
+        }
+                    /**
+         * 
+         *
+         * @return false|string 
+         * @static 
+         */ 
+        public static function colors()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->colors();
+        }
+                    /**
+         * 
+         *
+         * @return false|string 
+         * @static 
+         */ 
+        public static function horizontal()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->horizontal();
+        }
+                    /**
+         * 
+         *
+         * @return mixed 
+         * @static 
+         */ 
+        public static function xAxis()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->xAxis();
+        }
+                    /**
+         * 
+         *
+         * @return false|string 
+         * @static 
+         */ 
+        public static function grid()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->grid();
+        }
+                    /**
+         * 
+         *
+         * @return false|string 
+         * @static 
+         */ 
+        public static function markers()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->markers();
+        }
+                    /**
+         * 
+         *
+         * @return mixed 
+         * @static 
+         */ 
+        public static function stroke()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->stroke();
+        }
+                    /**
+         * 
+         *
+         * @return true|boolean 
+         * @static 
+         */ 
+        public static function toolbar()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->toolbar();
+        }
+                    /**
+         * 
+         *
+         * @return true|boolean 
+         * @static 
+         */ 
+        public static function zoom()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->zoom();
+        }
+                    /**
+         * 
+         *
+         * @return true|boolean 
+         * @static 
+         */ 
+        public static function dataLabels()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->dataLabels();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function toJson()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->toJson();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function toVue()
+        {
+                        /** @var \ArielMejiaDev\LarapexCharts\LarapexChart $instance */
+                        return $instance->toVue();
+        }
+         
+    }
+     
+}
+
+    namespace Spatie\LaravelIgnition\Facades { 
             /**
      * 
      *
@@ -16826,6 +17409,189 @@
         {
                         /** @var \Spatie\FlareClient\Flare $instance */
                         return $instance->group($groupName, $properties);
+        }
+         
+    }
+     
+}
+
+    namespace Yajra\DataTables\Facades { 
+            /**
+     * 
+     *
+     * @mixin \Yajra\DataTables\DataTables
+     * @see \Yajra\DataTables\DataTables
+     */ 
+        class DataTables {
+                    /**
+         * Make a DataTable instance from source.
+         * 
+         * Alias of make for backward compatibility.
+         *
+         * @param object $source
+         * @return \Yajra\DataTables\DataTableAbstract 
+         * @throws \Exception
+         * @static 
+         */ 
+        public static function of($source)
+        {
+                        return \Yajra\DataTables\DataTables::of($source);
+        }
+                    /**
+         * Make a DataTable instance from source.
+         *
+         * @param object $source
+         * @return \Yajra\DataTables\DataTableAbstract 
+         * @throws \Yajra\DataTables\Exceptions\Exception
+         * @static 
+         */ 
+        public static function make($source)
+        {
+                        return \Yajra\DataTables\DataTables::make($source);
+        }
+                    /**
+         * Get request object.
+         *
+         * @return \Yajra\DataTables\Utilities\Request 
+         * @static 
+         */ 
+        public static function getRequest()
+        {
+                        /** @var \Yajra\DataTables\DataTables $instance */
+                        return $instance->getRequest();
+        }
+                    /**
+         * Get config instance.
+         *
+         * @return \Yajra\DataTables\Utilities\Config 
+         * @static 
+         */ 
+        public static function getConfig()
+        {
+                        /** @var \Yajra\DataTables\DataTables $instance */
+                        return $instance->getConfig();
+        }
+                    /**
+         * DataTables using Query.
+         *
+         * @param \Illuminate\Contracts\Database\Query\Builder $builder
+         * @return \Yajra\DataTables\QueryDataTable 
+         * @static 
+         */ 
+        public static function query($builder)
+        {
+                        /** @var \Yajra\DataTables\DataTables $instance */
+                        return $instance->query($builder);
+        }
+                    /**
+         * DataTables using Eloquent Builder.
+         *
+         * @param \Illuminate\Contracts\Database\Eloquent\Builder $builder
+         * @return \Yajra\DataTables\EloquentDataTable 
+         * @static 
+         */ 
+        public static function eloquent($builder)
+        {
+                        /** @var \Yajra\DataTables\DataTables $instance */
+                        return $instance->eloquent($builder);
+        }
+                    /**
+         * DataTables using Collection.
+         *
+         * @param \Illuminate\Support\Collection<array-key,  array>|array  $collection
+         * @return \Yajra\DataTables\CollectionDataTable 
+         * @static 
+         */ 
+        public static function collection($collection)
+        {
+                        /** @var \Yajra\DataTables\DataTables $instance */
+                        return $instance->collection($collection);
+        }
+                    /**
+         * Get html builder instance.
+         *
+         * @return \Yajra\DataTables\Html\Builder 
+         * @throws \Yajra\DataTables\Exceptions\Exception
+         * @static 
+         */ 
+        public static function getHtmlBuilder()
+        {
+                        /** @var \Yajra\DataTables\DataTables $instance */
+                        return $instance->getHtmlBuilder();
+        }
+                    /**
+         * Register a custom macro.
+         *
+         * @param string $name
+         * @param object|callable $macro
+         * @return void 
+         * @static 
+         */ 
+        public static function macro($name, $macro)
+        {
+                        \Yajra\DataTables\DataTables::macro($name, $macro);
+        }
+                    /**
+         * Mix another object into the class.
+         *
+         * @param object $mixin
+         * @param bool $replace
+         * @return void 
+         * @throws \ReflectionException
+         * @static 
+         */ 
+        public static function mixin($mixin, $replace = true)
+        {
+                        \Yajra\DataTables\DataTables::mixin($mixin, $replace);
+        }
+                    /**
+         * Checks if macro is registered.
+         *
+         * @param string $name
+         * @return bool 
+         * @static 
+         */ 
+        public static function hasMacro($name)
+        {
+                        return \Yajra\DataTables\DataTables::hasMacro($name);
+        }
+                    /**
+         * Flush the existing macros.
+         *
+         * @return void 
+         * @static 
+         */ 
+        public static function flushMacros()
+        {
+                        \Yajra\DataTables\DataTables::flushMacros();
+        }
+         
+    }
+     
+}
+
+    namespace Laravel\Dusk { 
+            /**
+     * 
+     *
+     */ 
+        class Browser {
+                    /**
+         * Register simple macros for the Laravel Dusk.
+         * 
+         * $field - selector, or @element
+         * $value - option value, may be multiple, eg. ['foo', 'bar']
+         * $wait  - maximum count of seconds for ajax loading.
+         *
+         * @param mixed $field
+         * @param mixed $value
+         * @param mixed $wait
+         * @param mixed $suffix
+         * @static 
+         */ 
+        public static function select2($field, $value = null, $wait = 2, $suffix = ' + .select2')
+        {
+                        return \Laravel\Dusk\Browser::select2($field, $value, $wait, $suffix);
         }
          
     }
@@ -17406,7 +18172,7 @@ namespace  {
                 /**
              * Paginate the given query.
              *
-             * @param int|null $perPage
+             * @param int|null|\Closure $perPage
              * @param array $columns
              * @param string $pageName
              * @param int|null $page
@@ -18015,6 +18781,24 @@ namespace  {
             {
                                 /** @var \Illuminate\Database\Eloquent\Builder $instance */
                                 return $instance->whereHas($relation, $callback, $operator, $count);
+            }
+             
+                /**
+             * Add a relationship count / exists condition to the query with where clauses.
+             * 
+             * Also load the relationship with same condition.
+             *
+             * @param string $relation
+             * @param \Closure|null $callback
+             * @param string $operator
+             * @param int $count
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function withWhereHas($relation, $callback = null, $operator = '>=', $count = 1)
+            {
+                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
+                                return $instance->withWhereHas($relation, $callback, $operator, $count);
             }
              
                 /**
@@ -18750,13 +19534,13 @@ namespace  {
              *
              * @param array $wheres
              * @param array $bindings
-             * @return void 
+             * @return \Illuminate\Database\Query\Builder 
              * @static 
              */ 
             public static function mergeWheres($wheres, $bindings)
             {
                                 /** @var \Illuminate\Database\Query\Builder $instance */
-                                $instance->mergeWheres($wheres, $bindings);
+                                return $instance->mergeWheres($wheres, $bindings);
             }
              
                 /**
@@ -19643,8 +20427,8 @@ namespace  {
              * Add a "having" clause to the query.
              *
              * @param \Closure|string $column
-             * @param string|null $operator
-             * @param string|null $value
+             * @param string|int|float|null $operator
+             * @param string|int|float|null $value
              * @param string $boolean
              * @return \Illuminate\Database\Query\Builder 
              * @static 
@@ -19659,8 +20443,8 @@ namespace  {
              * Add an "or having" clause to the query.
              *
              * @param \Closure|string $column
-             * @param string|null $operator
-             * @param string|null $value
+             * @param string|int|float|null $operator
+             * @param string|int|float|null $value
              * @return \Illuminate\Database\Query\Builder 
              * @static 
              */ 
@@ -20621,7 +21405,9 @@ namespace  {
             class URL extends \Illuminate\Support\Facades\URL {}
             class Validator extends \Illuminate\Support\Facades\Validator {}
             class View extends \Illuminate\Support\Facades\View {}
+            class LarapexChart extends \ArielMejiaDev\LarapexCharts\Facades\LarapexChart {}
             class Flare extends \Spatie\LaravelIgnition\Facades\Flare {}
+            class DataTables extends \Yajra\DataTables\Facades\DataTables {}
      
 }
 

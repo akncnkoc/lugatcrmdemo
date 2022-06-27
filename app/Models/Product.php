@@ -2,71 +2,57 @@
 
 namespace App\Models;
 
-use App\Observers\ProductObserver;
-use Eloquent;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Carbon;
-use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * App\Models\Product
  *
  * @property int $id
  * @property string|null $uuid
- * @property string|null $name
+ * @property string $name
  * @property string|null $model_code
- * @property string|null $buying_price
- * @property int $buy_price_safe_id
- * @property string|null $sale_price
- * @property int $sale_price_safe_id
+ * @property string $buy_price
+ * @property string $sale_price
  * @property int $real_stock
  * @property int $critical_stock_alert
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property-read Collection|\Spatie\Activitylog\Models\Activity[] $activities
- * @property-read int|null $activities_count
- * @property-read \App\Models\Safe $buy_price_safe
- * @property-read Collection|\App\Models\InvoiceProduct[] $invoice_products
+ * @property int|null $buy_price_safe_id
+ * @property int|null $sale_price_safe_id
+ * @property int $product_type_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \App\Models\Safe|null $buy_price_safe
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\IncomingWaybillProduct[] $incoming_waybill_products
+ * @property-read int|null $incoming_waybill_products_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\InvoiceProduct[] $invoice_products
  * @property-read int|null $invoice_products_count
- * @property-read \App\Models\ProductType $product_type
- * @property-read \App\Models\Safe $sale_price_safe
- * @property-read Collection|\App\Models\SubProduct[] $sub_products
- * @property-read int|null $sub_products_count
- * @property-read Collection|\App\Models\ProductSupplier[] $suppliers
+ * @property-read \App\Models\ProductLog|null $productLog
+ * @property-read \App\Models\ProductType|null $product_type
+ * @property-read \App\Models\Safe|null $sale_price_safe
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProductSupplier[] $suppliers
  * @property-read int|null $suppliers_count
- * @method static Builder|Product newModelQuery()
- * @method static Builder|Product newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Product newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Product newQuery()
  * @method static \Illuminate\Database\Query\Builder|Product onlyTrashed()
- * @method static Builder|Product query()
- * @method static Builder|Product whereBuyPriceSafeId($value)
- * @method static Builder|Product whereBuyingPrice($value)
- * @method static Builder|Product whereCreatedAt($value)
- * @method static Builder|Product whereCriticalStockAlert($value)
- * @method static Builder|Product whereDeletedAt($value)
- * @method static Builder|Product whereId($value)
- * @method static Builder|Product whereModelCode($value)
- * @method static Builder|Product whereName($value)
- * @method static Builder|Product whereRealStock($value)
- * @method static Builder|Product whereSalePrice($value)
- * @method static Builder|Product whereSalePriceSafeId($value)
- * @method static Builder|Product whereUpdatedAt($value)
- * @method static Builder|Product whereUuid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereBuyPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereBuyPriceSafeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereCriticalStockAlert($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereModelCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereProductTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereRealStock($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereSalePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereSalePriceSafeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereUuid($value)
  * @method static \Illuminate\Database\Query\Builder|Product withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Product withoutTrashed()
- * @mixin Eloquent
- * @property int $product_type_id
- * @method static Builder|Product whereProductTypeId($value)
- * @property string|null $photo_path
- * @method static Builder|Product wherePhotoPath($value)
- * @property-read \App\Models\ProductLog $productLog
- * @property string $buy_price
- * @property-read Collection|\App\Models\IncomingWaybillProduct[] $incoming_waybill_products
- * @property-read int|null $incoming_waybill_products_count
- * @method static Builder|Product whereBuyPrice($value)
+ * @mixin \Eloquent
  */
 class Product extends Model
 {

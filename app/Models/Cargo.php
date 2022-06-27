@@ -9,26 +9,42 @@ use Illuminate\Database\Eloquent\Model;
  * App\Models\Cargo
  *
  * @property int $id
- * @property int $cargo_company_id
  * @property string|null $tracking_number
  * @property float $amount
- * @property int $amount_type_id
- * @property string $description
- * @property float $price
- * @property int $safe_id
- * @property int $safe_log_id
+ * @property string|null $description
+ * @property string $price
  * @property int $paided
+ * @property string|null $date_of_paid
+ * @property string|null $due_date
+ * @property string|null $future_shipping_date
  * @property int|null $invoice_id
- * @property string|null $created_at
- * @property string|null $updated_at
+ * @property int $cargo_company_id
+ * @property int $cargo_type_id
+ * @property int $safe_id
+ * @property int|null $safe_log_id
+ * @property int $amount_type_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $deleted_at
+ * @property-read \App\Models\AmountTypes|null $amount_type
+ * @property-read \App\Models\CargoCompany|null $cargo_company
+ * @property-read \App\Models\CargoType|null $cargo_type
+ * @property-read \App\Models\Invoice|null $invoice
+ * @property-read \App\Models\Safe|null $safe
+ * @property-read \App\Models\SafeLog|null $safe_log
  * @method static \Illuminate\Database\Eloquent\Builder|Cargo newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Cargo newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Cargo query()
  * @method static \Illuminate\Database\Eloquent\Builder|Cargo whereAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Cargo whereAmountTypeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Cargo whereCargoCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Cargo whereCargoTypeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Cargo whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Cargo whereDateOfPaid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Cargo whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Cargo whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Cargo whereDueDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Cargo whereFutureShippingDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Cargo whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Cargo whereInvoiceId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Cargo wherePaided($value)
@@ -38,22 +54,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Cargo whereTrackingNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Cargo whereUpdatedAt($value)
  * @mixin \Eloquent
- * @property-read \App\Models\Invoice|null $invoice
- * @property-read \App\Models\Safe $safe
- * @property-read \App\Models\SafeLog $safe_log
- * @property int $cargo_type_id
- * @property string|null $date_of_paid
- * @property string|null $due_date
- * @property-read \App\Models\CargoCompany $cargo_company
- * @property-read \App\Models\CargoType $cargo_type
- * @method static \Illuminate\Database\Eloquent\Builder|Cargo whereCargoTypeId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Cargo whereDateOfPaid($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Cargo whereDueDate($value)
- * @property-read \App\Models\AmountTypes $amount_type
- * @property string|null $future_shipping_date
- * @method static \Illuminate\Database\Eloquent\Builder|Cargo whereFutureShippingDate($value)
- * @property string|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|Cargo whereDeletedAt($value)
  */
 class Cargo extends Model
 {

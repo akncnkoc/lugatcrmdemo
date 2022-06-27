@@ -17,10 +17,10 @@ class StaffSeeder extends Seeder
      */
     public function run()
     {
-      $faker = Factory::create('tr_TR');
-      $faker->addProvider(new Commerce($faker));
-      foreach (range(1, 10) as $item) {
-        Staff::create([
+        $faker = Factory::create('tr_TR');
+        $faker->addProvider(new Commerce($faker));
+        foreach (range(1, 10) as $item) {
+            Staff::create([
           'name' => $faker->firstName,
           'surname' => $faker->lastName,
           'email' => $faker->email,
@@ -30,6 +30,6 @@ class StaffSeeder extends Seeder
           'salary_safe_id' => Safe::inRandomOrder()
             ->first()->id,
         ]);
-      }
+        }
     }
 }

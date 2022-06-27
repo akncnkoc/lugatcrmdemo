@@ -8,28 +8,28 @@
                        :asyncload="route('expense_type.select')"
                        required
                        editing
-                       parent="#edit_modal" />
+                       parent="#edit_modal"/>
         <x-form.input name="date"
                       :label="__('globals/words.date')"
                       :placeholder="__('globals/words.date')"
                       required
-                      :date="true" />
+                      :date="true"/>
       </div>
       <div class="row row-cols-2">
         <x-form.input name="price"
                       :label="__('globals/words.price')"
                       :placeholder="__('globals/words.price')"
                       money
-                      required />
+                      required/>
         <x-form.select :label="__('layout/aside/menu.safe')"
                        name="safe_id"
                        :asyncload="route('safe.select')"
                        required
                        parent="#edit_modal"
-                       editing />
+                       editing/>
       </div>
 
-      <x-form.textarea name="comment" :label="__('globals/words.comment')" />
+      <x-form.textarea name="comment" :label="__('globals/words.comment')"/>
       <x-form.button>@lang('globals/words.save')</x-form.button>
     </x-form.form>
   </x-slot>
@@ -60,7 +60,7 @@
           $(editForm).find('textarea[name="comment"]').val(data.comment);
           blockUI.release();
         },
-        error: function (){
+        error: function () {
           blockUI.release();
         }
       });
@@ -68,7 +68,7 @@
     let {
       form: editForm,
       validator: editValidator
-    } = validateForm("edit_form", {
+    } = validateBasicForm("edit_form", {
       price: {
         validators: {
           numeric: {

@@ -9,47 +9,53 @@ use DB;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Throwable;
 use Yajra\DataTables\EloquentDataTable;
 
 class ExpenseController extends Controller
 {
-  public function index(Request $request)
+  public function index()
   {
     return view('pages.expense.index');
+  }
+
+  /**
+   * @throws Throwable
+   */
+  public function store(ExpenseRequest $request)
+  {
+    try {
+      $request->merge([
+        'date'  => AppHelper::convertDate($request->get('date'), 'Y-m-d H:i:s'),
+        'price' => AppHelper::currencyToDecimal($request->get('price'))
+      ]);
+      DB::beginTransaction();
+      Expense::create($request->only(['expense_type_id', 'price', 'safe_id', 'comment', 'date']));
+      DB::commit();
+      return response()->json(true);
+    } catch (Exception $e) {
+      DB::rollBack();
+      return response()->json($e->getMessage(), 500);
+    }
   }
 
   public function get(Request $request)
   {
     try {
       return response()->json(Expense::with('expense_type', 'safe.currency')->find($request->get('id')));
-    } catch (\Exception $e) {
-      return response()->json(false, 500);
+    } catch (Exception $e) {
+      return response()->json($e->getMessage(), 500);
     }
   }
 
-  public function store(ExpenseRequest $request)
-  {
-    if ($request->ajax()) {
-      try {
-        $request->merge([
-          'date' => AppHelper::convertDate($request->get('date'), 'Y-m-d H:i:s'),
-          'price' => AppHelper::currencyToDecimal($request->get('price'))
-        ]);
-        DB::beginTransaction();
-        Expense::create($request->only(['expense_type_id', 'price', 'safe_id', 'comment', 'date']));
-        DB::commit();
-        return response()->json(true);
-      } catch (Exception $e) {
-        DB::rollBack();
-        return response()->json(false, 500);
-      }
-    }
-  }
+  /**
+   * @throws Throwable
+   */
   public function update(ExpenseRequest $request)
   {
     try {
       $request->merge([
-        'date' => AppHelper::convertDate($request->get('date'), 'Y-m-d H:i:s'),
+        'date'  => AppHelper::convertDate($request->get('date'), 'Y-m-d H:i:s'),
         'price' => AppHelper::currencyToDecimal($request->get('price'))
       ]);
       DB::beginTransaction();
@@ -62,17 +68,20 @@ class ExpenseController extends Controller
       return response()->json($e->getMessage(), 500);
     }
   }
+
   public function delete(Request $request)
   {
-    if ($request->ajax()) {
-      try {
-        Expense::where('id', $request->get('id'))->delete();
-        return response()->json(true);
-      } catch (\Exception $e) {
-        return response()->json(false, 500);
-      }
+    try {
+      Expense::where('id', $request->get('id'))->delete();
+      return response()->json(true);
+    } catch (Exception $e) {
+      return response()->json($e->getMessage(), 500);
     }
   }
+
+  /**
+   * @throws Exception
+   */
   public function table(Request $request)
   {
     $expenses = Expense::with([

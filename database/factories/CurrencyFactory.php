@@ -9,9 +9,9 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class CurrencyFactory extends Factory
 {
-  public function definition()
-  {
-    return [
+    public function definition()
+    {
+        return [
       'name' => $this->faker->name,
       'banknote_buy' => 1,
       'banknote_sell' => 1,
@@ -21,5 +21,5 @@ class CurrencyFactory extends Factory
       'primary' => false,
       'unit' => 1,
     ];
-  }
+    }
 }

@@ -10,22 +10,22 @@ use Illuminate\Database\Seeder;
 
 class ExpenseSeeder extends Seeder
 {
-  /**
-   * Run the database seeds.
-   *
-   * @return void
-   */
-  public function run()
-  {
-    $faker = Factory::create('tr_TR');
-    foreach (range(1,80) as $expense){
-      Expense::create([
-        'price' => $faker->numberBetween(200,500),
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $faker = Factory::create('tr_TR');
+        foreach (range(1, 80) as $expense) {
+            Expense::create([
+        'price' => $faker->numberBetween(200, 500),
         'safe_id' => Safe::inRandomOrder()->first()->id,
         'date' => $faker->dateTimeBetween("-1 years", "+1 years"),
         'expense_type_id' => ExpenseType::inRandomOrder()->first()->id,
         'comment' => $faker->sentence,
       ]);
+        }
     }
-  }
 }

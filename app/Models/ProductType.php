@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $initial_code
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Product[] $products
  * @property-read int|null $products_count
+ * @method static \Database\Factories\ProductTypeFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductType newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductType newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductType query()
@@ -23,8 +24,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ProductType extends Model
 {
-
   use HasFactory;
+
   public $timestamps = false;
   public $guarded = [];
 

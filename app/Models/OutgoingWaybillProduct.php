@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Observers\OutgoingWaybillProductObserver;
 use App\Observers\SubProductObserver;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -40,7 +39,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class OutgoingWaybillProduct extends Model
 {
-
   protected $guarded = [];
 
 

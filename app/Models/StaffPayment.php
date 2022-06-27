@@ -10,23 +10,27 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property string $price
+ * @property string|null $date
+ * @property string|null $description
  * @property int $safe_id
  * @property int $staff_id
  * @property int $staff_payment_type_id
  * @property int|null $safe_log_id
- * @property string $payment_date
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\StaffPaymentType $payment_type
- * @property-read \App\Models\Safe $safe
+ * @property string|null $deleted_at
+ * @property-read \App\Models\StaffPaymentType|null $payment_type
+ * @property-read \App\Models\Safe|null $safe
  * @property-read \App\Models\SafeLog|null $safe_log
- * @property-read \App\Models\Staff $staff
+ * @property-read \App\Models\Staff|null $staff
  * @method static \Illuminate\Database\Eloquent\Builder|StaffPayment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|StaffPayment newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|StaffPayment query()
  * @method static \Illuminate\Database\Eloquent\Builder|StaffPayment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StaffPayment whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StaffPayment whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StaffPayment whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StaffPayment whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StaffPayment wherePaymentDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StaffPayment wherePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StaffPayment whereSafeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StaffPayment whereSafeLogId($value)
@@ -34,16 +38,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|StaffPayment whereStaffPaymentTypeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StaffPayment whereUpdatedAt($value)
  * @mixin \Eloquent
- * @property string|null $date
- * @property string|null $description
- * @property string|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|StaffPayment whereDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StaffPayment whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StaffPayment whereDescription($value)
  */
 class StaffPayment extends Model
 {
-
   protected $guarded = [];
 
   protected static function boot()
@@ -71,5 +68,4 @@ class StaffPayment extends Model
   {
     return $this->belongsTo(SafeLog::class, 'safe_log_id');
   }
-
 }

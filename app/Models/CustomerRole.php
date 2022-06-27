@@ -2,23 +2,18 @@
 
 namespace App\Models;
 
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Carbon;
-use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * App\Models\CustomerRole
  *
  * @property int $id
- * @property string|null $name
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
- * @property-read int|null $activities_count
+ * @property string $name
+ * @property string|null $created_at
+ * @property string|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
  * @method static Builder|CustomerRole newModelQuery()
  * @method static Builder|CustomerRole newQuery()
  * @method static \Illuminate\Database\Query\Builder|CustomerRole onlyTrashed()
@@ -30,7 +25,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @method static Builder|CustomerRole whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|CustomerRole withTrashed()
  * @method static \Illuminate\Database\Query\Builder|CustomerRole withoutTrashed()
- * @mixin Eloquent
+ * @mixin \Eloquent
  */
 class CustomerRole extends Model
 {

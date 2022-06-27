@@ -51,7 +51,7 @@
     let {
       form: editForm,
       validator: editValidator
-    } = validateForm("edit_form", {
+    } = validateBasicForm("edit_form", {
       price: {
         validators: {
           numeric: {

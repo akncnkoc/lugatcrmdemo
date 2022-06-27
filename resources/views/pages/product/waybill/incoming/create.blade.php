@@ -26,7 +26,7 @@
                 <x-form.normal-select name="buy_price_safe_id" label="Kasa" required/>
                 <x-form.input name="sale_price" label="Satış Fiyatı" placeholder="Satış Fiyatı" required money/>
                 <x-form.normal-select name="sale_price_safe_id" label="Kasa" required/>
-                <a href="javascript:;" data-repeater-delete class="btn btn-light-danger">
+                <a href="javascript:" data-repeater-delete class="btn btn-light-danger">
                   <i class="la la-trash-o"></i>
                   Ürün Sil
                 </a>
@@ -154,9 +154,9 @@
     let {
       form: createForm,
       validator: createValidator
-    } = validateForm("create_form", {
+    } = validateBasicForm("create_form", {
       'supplier_id': {
-        validators:{
+        validators: {
           notEmpty: {
             message: "Tedarikçi seçilmesi zorunludur."
           }
@@ -191,24 +191,24 @@
     }, () => {
       console.log("invalidated")
     }, (form, validator) => {
-      $('#create_modal').on('change', '.money_input', function (e){
+      $('#create_modal').on('change', '.money_input', function (e) {
         let name = $(e.target).attr('name');
         validator.revalidateField(name);
       });
-      $('body').on('change', '.supplier_id_select', function (e){
+      $('body').on('change', '.supplier_id_select', function (e) {
         let name = $(e.target).attr('name');
         validator.revalidateField(name);
       });
 
-      $('body').on('change', '.buy_price_safe_id_select', function (e){
+      $('body').on('change', '.buy_price_safe_id_select', function (e) {
         let name = $(e.target).attr('name');
         validator.revalidateField(name);
       });
-      $('body').on('change', '.sale_price_safe_id_select', function (e){
+      $('body').on('change', '.sale_price_safe_id_select', function (e) {
         let name = $(e.target).attr('name');
         validator.revalidateField(name);
       })
-      $('body').on('change', '.product_id_select', function (e){
+      $('body').on('change', '.product_id_select', function (e) {
         let name = $(e.target).attr('name');
         validator.revalidateField(name);
       })

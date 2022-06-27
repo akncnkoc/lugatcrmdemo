@@ -9,12 +9,12 @@ class SafeLogObserver
 {
   public function creating(SafeLog $safeLog)
   {
-    if ($safeLog->process_type == AppHelper::INPUT || $safeLog->process_type == AppHelper::CASH_REGISTER){
+    if ($safeLog->process_type == AppHelper::INPUT || $safeLog->process_type == AppHelper::CASH_REGISTER) {
       $safeLog->safe->update([
         'total' => ($safeLog->safe->total) + $safeLog->price
       ]);
     }
-    if ($safeLog->process_type == AppHelper::OUTPUT){
+    if ($safeLog->process_type == AppHelper::OUTPUT) {
       $safeLog->safe->update([
         'total' => ($safeLog->safe->total) - $safeLog->price
       ]);
@@ -23,12 +23,12 @@ class SafeLogObserver
 
   public function deleting(SafeLog $safeLog)
   {
-    if ($safeLog->process_type == AppHelper::INPUT || $safeLog->process_type == AppHelper::CASH_REGISTER){
+    if ($safeLog->process_type == AppHelper::INPUT || $safeLog->process_type == AppHelper::CASH_REGISTER) {
       $safeLog->safe->update([
         'total' => ($safeLog->safe->total) - $safeLog->price
       ]);
     }
-    if ($safeLog->process_type == AppHelper::OUTPUT){
+    if ($safeLog->process_type == AppHelper::OUTPUT) {
       $safeLog->safe->update([
         'total' => ($safeLog->safe->total) + $safeLog->price
       ]);

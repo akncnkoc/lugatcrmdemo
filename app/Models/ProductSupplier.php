@@ -10,18 +10,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $product_id
  * @property int $supplier_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Product $product
- * @property-read \App\Models\Supplier $supplier
+ * @property-read \App\Models\Product|null $product
+ * @property-read \App\Models\Supplier|null $supplier
  * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier query()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier whereProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier whereSupplierId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSupplier whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class ProductSupplier extends Model

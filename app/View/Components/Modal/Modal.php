@@ -8,6 +8,7 @@ class Modal extends Component
 {
   public string $id;
   public string $size;
+
   public function __construct($id = "", $size = "")
   {
     $this->id = $id;

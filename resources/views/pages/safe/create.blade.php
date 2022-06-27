@@ -19,7 +19,7 @@
     let {
       form: createForm,
       validator: createValidator
-    } = validateForm("create_form", {
+    } = validateBasicForm("create_form", {
       name: {
         validators: {
           notEmpty: {
@@ -54,7 +54,7 @@
         }
       });
     }, null, (form, validator) => {
-      $(".currency_id_select").on('change', function(){
+      $(".currency_id_select").on('change', function () {
         validator.revalidateField('currency_id');
       });
     });

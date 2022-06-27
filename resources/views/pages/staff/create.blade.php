@@ -3,24 +3,26 @@
   <x-slot name="body">
     <x-form.form id="create_form">
       <div class="row row-cols-2">
-        <x-form.input name="name" label="Ad (Ünvan)" placeholder="Ad (Ünvan)" required />
-        <x-form.input name="surname" label="Soyad" placeholder="Soyad" />
+        <x-form.input name="name" label="Ad (Ünvan)" placeholder="Ad (Ünvan)" required/>
+        <x-form.input name="surname" label="Soyad" placeholder="Soyad"/>
       </div>
       <div class="row row-cols-2">
-        <x-form.input name="email" label="Email" placeholder="Email" />
-        <x-form.input name="phone" label="Telefon" placeholder="Telefon" />
+        <x-form.input name="email" label="Email" placeholder="Email"/>
+        <x-form.input name="phone" label="Telefon" placeholder="Telefon"/>
       </div>
       <div class="row row-cols-2">
-        <x-form.input name="salary" label="Maaş" placeholder="Maaş" money />
-        <x-form.select name="salary_safe_id" :asyncload="route('safe.select')" label="Maaş Kasası" placeholder="Maaş Kasası" hint="Personel'e hangi kasadan ödeme yapılacak ise onu seçin." parent="#create_modal" />
+        <x-form.input name="salary" label="Maaş" placeholder="Maaş" money/>
+        <x-form.select name="salary_safe_id" :asyncload="route('safe.select')" label="Maaş Kasası" placeholder="Maaş Kasası"
+                       hint="Personel'e hangi kasadan ödeme yapılacak ise onu seçin." parent="#create_modal"/>
       </div>
       <div class="row row-cols-2">
-        <x-form.select name="staff_role_id" label="Rol" placeholder="Rol" :asyncload="route('staff_role.select')" parent="#create_modal" required />
+        <x-form.select name="staff_role_id" label="Rol" placeholder="Rol" :asyncload="route('staff_role.select')" parent="#create_modal" required/>
         <div class="d-flex align-items-center">
-          <x-form.radio label="Cinsiyet" checked="1" name="gender" hint="Eğer personel bir firma yada tüzel kişiyşe diğeri seçin" :items="['Erkek' => 1, 'Kadın' => 2, 'Diğer' => 3]" />
+          <x-form.radio label="Cinsiyet" checked="1" name="gender" hint="Eğer personel bir firma yada tüzel kişiyşe diğeri seçin"
+                        :items="['Erkek' => 1, 'Kadın' => 2, 'Diğer' => 3]"/>
         </div>
       </div>
-      <x-form.textarea name="comment" label="Yorum" />
+      <x-form.textarea name="comment" label="Yorum"/>
       <x-form.button>Kaydet</x-form.button>
     </x-form.form>
   </x-slot>
@@ -30,7 +32,7 @@
     let {
       form: createForm,
       validator: createValidator
-    } = validateForm("create_form", {
+    } = validateBasicForm("create_form", {
       name: {
         validators: {
           notEmpty: {
@@ -55,19 +57,19 @@
         url: "{{ route('staff.store') }}",
         type: "POST",
         data: data,
-        success: function(data) {
+        success: function (data) {
           $("#create_modal").modal("hide");
           table.ajax.reload(null, false);
           toastr.success("Başarılı!");
         },
-        error: function(err) {
+        error: function (err) {
           toastr.error("Bir sorun var daha sonra tekrar deneyin!");
         }
       });
     }, () => {
       console.log("invalidated")
     }, (form, validator) => {
-      $(form).find('.staff_role_id_select').on('change', function() {
+      $(form).find('.staff_role_id_select').on('change', function () {
         validator.revalidateField('staff_role_id');
       });
     });

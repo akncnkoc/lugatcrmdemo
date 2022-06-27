@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * App\Models\Variant
@@ -15,9 +14,6 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property int|null $variant_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
- * @property-read int|null $activities_count
  * @property-read \Illuminate\Database\Eloquent\Collection|Variant[] $childrenVariants
  * @property-read int|null $children_variants_count
  * @property-read Variant|null $parent_variant
@@ -28,7 +24,6 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @method static \Illuminate\Database\Query\Builder|Variant onlyTrashed()
  * @method static Builder|Variant query()
  * @method static Builder|Variant whereCreatedAt($value)
- * @method static Builder|Variant whereDeletedAt($value)
  * @method static Builder|Variant whereId($value)
  * @method static Builder|Variant whereName($value)
  * @method static Builder|Variant whereUpdatedAt($value)

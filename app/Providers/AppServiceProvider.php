@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App;
 use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 use Session;
@@ -17,7 +18,7 @@ class AppServiceProvider extends ServiceProvider
   {
     if (Session::get("locale") !== null) {
       Carbon::setLocale(Session::get('locale'));
-      \App::setLocale(Session::get('locale'));
+      App::setLocale(Session::get('locale'));
     } else {
       Carbon::setLocale(app()->getLocale());
     }

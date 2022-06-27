@@ -24,7 +24,7 @@
               <div class="row row-cols-5 align-items-center">
                 <x-form.input name="sale_price" label="Satış Fiyatı" placeholder="Satış Fiyatı" required money/>
                 <x-form.normal-select name="sale_price_safe_id" label="Kasa" required/>
-                <a href="javascript:;" data-repeater-delete class="btn btn-light-danger">
+                <a href="javascript:" data-repeater-delete class="btn btn-light-danger">
                   <i class="la la-trash-o"></i>
                   Ürün Sil
                 </a>
@@ -140,7 +140,7 @@
     let {
       form: createForm,
       validator: createValidator
-    } = validateForm("create_form", {
+    } = validateBasicForm("create_form", {
       'customer_id': {
         validators: {
           notEmpty: {

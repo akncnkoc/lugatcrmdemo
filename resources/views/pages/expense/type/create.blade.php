@@ -3,7 +3,7 @@
   <x-slot name="body">
     <x-form.form id="expense_type_create_form">
       <div class="row row-cols-1">
-        <x-form.input name="name" :label="__('globals/words.name')" :placeholder="__('globals/words.name')" required />
+        <x-form.input name="name" :label="__('globals/words.name')" :placeholder="__('globals/words.name')" required/>
       </div>
       <x-form.button>@lang('globals/words.save')</x-form.button>
     </x-form.form>
@@ -12,7 +12,7 @@
 @push('customscripts')
 @endpush
 <script>
-  validateForm("expense_type_create_form", {
+  validateBasicForm("expense_type_create_form", {
     name: {
       validators: {
         notEmpty: {

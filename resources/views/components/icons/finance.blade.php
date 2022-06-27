@@ -1,5 +1,5 @@
 <span class="svg-icon svg-icon-3"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                        viewBox="0 0 24 24" fill="none">
+                                       viewBox="0 0 24 24" fill="none">
 <path opacity="0.3" d="M3.20001 5.91897L16.9 3.01895C17.4 2.91895 18 3.219 18.1 3.819L19.2 9.01895L3.20001 5.91897Z"
       fill="currentColor"/>
 <path opacity="0.3"

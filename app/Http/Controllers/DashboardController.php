@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App;
 use App\ApexChart\ApexChart;
 use App\AppHelper;
 use App\Models\Expense;
@@ -12,16 +13,15 @@ use App\Models\Safe;
 use App\Models\SafeLog;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-  public function index(Request $request)
+  public function index()
   {
     return view('pages.dashboard.index');
   }
 
-  public function yearlyPriceReport(Request $request)
+  public function yearlyPriceReport()
   {
     $current_year_invoice_products = InvoiceProduct::with(['safe.currency', 'invoice'])
       ->whereHas('invoice', function (Builder $builder) {
@@ -57,7 +57,7 @@ class DashboardController extends Controller
     $year_ago_invoice_products->map(function (InvoiceProduct $invoiceProduct) use (&$beforeYearTotal, $primaryCurrency) {
       $beforeYearTotal += AppHelper::convertedPrice($invoiceProduct, $primaryCurrency);
     });
-    foreach ($groupedByDate as $key => $value) {
+    foreach ($groupedByDate as $value) {
       if ($value && count($value) > 0) {
         $total = 0;
         foreach ($value as $item) {
@@ -73,6 +73,8 @@ class DashboardController extends Controller
     $chart->setType("area")
       ->setHeight(150)
       ->setToolbar()
+      ->addLocale(AppHelper::getApexChartLocaleConfiguration())
+      ->setDefaultLocale(App::getLocale())
       ->setZoom()
       ->setDataLabelsEnabled(false)
       ->setFill("solid", 0)
@@ -88,17 +90,15 @@ class DashboardController extends Controller
       ->addLabels(array_keys($groupedByDate));
 
     return response()->json([
-      'yearly_price_chart' => $chart,
-      'yearly_price_total' => $globalTotal,
+      'yearly_price_chart'          => $chart,
+      'yearly_price_total'          => $globalTotal,
       'yearly_price_exchange_ratio' => $beforeYearTotalPercentage
     ]);
   }
 
   public function yearlyExpenseReport()
   {
-    $current_year_expenses = Expense::with(['safe.currency', 'expense_type'])
-      ->whereBetween('date', AppHelper::searchedDates('year'))
-      ->get();
+    $current_year_expenses = Expense::with(['safe.currency', 'expense_type'])->whereBetween('date', AppHelper::searchedDates('year'))->get();
 
     $labels = AppHelper::getAllMonths();
     $totaled_prices = [];
@@ -109,7 +109,7 @@ class DashboardController extends Controller
         $totaled_prices[$month][$expense_type->name . " " . $primaryCurrency->code] = 0;
       }
     }
-    $current_year_expenses->map(function (Expense $expense) use (&$totaled_prices, $primaryCurrency) {
+    $current_year_expenses->each(function (Expense $expense) use (&$totaled_prices, $primaryCurrency) {
       $month = Carbon::parse($expense->date)->monthName;
       $totaled_prices[$month][$expense->expense_type->name . " " . $primaryCurrency->code] += AppHelper::convertedPrice($expense, $primaryCurrency);
     });
@@ -132,14 +132,13 @@ class DashboardController extends Controller
     foreach ($labels as $month) {
       foreach (Safe::all() as $safe) {
         $totaled_prices[$month]["month"] = $month;
-        $totaled_prices[$month][$safe->name . " (" . $safe->currency->code . ")"] = 0;
+        $totaled_prices[$month][sprintf("%s (%s)", $safe->name, $safe->currency->code)] = 0;
       }
     }
     $current_year_safes->map(function (SafeLog $safeLog) use (&$totaled_prices, $primaryCurrency) {
       $month = Carbon::parse($safeLog->date)->monthName;
       $totaled_prices[$month][$safeLog->safe->name . " (" . $safeLog->safe->currency->code . ")"] +=
-        AppHelper::convertedPrice
-        ($safeLog, $primaryCurrency);
+        AppHelper::convertedPrice($safeLog, $primaryCurrency);
     });
     return response()->json(array_values($totaled_prices));
   }
@@ -163,7 +162,7 @@ class DashboardController extends Controller
     $counts = [];
     $query->sortDesc()
       ->take(5)
-      ->map(function ($row, $key) use (&$counts) {
+      ->map(function ($row) use (&$counts) {
         $counts[] = count($row);
       });
 
@@ -171,6 +170,8 @@ class DashboardController extends Controller
       $chart = new ApexChart("yearlyProductReport");
       $chart
         ->setChart("donut", 150)
+        ->addLocale(AppHelper::getApexChartLocaleConfiguration())
+        ->setDefaultLocale(App::getLocale())
         ->setToolbar()
         ->setZoom()
         ->setDataLabelsEnabled(false)
@@ -185,5 +186,4 @@ class DashboardController extends Controller
       return response()->json(['status' => 'warning', 'message' => 'notfound']);
     }
   }
-
 }

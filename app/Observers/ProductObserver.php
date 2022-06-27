@@ -7,14 +7,13 @@ use App\Models\SubProduct;
 
 class ProductObserver
 {
-
   public function deleting(Product $product)
   {
     $product->load('sub_products');
-    $product->sub_products->each->map(function (SubProduct $subProduct){
+    $product->sub_products->each->map(function (SubProduct $subProduct) {
       if (!$subProduct->rebate && !$subProduct->sold) {
         $subProduct->delete();
-      }else{
+      } else {
         $subProduct->update(['rebate' => true]);
       }
     });

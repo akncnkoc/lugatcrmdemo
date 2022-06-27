@@ -3,15 +3,15 @@
   <x-slot name="body">
     <x-form.form id="edit_form">
       <div class="row row-cols-2">
-        <x-form.input name="price" label="Fiyat" placeholder="Fiyat" money required />
-        <x-form.select label="Kasa" name="safe_id" :asyncload="route('safe.select')" required parent="#edit_moda" editing />
+        <x-form.input name="price" label="Fiyat" placeholder="Fiyat" money required/>
+        <x-form.select label="Kasa" name="safe_id" :asyncload="route('safe.select')" required parent="#edit_moda" editing/>
       </div>
       <div class="row row-cols-2 align-items-center">
-        <x-form.input name="date" label="Tarih" placeholder="Tarih" required date />
-        <x-form.checkbox name="payable" label="Ödeme Tamamlandı mı?" hint="Ödeme sadece bu seçenek açık ise kasadan düşme işlemi olacaktır."  />
+        <x-form.input name="date" label="Tarih" placeholder="Tarih" required date/>
+        <x-form.checkbox name="payable" label="Ödeme Tamamlandı mı?" hint="Ödeme sadece bu seçenek açık ise kasadan düşme işlemi olacaktır."/>
       </div>
       <div class="row row-cols-1">
-        <x-form.textarea name="description" label="Açıklama" />
+        <x-form.textarea name="description" label="Açıklama"/>
         <x-form.button>Kaydet</x-form.button>
       </div>
     </x-form.form>
@@ -42,7 +42,7 @@
           $(editForm).find('textarea[name="description"]').val(data.description);
           blockUI.release();
         },
-        error: function(){
+        error: function () {
           blockUI.release();
         }
       });
@@ -50,7 +50,7 @@
     let {
       form: editForm,
       validator: editValidator
-    } = validateForm("edit_form", {
+    } = validateBasicForm("edit_form", {
       price: {
         validators: {
           numeric: {

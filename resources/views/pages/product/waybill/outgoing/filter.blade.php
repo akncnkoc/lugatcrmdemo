@@ -23,22 +23,24 @@
     </div>
     <div class="fs-3 mb-4">Ürün Sayısı</div>
     <div class="row row-cols-2">
-      <x-form.input name="filter_min_product" label="Min. Ürün Sayısı" placeholder="Min. Ürün Sayısı" value="1" />
-      <x-form.input name="filter_max_product" label="Maks. Ürün Sayısı" placeholder="Maks. Ürün Sayısı" />
+      <x-form.input name="filter_min_product" label="Min. Ürün Sayısı" placeholder="Min. Ürün Sayısı" value="1"/>
+      <x-form.input name="filter_max_product" label="Maks. Ürün Sayısı" placeholder="Maks. Ürün Sayısı"/>
     </div>
     <div class="fs-3 mb-4">Çıkış Tarihi</div>
     <div class="row row-cols-2">
-      <x-form.input name="filter_min_date" label="Min. Tarih" placeholder="Min. Tarih" date />
-      <x-form.input name="filter_max_date" label="Maks. Tarih" placeholder="Maks. Tarih" date />
+      <x-form.input name="filter_min_date" label="Min. Tarih" placeholder="Min. Tarih" date/>
+      <x-form.input name="filter_max_date" label="Maks. Tarih" placeholder="Maks. Tarih" date/>
     </div>
     <div class="d-flex justify-content-end">
-      <button class="btn btn-bg-light btn-icon-info btn-text-info" data-bs-custom-class="tooltip-dark" type="button" data-bs-placement="top" data-bs-toggle="tooltip" title="Filtreyi temizle"
-        data-filter-clear-button>
+      <button class="btn btn-bg-light btn-icon-info btn-text-info" data-bs-custom-class="tooltip-dark" type="button" data-bs-placement="top" data-bs-toggle="tooltip"
+              title="Filtreyi temizle"
+              data-filter-clear-button>
         <i class="la la-trash-o fs-3"></i>
         Temizle
       </button>
-      <button class="btn btn-info ms-4" data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip" title="Filtrele" type="submit" data-kt-menu-dismiss="true"
-        data-filter-button>
+      <button class="btn btn-info ms-4" data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip" title="Filtrele" type="submit"
+              data-kt-menu-dismiss="true"
+              data-filter-button>
         <i class="las la-filter fs-3"></i>
         Filtrele
       </button>
@@ -47,7 +49,7 @@
 </x-form.form>
 @push('customscripts')
   <script type="text/javascript">
-    $("#filter_form").submit(function(e) {
+    $("#filter_form").submit(function (e) {
       event.preventDefault();
     });
     let min_product = $('input[name="filter_min_product"]'),
@@ -55,7 +57,7 @@
       min_date = $('input[name="filter_min_date"]'),
       max_date = $('input[name="filter_max_date"]'),
       filter_customers = $(".filter_customers_select");
-    $("[data-filter-clear-button]").click(function() {
+    $("[data-filter-clear-button]").click(function () {
       min_product.val("");
       max_product.val("");
       min_date.val("");
@@ -63,7 +65,7 @@
       filter_customers.val(null).trigger('change');
       initOutgoingWaybillTable({});
     });
-    $("button[data-filter-button]").click(function(e) {
+    $("button[data-filter-button]").click(function (e) {
       e.preventDefault();
       let min_product_val = min_product.val(),
         max_product_val = max_product.val(),
@@ -78,7 +80,7 @@
         customers: customers_val
       });
     });
-    $("[data-export-excel]").click(function() {
+    $("[data-export-excel]").click(function () {
       console.log("çıkar")
     });
   </script>

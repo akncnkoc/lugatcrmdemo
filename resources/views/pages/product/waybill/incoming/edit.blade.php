@@ -3,7 +3,7 @@
   <x-slot name="body">
     <div class="edit_template" style="display: none">
       <div class="row row-cols-1">
-        <input type="hidden" name="product_code" />
+        <input type="hidden" name="product_code"/>
         <div style="width: 30%">
           <div class="row">
             <div class="col-md-12">
@@ -152,7 +152,7 @@
     var {
       form: editForm,
       validator: editValidator
-    } = validateForm("edit_form", {
+    } = validateBasicForm("edit_form", {
       'supplier_id': {
         validators: {
           notEmpty: {
@@ -261,8 +261,8 @@
               $(clone).find('input[name="product_code"]').attr('name', 'waybill_product_edit[' + (index + 1) + '][product_code]').val(item.product_code);
 
               let product_label_text = "";
-              if(item.rebate)  product_label_text = "Ürün iade edilmiş";
-              else if(item.sold)  product_label_text = "Ürün satılmış";
+              if (item.rebate) product_label_text = "Ürün iade edilmiş";
+              else if (item.sold) product_label_text = "Ürün satılmış";
               else product_label_text = "Ürün hazır"
               $(clone)
                 .find('select[name="product_id"]')

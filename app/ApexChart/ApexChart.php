@@ -2,6 +2,8 @@
 
 namespace App\ApexChart;
 
+use Illuminate\Support\Facades\App;
+
 class ApexChart
 {
   use ApexChartChartValues;
@@ -46,7 +48,7 @@ class ApexChart
   }
 
 
-  public function setDataLabelsEnabled(bool $enabled = false): static
+  public function setDataLabelsEnabled(bool $enabled = true): static
   {
     $this->dataLabels['enabled'] = $enabled;
     return $this;
@@ -150,6 +152,13 @@ class ApexChart
     return $this;
   }
 
+  public function addLocale(
+    array $options
+  ){
+    $this->chart['locales'][] = ['name' => App::getLocale(), 'options' => $options];
+    return $this;
+  }
+
   public function setGrid(
     int  $strokeDashArray,
     int  $paddingTop,
@@ -198,20 +207,20 @@ class ApexChart
   public function toJson()
   {
     $options = [
-      'series' => $this->series,
-      'chart' => $this->chart,
-      'legend' => $this->legend,
+      'series'     => $this->series,
+      'chart'      => $this->chart,
+      'legend'     => $this->legend,
       'dataLabels' => $this->dataLabels,
-      'fill' => $this->fill,
-      'stroke' => $this->stroke,
-      'xaxis' => $this->xaxis,
-      'yaxis' => $this->yaxis,
-      'states' => $this->states,
-      'tooltip' => $this->tooltip,
-      'colors' => $this->colors,
-      'grid' => $this->grid,
-      'markers' => $this->markers,
-      'labels' => $this->labels
+      'fill'       => $this->fill,
+      'stroke'     => $this->stroke,
+      'xaxis'      => $this->xaxis,
+      'yaxis'      => $this->yaxis,
+      'states'     => $this->states,
+      'tooltip'    => $this->tooltip,
+      'colors'     => $this->colors,
+      'grid'       => $this->grid,
+      'markers'    => $this->markers,
+      'labels'     => $this->labels
     ];
 
     return json_encode($options);

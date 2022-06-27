@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 
 class ProductReportController extends Controller
 {
-  public function index(Request $request, $product_id)
+  public function index( $product_id)
   {
     $product = Product::where('id', $product_id)->firstOr(fn() => redirect()->route('product.index')->send());
     return view('pages.product.report.index', compact('product'));
@@ -56,7 +56,7 @@ class ProductReportController extends Controller
     $year_ago_invoice_products->map(function (InvoiceProduct $invoiceProduct) use (&$beforeYearTotal, $primaryCurrency) {
       $beforeYearTotal += AppHelper::convertedPrice($invoiceProduct, $primaryCurrency);
     });
-    foreach ($groupedByDate as $key => $value) {
+    foreach ($groupedByDate as $value) {
       if ($value && count($value) > 0) {
         $total = 0;
         foreach ($value as $item) {
@@ -70,8 +70,8 @@ class ProductReportController extends Controller
     $beforeYearTotalPercentage = sprintf("%1.2f", (($globalTotal - $beforeYearTotal) / $globalTotal));
     $chart = new ApexChart("yearlyPriceReport");
     $chart->setChart("area", 150)
-      ->setLegendShown(false)
-      ->setDataLabelsEnabled(false)
+      ->setLegendShown()
+      ->setDataLabelsEnabled()
       ->setFill("solid", 0)
       ->setStroke("smooth", true, 2, ["#3F4254"])
       ->setXAxis(false, false, false, "front", "#3F4254", 1, 3, true, 0, "12px")
@@ -85,8 +85,8 @@ class ProductReportController extends Controller
       ->addLabels(array_keys($groupedByDate));
 
     return response()->json([
-      'yearly_price_chart' => $chart,
-      'yearly_price_total' => $globalTotal,
+      'yearly_price_chart'          => $chart,
+      'yearly_price_total'          => $globalTotal,
       'yearly_price_exchange_ratio' => $beforeYearTotalPercentage
     ]);
   }
@@ -125,7 +125,7 @@ class ProductReportController extends Controller
     }, []);
     $global_total = $current_year_invoice_products->count();
     $year_ago_total = $year_ago_invoice_products->count();
-    foreach ($grouped_by_date as $key => $value) {
+    foreach ($grouped_by_date as $value) {
       if ($value && count($value) > 0) {
         $totaled_sale[] = count($value);
       }
@@ -135,8 +135,8 @@ class ProductReportController extends Controller
 
     $chart = new ApexChart("yearlySaleReport");
     $chart->setChart("area", 150)
-      ->setLegendShown(false)
-      ->setDataLabelsEnabled(false)
+      ->setLegendShown()
+      ->setDataLabelsEnabled()
       ->setFill("solid", 0)
       ->setStroke("smooth", true, 2, ["#3F4254"])
       ->setXAxis(false, false, false, "front", "#3F4254", 1, 3, true, 0, "12px")
@@ -149,8 +149,8 @@ class ProductReportController extends Controller
       ->addSeries('Toplam Adet ', $totaled_sale)
       ->addLabels(array_keys($grouped_by_date));
     return response()->json([
-      'yearly_sale_chart' => $chart,
-      'yearly_sale_total' => $global_total,
+      'yearly_sale_chart'          => $chart,
+      'yearly_sale_total'          => $global_total,
       'yearly_sale_exchange_ratio' => $year_ago_product_count_percantage
     ]);
   }

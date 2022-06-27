@@ -3,8 +3,8 @@
   <x-slot name="body">
     <x-form.form id="product_type_edit_form">
       <div class="row row-cols-1">
-        <x-form.input name="name" label="Ad (Ünvan)" placeholder="Ad (Ünvan)" required />
-        <x-form.input name="initial_code" label="Başlangıç Kodu" placeholder="Başlangıç Kodu" required />
+        <x-form.input name="name" label="Ad (Ünvan)" placeholder="Ad (Ünvan)" required/>
+        <x-form.input name="initial_code" label="Başlangıç Kodu" placeholder="Başlangıç Kodu" required/>
       </div>
       <x-form.button>Kaydet</x-form.button>
     </x-form.form>
@@ -14,7 +14,7 @@
   <script>
     var id;
     var blockUI = new KTBlockUI(document.querySelector("#product_type_edit_modal_target"));
-    $("#product_type_edit_modal").on('shown.bs.modal', function(e) {
+    $("#product_type_edit_modal").on('shown.bs.modal', function (e) {
       id = $(e.target).data('editId');
       $.ajax({
         url: "{{ route('product_type.get') }}",
@@ -25,7 +25,7 @@
         beforeSend: () => {
           blockUI.block();
         },
-        success: function(data) {
+        success: function (data) {
           $(productTypeEditForm).find('input[name="name"]').val(data.name);
           $(productTypeEditForm).find('input[name="initial_code"]').val(data.initial_code);
           blockUI.release();
@@ -35,7 +35,7 @@
     });
     let {
       form: productTypeEditForm
-    } = validateForm("product_type_edit_form", {
+    } = validateBasicForm("product_type_edit_form", {
       name: {
         validators: {
           notEmpty: {
@@ -64,12 +64,12 @@
         url: "{{ route('product_type.update') }}",
         type: "POST",
         data: data,
-        success: function(data) {
+        success: function (data) {
           $("#product_type_edit_modal").modal("hide");
           initproductTypeData();
           toastr.success("Başarılı!");
         },
-        error: function(err) {
+        error: function (err) {
           toastr.error("Bir sorun var daha sonra tekrar deneyin!");
         }
       });

@@ -18,7 +18,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class AmountTypes extends Model
 {
-
   public $timestamps = false;
   protected $guarded = [];
 }

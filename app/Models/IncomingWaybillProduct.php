@@ -49,7 +49,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class IncomingWaybillProduct extends Model
 {
-
   protected $guarded = [];
 
   protected static function boot()

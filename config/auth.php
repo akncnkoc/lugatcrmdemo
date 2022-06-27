@@ -1,26 +1,27 @@
 <?php
+
 return [
-  'defaults' => [
-    'guard' => 'web',
+  'defaults'         => [
+    'guard'     => 'web',
     'passwords' => 'users',
   ],
-  'guards' => [
+  'guards'           => [
     'web' => [
-      'driver' => 'session',
+      'driver'   => 'session',
       'provider' => 'users',
     ],
   ],
-  'providers' => [
+  'providers'        => [
     'users' => [
       'driver' => 'eloquent',
-      'model' => App\Models\User::class,
+      'model'  => App\Models\User::class,
     ],
   ],
-  'passwords' => [
+  'passwords'        => [
     'users' => [
       'provider' => 'users',
-      'table' => 'password_resets',
-      'expire' => 60,
+      'table'    => 'password_resets',
+      'expire'   => 60,
       'throttle' => 60,
     ],
   ],

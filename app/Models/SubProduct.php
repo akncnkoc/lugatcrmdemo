@@ -9,28 +9,27 @@ use Illuminate\Database\Eloquent\Model;
  * App\Models\SubProduct
  *
  * @property int $id
- * @property int $product_id
- * @property int $bulk_waybill_id
  * @property string $product_code
  * @property string $buy_price
- * @property int $buy_price_safe_id
  * @property string $sale_price
- * @property int $sale_price_safe_id
  * @property int $rebate
  * @property string|null $rebate_date
  * @property string|null $rebate_note
  * @property int $sold
  * @property string|null $date_of_sale
+ * @property int $product_id
+ * @property int $waybill_id
+ * @property int $buy_price_safe_id
+ * @property int $sale_price_safe_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\BulkWaybill $bulk_waybill
- * @property-read \App\Models\Safe $buy_price_safe
- * @property-read \App\Models\Product $product
- * @property-read \App\Models\Safe $sale_price_safe
+ * @property-read \App\Models\Safe|null $buy_price_safe
+ * @property-read \App\Models\Product|null $product
+ * @property-read \App\Models\Safe|null $sale_price_safe
+ * @property-read \App\Models\Waybill|null $waybill
  * @method static \Illuminate\Database\Eloquent\Builder|SubProduct newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SubProduct newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SubProduct query()
- * @method static \Illuminate\Database\Eloquent\Builder|SubProduct whereBulkWaybillId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SubProduct whereBuyPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SubProduct whereBuyPriceSafeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SubProduct whereCreatedAt($value)
@@ -45,14 +44,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|SubProduct whereSalePriceSafeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SubProduct whereSold($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SubProduct whereUpdatedAt($value)
- * @mixin \Eloquent
- * @property int $waybill_id
- * @property-read \App\Models\Waybill|null $waybill
  * @method static \Illuminate\Database\Eloquent\Builder|SubProduct whereWaybillId($value)
+ * @mixin \Eloquent
  */
 class SubProduct extends Model
 {
-
   protected $guarded = [];
 
 

@@ -7,14 +7,14 @@ use Illuminate\Database\Seeder;
 
 class CashRegisterSeeder extends Seeder
 {
-  /**
-   * Run the database seeds.
-   *
-   * @return void
-   */
-  public function run()
-  {
-    $cashRegisters = [
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $cashRegisters = [
       [
         'name' => 'Nakit',
         'percentage' => 0
@@ -24,8 +24,8 @@ class CashRegisterSeeder extends Seeder
         'percentage' => 2.5
       ],
     ];
-    foreach ($cashRegisters as $cashRegister) {
-      CashRegister::create($cashRegister);
+        foreach ($cashRegisters as $cashRegister) {
+            CashRegister::create($cashRegister);
+        }
     }
-  }
 }

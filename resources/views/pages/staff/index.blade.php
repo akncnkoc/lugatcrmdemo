@@ -3,7 +3,8 @@
   Personeller
 @endsection
 @section('toolbar')
-  <a class="btn btn-bg-light btn-icon-info btn-text-info" data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip" title="Yeni Personel Ekle" data-create-button>
+  <a class="btn btn-bg-light btn-icon-info btn-text-info" data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip" title="Yeni Personel Ekle"
+     data-create-button>
     <i class="las la-edit fs-3"></i>
     Ekle
   </a>
@@ -26,7 +27,7 @@
         <x-table.thead>
           <th class="w-10px pe-2">
             <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
-              <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#table .form-check-input" value="1" />
+              <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#table .form-check-input" value="1"/>
             </div>
           </th>
           <th>No</th>
@@ -48,11 +49,11 @@
 @push('customscripts')
   <script type="text/javascript">
     var table = initStaffTable();
-    $(document).on('click', '[data-create-button]', function(event) {
+    $(document).on('click', '[data-create-button]', function (event) {
       event.preventDefault();
       $("#create_modal").modal("show");
     });
-    $(document).on('click', '[data-edit-button]', function(event) {
+    $(document).on('click', '[data-edit-button]', function (event) {
       event.preventDefault();
       $("#edit_modal").data("editId", $(this).data('editButton')).modal("show");
     });
@@ -71,16 +72,16 @@
         ajax: {
           url: '{{ route('staff.table') }}',
           type: 'POST',
-          data: function(d) {
+          data: function (d) {
             for (const [key, value] of Object.entries(data)) {
               d[key] = value;
             }
           }
         },
         columns: [{
-            data: 'DT_RowIndex',
-            name: "id"
-          },
+          data: 'DT_RowIndex',
+          name: "id"
+        },
           {
             data: "id",
             name: "id"
@@ -88,7 +89,7 @@
           {
             data: "name",
             name: "name",
-            render: function(data, type, row) {
+            render: function (data, type, row) {
               let fullname = "";
               fullname += row.name ?? "";
               fullname += " ";
@@ -107,8 +108,8 @@
           {
             name: "salary",
             data: "salary",
-            render: function(data, type, row) {
-              if(!row.salary_safe || parseInt(row.salary_safe) <= 0) return "Maaş bilgisi bulunamadı.";
+            render: function (data, type, row) {
+              if (!row.salary_safe || parseInt(row.salary_safe) <= 0) return "Maaş bilgisi bulunamadı.";
               let salary_safe = row.salary_safe.name;
               return row.salary + " " + salary_safe;
             }
@@ -122,21 +123,21 @@
           }
         ],
         columnDefs: [{
-            targets: 0,
-            orderable: false,
-            render: function(data) {
-              return `
+          targets: 0,
+          orderable: false,
+          render: function (data) {
+            return `
               <div class="form-check form-check-sm form-check-custom form-check-solid">
                   <input class="form-check-input" type="checkbox" value="${data}" />
               </div>`;
-            }
-          },
+          }
+        },
           {
             targets: -1,
             data: null,
             orderable: false,
             className: 'text-center',
-            render: function(data, type, row) {
+            render: function (data, type, row) {
               return `
               <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" data-edit-button="${row.id}" data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip" title="Düzenle">
                 @include('components.icons.edit')
@@ -158,7 +159,7 @@
       let handleDeleteRows = () => {
         const deleteButtons = document.querySelectorAll('[data-delete-button]');
         deleteButtons.forEach(d => {
-          d.addEventListener('click', function(e) {
+          d.addEventListener('click', function (e) {
             e.preventDefault();
             const parent = e.target.closest('tr');
             const staff_name = parent.querySelectorAll('td')[2].innerText;
@@ -174,7 +175,7 @@
                 confirmButton: "btn fw-bold btn-danger",
                 cancelButton: "btn fw-bold btn-active-light-primary"
               }
-            }).then(function(result) {
+            }).then(function (result) {
               if (result.value) {
                 $.ajax({
                   url: "{{ route('staff.delete') }}",
@@ -182,7 +183,7 @@
                   data: {
                     id: id
                   },
-                  beforeSend: function() {
+                  beforeSend: function () {
                     Swal.fire({
                       text: staff_name + " adlı personel siliniyor...",
                       icon: "info",
@@ -190,7 +191,7 @@
                       showConfirmButton: false,
                     })
                   },
-                  success: function(data) {
+                  success: function (data) {
                     Swal.close();
                     Swal.fire({
                       text: "Personel silindi",
@@ -203,7 +204,7 @@
                     })
                     table.ajax.reload();
                   },
-                  error: function(err) {
+                  error: function (err) {
                     Swal.close();
                     Swal.fire({
                       text: "Personel silinemedi tekrar deneyin!",

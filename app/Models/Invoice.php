@@ -3,15 +3,8 @@
 namespace App\Models;
 
 use App\Observers\InvoiceObserver;
-use Eloquent;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Carbon;
-use Spatie\Activitylog\Traits\LogsActivity;
-
 
 /**
  * App\Models\Invoice
@@ -20,39 +13,37 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property string|null $description
  * @property int|null $customer_id
  * @property string|null $invoice_date
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property-read Collection|\Spatie\Activitylog\Models\Activity[] $activities
- * @property-read int|null $activities_count
+ * @property string|null $invoice_contract_number
+ * @property int $has_cargo
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \App\Models\Cargo|null $cargo
  * @property-read \App\Models\Customer|null $customer
- * @property-read Collection|\App\Models\InvoiceExpense[] $invoice_expenses
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\InvoiceExpense[] $invoice_expenses
  * @property-read int|null $invoice_expenses_count
- * @property-read Collection|\App\Models\InvoiceProduct[] $invoice_products
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\InvoiceProduct[] $invoice_products
  * @property-read int|null $invoice_products_count
- * @property-read Collection|\App\Models\InvoiceStaffPayment[] $invoice_staff_payments
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\InvoiceStaffPayment[] $invoice_staff_payments
  * @property-read int|null $invoice_staff_payments_count
- * @property-read Collection|\App\Models\InvoiceStaff[] $invoice_staffs
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\InvoiceStaff[] $invoice_staffs
  * @property-read int|null $invoice_staffs_count
- * @method static Builder|Invoice newModelQuery()
- * @method static Builder|Invoice newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Invoice newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Invoice newQuery()
  * @method static \Illuminate\Database\Query\Builder|Invoice onlyTrashed()
- * @method static Builder|Invoice query()
- * @method static Builder|Invoice whereCreatedAt($value)
- * @method static Builder|Invoice whereCustomerId($value)
- * @method static Builder|Invoice whereDeletedAt($value)
- * @method static Builder|Invoice whereDescription($value)
- * @method static Builder|Invoice whereId($value)
- * @method static Builder|Invoice whereInvoiceDate($value)
- * @method static Builder|Invoice whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Invoice query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereCustomerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereHasCargo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereInvoiceContractNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereInvoiceDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|Invoice withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Invoice withoutTrashed()
- * @mixin Eloquent
- * @property string $invoice_contract_number
- * @method static Builder|Invoice whereInvoiceContractNumber($value)
- * @property-read \App\Models\Cargo $cargo
- * @property int $has_cargo
- * @method static Builder|Invoice whereHasCargo($value)
+ * @mixin \Eloquent
  */
 class Invoice extends Model
 {

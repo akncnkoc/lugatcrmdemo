@@ -15,6 +15,7 @@ class SupplierRegularPaymentRequest extends FormRequest
   public function rules()
   {
     return [
+      'id'                               => 'sometimes|exists:supplier_regular_payments,id',
       'name'                             => 'required|string|max:50',
       'regular_payment_period.*.safe_id' => 'exists:safes,id',
       'regular_payment_period.*.price'   => [new PriceGreaterThenOne()],

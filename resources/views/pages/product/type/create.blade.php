@@ -3,8 +3,8 @@
   <x-slot name="body">
     <x-form.form id="product_type_create_form">
       <div class="row row-cols-1">
-        <x-form.input name="name" label="Ad" placeholder="Ad" required />
-        <x-form.input name="initial_code" label="Başlangıç Kodu" placeholder="Başlangıç Kodu" required />
+        <x-form.input name="name" label="Ad" placeholder="Ad" required/>
+        <x-form.input name="initial_code" label="Başlangıç Kodu" placeholder="Başlangıç Kodu" required/>
       </div>
       <x-form.button>Kaydet</x-form.button>
     </x-form.form>
@@ -12,7 +12,7 @@
 </x-modal.modal>
 @push('customscripts')
   <script>
-    validateForm("product_type_create_form", {
+    validateBasicForm("product_type_create_form", {
       name: {
         validators: {
           notEmpty: {
@@ -37,12 +37,12 @@
         url: "{{ route('product_type.store') }}",
         type: "POST",
         data: data,
-        success: function(data) {
+        success: function (data) {
           $("#product_type_create_modal").modal("hide");
           initproductTypeData();
           toastr.success("Başarılı!");
         },
-        error: function(err) {
+        error: function (err) {
           toastr.error("Bir sorun var daha sonra tekrar deneyin!");
         }
       });

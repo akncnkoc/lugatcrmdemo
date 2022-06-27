@@ -5,14 +5,16 @@ namespace App\Http\Controllers;
 use App\AppHelper;
 use App\Http\Requests\SafeRequest;
 use App\Models\Safe;
+use DB;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Throwable;
 use Yajra\DataTables\EloquentDataTable;
 
 class SafeController extends Controller
 {
-
-  public function index(Request $request)
+  public function index()
   {
     return view('pages.safe.index');
   }
@@ -22,60 +24,70 @@ class SafeController extends Controller
     return AppHelper::_select2($request, Safe::class);
   }
 
-  public function get(Request $request)
-  {
-    if ($request->ajax()) {
-      try {
-        return response()->json(Safe::with('currency')->find($request->get('id')));
-      } catch (\Exception $e) {
-        return response()->json(false, 500);
-      }
-    }
-  }
-
+  /**
+   * @throws Throwable
+   */
   public function store(SafeRequest $request)
   {
     try {
-      \DB::beginTransaction();
+      DB::beginTransaction();
       $request->merge(['total' => !empty($request->get('total')) ? AppHelper::currencyToDecimal($request->get('total')) : 0]);
-      $safe = Safe::create($request->only(['name', 'total', 'currency_id']));
+      Safe::create($request->only(['name', 'total', 'currency_id']));
 
-      \DB::commit();
+      DB::commit();
       return response()->json(true);
-    } catch (\Exception $e) {
-      \DB::rollBack();
+    } catch (Exception $e) {
+      DB::rollBack();
       return response()->json($e->getMessage(), 500);
     }
   }
 
+  public function get(Request $request)
+  {
+    try {
+      return response()->json(Safe::with('currency')->find($request->get('id')));
+    } catch (Exception $e) {
+      return response()->json($e->getMessage(), 500);
+    }
+  }
+
+  /**
+   * @throws Throwable
+   */
   public function update(Request $request)
   {
     try {
-      \DB::beginTransaction();
+      DB::beginTransaction();
       $safe = Safe::where('id', $request->get('id'))->firstOrFail();
       $safe->update($request->only(['name']));
-      \DB::commit();
+      DB::commit();
       return response()->json(true);
-    } catch (\Exception $e) {
-      \DB::rollBack();
-      return response()->json(false, 500);
+    } catch (Exception $e) {
+      DB::rollBack();
+      return response()->json($e->getMessage(), 500);
     }
   }
 
+  /**
+   * @throws Throwable
+   */
   public function delete(Request $request)
   {
     try {
-      \DB::beginTransaction();
+      DB::beginTransaction();
       $safe = Safe::where('id', $request->get('id'))->firstOrFail();
       $safe->delete();
-      \DB::commit();
+      DB::commit();
       return response()->json(true);
-    } catch (\Exception $e) {
-      \DB::rollBack();
-      return response()->json(false, 500);
+    } catch (Exception $e) {
+      DB::rollBack();
+      return response()->json($e->getMessage(), 500);
     }
   }
 
+  /**
+   * @throws Exception
+   */
   public function table(Request $request)
   {
     $safes = Safe::with([

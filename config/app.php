@@ -3,26 +3,26 @@
 use Illuminate\Support\Facades\Facade;
 
 return [
-  'name' => env('APP_NAME', 'Lugat CRM'),
-  'env' => env('APP_ENV', 'production'),
-  'debug' => (bool)env('APP_DEBUG', false),
-  'url' => env('APP_URL', 'http://localhost'),
-  'asset_url' => env('ASSET_URL'),
-  'timezone' => 'UTC',
-  'locale' => 'tr',
-  'fallback_locale' => 'tr',
-  'faker_locale' => 'tr_TR',
-  'key' => env('APP_KEY'),
-  'cipher' => 'AES-256-CBC',
+  'name'              => env('APP_NAME', 'Lugat CRM'),
+  'env'               => env('APP_ENV', 'production'),
+  'debug'             => (bool)env('APP_DEBUG', false),
+  'url'               => env('APP_URL', 'http://localhost'),
+  'asset_url'         => env('ASSET_URL'),
+  'timezone'          => 'UTC',
+  'locale'            => 'tr',
+  'fallback_locale'   => 'tr',
+  'faker_locale'      => 'tr_TR',
+  'key'               => env('APP_KEY'),
+  'cipher'            => 'AES-256-CBC',
   'available_locales' => [
     'tr',
     'en'
   ],
-  'maintenance' => [
+  'maintenance'       => [
     'driver' => 'file',
     // 'store'  => 'redis',
   ],
-  'providers' => [
+  'providers'         => [
     Illuminate\Auth\AuthServiceProvider::class,
     Illuminate\Broadcasting\BroadcastServiceProvider::class,
     Illuminate\Bus\BusServiceProvider::class,
@@ -52,7 +52,7 @@ return [
     App\Providers\RouteServiceProvider::class,
 
   ],
-  'aliases' => Facade::defaultAliases()->merge([
+  'aliases'           => Facade::defaultAliases()->merge([
     // 'ExampleClass' => App\Example\ExampleClass::class,
   ])->toArray(),
 

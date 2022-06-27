@@ -89,8 +89,8 @@
           {
             data: "payable",
             name: "payable",
-            render: function(data, type,row){
-              if(row.payable){
+            render: function (data, type, row) {
+              if (row.payable) {
                 return `<span class="badge badge-success">Ödendi</span>`;
               }
               return `<span class="badge badge-danger">Ödenmemiş</span>`;
@@ -122,11 +122,11 @@
               return `
                 <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" data-edit-button="${row.id}">
                   @include('components.icons.edit')
-                </button>
-                <button class="btn btn-icon btn-active-light-primary w-30px h-30px" data-delete-button="${row.id}">
+              </button>
+              <button class="btn btn-icon btn-active-light-primary w-30px h-30px" data-delete-button="${row.id}">
                     @include('components.icons.delete')
-                </button>
-              `;
+              </button>
+`;
             },
           }
         ],

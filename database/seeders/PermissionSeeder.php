@@ -7,14 +7,14 @@ use Illuminate\Database\Seeder;
 
 class PermissionSeeder extends Seeder
 {
-  /**
-   * Run the database seeds.
-   *
-   * @return void
-   */
-  public function run()
-  {
-    $permission_types = [
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $permission_types = [
       'Anasayfa Kasaları Listele' => 'dashboard-safe-list',
       'Anasayfa Stoktaki Ürünleri Göster' => 'dashboard-show-stocked-products',
       'Anasayfa Sistemdeki Ürünleri Göster' => 'dashboard-show-in-system-products',
@@ -200,14 +200,13 @@ class PermissionSeeder extends Seeder
       'Kur Oranlarını Güncelleme' => 'currency-update'
     ];
 
-    if (Permission::all()->isEmpty()){
-      foreach ($permission_types as $permission_type => $permission_value){
-        Permission::create([
+        if (Permission::all()->isEmpty()) {
+            foreach ($permission_types as $permission_type => $permission_value) {
+                Permission::create([
           'name' => $permission_type,
           'slug' => $permission_value
         ]);
-      }
+            }
+        }
     }
-
-  }
 }

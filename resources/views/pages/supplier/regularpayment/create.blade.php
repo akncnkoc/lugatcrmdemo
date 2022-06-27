@@ -3,18 +3,18 @@
   <x-slot name="body">
     <x-form.form id="create_form">
       <div class="row row-cols-2">
-        <x-form.input name="name" :label="__('globals/words.name')" :placeholder="__('globals/words.name')" required />
-        <x-form.textarea name="comment" :label="__('globals/words.comment')" />
+        <x-form.input name="name" :label="__('globals/words.name')" :placeholder="__('globals/words.name')" required/>
+        <x-form.textarea name="comment" :label="__('globals/words.comment')"/>
       </div>
       <x-form.repeater id="regular_payment_period" button-text="Ödeme Düzeni Ekle">
         <x-slot:body>
           <div class="row row-cols-5 d-flex align-items-center">
-            <x-form.input name="date" label="Ödenecek Tarih" placeholder="Ödenecek Tarih" date />
-            <x-form.normal-select name="safe_id" label="Kasa" required />
-            <x-form.input name="price" label="Tutar" placeholder="Tutar" required money />
+            <x-form.input name="date" label="Ödenecek Tarih" placeholder="Ödenecek Tarih" date/>
+            <x-form.normal-select name="safe_id" label="Kasa" required/>
+            <x-form.input name="price" label="Tutar" placeholder="Tutar" required money/>
             <x-form.checkbox label="Ödeme Tamamlandı mı ?" name="completed" hint="Eğer açık olarak kaydedilirse
-            seçilmiş olan kasadan girilin tutar kadar düşülecektir" />
-            <a href="javascript:;" data-repeater-delete class="btn btn-light-danger">
+            seçilmiş olan kasadan girilin tutar kadar düşülecektir"/>
+            <a href="javascript:" data-repeater-delete class="btn btn-light-danger">
               <i class="la la-trash-o"></i>
               Düzenli Ödemeyi Sil
             </a>
@@ -93,7 +93,7 @@
     let {
       form: createForm,
       validator: createValidator
-    } = validateForm("create_form", {
+    } = validateBasicForm("create_form", {
       name: {
         validators: {
           notEmpty: {
@@ -136,41 +136,49 @@
         validator.revalidateField(name);
       });
     });
-    $('#regular_payment_period').repeater({
-      initEmpty: false,
-      isFirstItemUndeletable: true,
-      show: function () {
-        $(this).show();
-        $("select.safe_id_select").select2(safe_select_options);
-        $(".money_input").each(function (index, item) {
-          $(item).maskMoney({thousands: ".", decimal: ",", allowZero: true, affixesStay: false, allowNegative: false});
-          $(item).maskMoney("mask");
-        });
-        $(this).find('input[type="checkbox"]').prop('checked', false);
-        $(this).find('.datetime-picker').flatpickr();
-      },
-      hide: function (deleteElement) {
-        $(this).slideUp(deleteElement);
-      },
-      ready: function () {
-        $('select.safe_id_select').select2(safe_select_options);
-      }
+    $("#create_modal").on('shown.bs.modal', function (e) {
+      $('#regular_payment_period').repeater({
+        initEmpty: false,
+        isFirstItemUndeletable: true,
+        show: function () {
+          createRowIndex++;
+          $(this).show();
+          $("select.safe_id_select").select2(safe_select_options);
+          $(".money_input").each(function (index, item) {
+            $(item).maskMoney({
+              thousands: ".",
+              decimal: ",",
+              allowZero: true,
+              affixesStay: false,
+              allowNegative: false
+            });
+            $(item).maskMoney("mask");
+          });
+          $(this).find('input[type="checkbox"]').prop('checked', false);
+          $(this).find('.flatpickr-input').remove();
+          $(this).find('.datetime-picker').flatpickr();
+          $(this).find('.flatpickr-input').attr('name', 'regular_payment_period[' + createRowIndex + '][date]');
+
+          createValidator.addField('regular_payment_period[' + createRowIndex + '][date]', date_validator);
+          createValidator.addField('regular_payment_period[' + createRowIndex + '][price]', price_validator);
+          createValidator.addField('regular_payment_period[' + createRowIndex + '][safe_id]', safe_validator);
+        },
+        hide: function (deleteElement) {
+          $(this).slideUp(deleteElement);
+          createValidator.removeField('regular_payment_period[' + createRowIndex + '][date]');
+          createValidator.removeField('regular_payment_period[' + createRowIndex + '][price]');
+          createValidator.removeField('regular_payment_period[' + createRowIndex + '][safe_id]');
+          createRowIndex--;
+        },
+        ready: function () {
+          $('select.safe_id_select').select2(safe_select_options);
+        }
+      });
+      createValidator.addField('regular_payment_period[0][date]', date_validator);
+      createValidator.addField('regular_payment_period[0][price]', price_validator);
+      createValidator.addField('regular_payment_period[0][safe_id]', safe_validator);
     });
-    createValidator.addField('regular_payment_period[0][date]', date_validator);
-    createValidator.addField('regular_payment_period[0][price]', price_validator);
-    createValidator.addField('regular_payment_period[0][safe_id]', safe_validator);
-    $("[data-repeater-create]").click(function () {
-      createRowIndex++;
-      createValidator.addField('regular_payment_period[' + createRowIndex + '][date]', date_validator);
-      createValidator.addField('regular_payment_period[' + createRowIndex + '][price]', price_validator);
-      createValidator.addField('regular_payment_period[' + createRowIndex + '][safe_id]', safe_validator);
-    })
-    $("body").on('click', "[data-repeater-delete]", function (event) {
-      createValidator.removeField('regular_payment_period[' + createRowIndex + '][date]');
-      createValidator.removeField('regular_payment_period[' + createRowIndex + '][price]');
-      createValidator.removeField('regular_payment_period[' + createRowIndex + '][safe_id]');
-      createRowIndex--;
-    });
+
 
     const reloadFormRepeater = () => {
       $("#regular_payment_period").find('[data-repeater-item]:not(:first-child)').each((index, item) => {

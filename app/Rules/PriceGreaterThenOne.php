@@ -11,6 +11,7 @@ class PriceGreaterThenOne implements Rule
   {
     return AppHelper::currencyToDecimal($value) >= 1;
   }
+
   public function message()
   {
     return ':attribute must be greater or equal to 1';

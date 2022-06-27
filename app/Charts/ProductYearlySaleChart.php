@@ -2,6 +2,7 @@
 
 namespace App\Charts;
 
+use ArielMejiaDev\LarapexCharts\AreaChart;
 use ArielMejiaDev\LarapexCharts\LarapexChart;
 
 class ProductYearlySaleChart
@@ -13,10 +14,8 @@ class ProductYearlySaleChart
     $this->chart = $chart;
   }
 
-  public function build($product_id): \ArielMejiaDev\LarapexCharts\AreaChart
+  public function build($product_id): AreaChart
   {
-
-
     return $this->chart->areaChart()
       ->addData('Physical sales', [40, 93, 35, 42, 18, 82])
       ->setHeight(120)

@@ -1,4 +1,4 @@
-function validateForm(formid, validations, onValid = null, onInvalid = null, loadAfter = null) {
+function validateBasicForm(formid, validations, onValid = null, onInvalid = null, loadAfter = null) {
   const form = document.getElementById(formid);
   let validator = FormValidation.formValidation(form, {
     fields: {
@@ -19,7 +19,7 @@ function validateForm(formid, validations, onValid = null, onInvalid = null, loa
     e.preventDefault();
     if (validator) {
       validator.validate().then(function (status) {
-        if (status == 'Valid') {
+        if (status === 'Valid') {
           onValid && onValid(form, submitButton);
           submitButton.disabled = true;
           submitButton.removeAttribute('data-kt-indicator');
@@ -115,7 +115,133 @@ SearchDropdown.prototype.render = function (decorated) {
 };
 $.ajaxSetup({
   headers: {
-    'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content'),
-    'token':  localStorage.getItem('_api_token')
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+    'token': localStorage.getItem('_api_token')
   }
 });
+
+
+$.fn.filterForm = function (options) {
+  let defaults = {
+    onClear: null,
+    clearButtonSelector: "[data-filter-clear-button]",
+    onFilter: null,
+    filterButtonSelector: "[data-filter-button]",
+  }
+  let settings = $.extend({}, defaults, options);
+
+  this.submit((e) => e.preventDefault());
+  this.find(settings.clearButtonSelector).click((e) => (settings.onClear && typeof settings.onClear === "function") && settings.onClear(e))
+  this.find(settings.filterButtonSelector).click((e) => (settings.onFilter && typeof settings.onFilter === "function") && settings.onFilter(e))
+  return this;
+}
+
+$.fn.initDatatable = function (options) {
+  let defaults = {
+    filterValues: {},
+    datatableValues: {},
+    createButtonSelector: "[data-create-button]",
+    createModalSelector: "#create_modal",
+    editButtonSelector: "[data-edit-button]",
+    editModalSelector: "#edit_modal",
+    editDataSelector: "editButton",
+    deleteDataSelector: "[data-delete-button]",
+    deleteAjaxUrl: "",
+    deleteRowText: "Delete",
+    loadingText: "Loading",
+    deleteSuccessText: "Deleted",
+    deleteErrorText: "Error Deleted",
+  }
+  let settings = $.extend({}, defaults, options);
+
+  $(document).on('click', settings.createButtonSelector, function (event) {
+    event.preventDefault();
+    $(settings.createModalSelector).modal("show");
+  })
+  $(document).on('click', settings.editButtonSelector, function (event) {
+    event.preventDefault();
+    $(settings.editModalSelector).data("editId", $(this).data(settings.editDataSelector)).modal("show");
+  });
+  let tableExists = $.fn.DataTable.isDataTable("#" + this.attr('id'));
+  if (tableExists) {
+    this.DataTable().destroy();
+  }
+  var table = this.DataTable(settings.datatableValues);
+  table.on('draw', () => {
+    //Init non dom elements
+    $('[data-bs-toggle="tooltip"]').tooltip();
+    //TODO: make localization for this method
+    //TODO: make this javascript to jquery methods
+    //Delete action for row
+    const deleteButtons = document.querySelectorAll(settings.deleteDataSelector);
+    deleteButtons.forEach(d => {
+      d.addEventListener('click', function (e) {
+        e.preventDefault();
+        const parent = e.target.closest('tr');
+        const id = parent.querySelectorAll('td')[1].innerText;
+        Swal.fire({
+          text: settings.deleteRowText,
+          icon: "warning",
+          showCancelButton: true,
+          buttonsStyling: false,
+          //??
+          confirmButtonText: "Evet",
+          //??
+          cancelButtonText: "Hayır",
+          customClass: {
+            confirmButton: "btn fw-bold btn-danger",
+            cancelButton: "btn fw-bold btn-active-light-primary"
+          }
+        }).then(function (result) {
+          if (result.value) {
+            $.ajax({
+              url: settings.deleteAjaxUrl,
+              type: "POST",
+              data: {
+                id: id
+              },
+              beforeSend: function () {
+                Swal.fire({
+                  text: settings.loadingText,
+                  icon: "info",
+                  buttonsStyling: false,
+                  showConfirmButton: false,
+                })
+              },
+              success: function (data) {
+                Swal.close();
+                Swal.fire({
+                  text: settings.deleteSuccessText,
+                  icon: "success",
+                  buttonsStyling: false,
+                  //??
+                  confirmButtonText: "Tamam",
+                  customClass: {
+                    confirmButton: "btn fw-bold btn-primary",
+                  }
+                })
+                table.ajax.reload();
+              },
+              error: function (err) {
+                Swal.close();
+                Swal.fire({
+                  text: settings.deleteErrorText,
+                  icon: "error",
+                  buttonsStyling: false,
+                  //??
+                  confirmButtonText: "Tamam",
+                  customClass: {
+                    confirmButton: "btn fw-bold btn-primary",
+                  }
+                });
+              }
+            });
+          }
+        });
+      })
+    });
+  });
+
+  return table;
+}
+

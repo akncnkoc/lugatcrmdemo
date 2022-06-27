@@ -6,43 +6,43 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateInvoiceProductsTable extends Migration
 {
-  /**
-   * Run the migrations.
-   *
-   * @return void
-   */
-  public function up()
-  {
-    Schema::create('invoice_products', function (Blueprint $table) {
-      $table->id();
-      $table->foreignId('invoice_id')
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('invoice_products', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('invoice_id')
         ->nullable();
-      $table->foreignId('product_id');
-      $table->text('product_code')
+            $table->foreignId('product_id');
+            $table->text('product_code')
         ->nullable();
-      $table->decimal('price', 15)
+            $table->decimal('price', 15)
         ->nullable();
-      $table->foreignId('cash_register_id')
+            $table->foreignId('cash_register_id')
         ->nullable();
-      $table->foreignId('safe_id')
+            $table->foreignId('safe_id')
         ->nullable();
-      $table->foreignId('safe_log_id')
+            $table->foreignId('safe_log_id')
         ->nullable();
-      $table->integer('tax')
+            $table->integer('tax')
         ->default(0)
         ->nullable();
-      $table->foreignId('cargo_id')->nullable();
-      $table->timestamps();
-    });
-  }
+            $table->foreignId('cargo_id')->nullable();
+            $table->timestamps();
+        });
+    }
 
-  /**
-   * Reverse the migrations.
-   *
-   * @return void
-   */
-  public function down()
-  {
-    Schema::dropIfExists('invoice_products');
-  }
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('invoice_products');
+    }
 }

@@ -13,6 +13,7 @@ trait ApexChartChartValues
     return $this;
   }
 
+
   public function setWidth(string|int $width = 400): static
   {
     $this->chart['width'] = $width;
@@ -22,9 +23,12 @@ trait ApexChartChartValues
   public function setToolbar(bool $show = true, mixed $tools = []): static
   {
     $this->chart['toolbar']['show'] = $show;
-    $this->chart['toolbar']['tools'] = $tools;
+    if (isset($tools) && count($tools) > 0){
+      $this->chart['toolbar']['tools'] = $tools;
+    }
     return $this;
   }
+
   public function setZoom(bool $enabled = true): static
   {
     $this->chart['zoom']['enabled'] = $enabled;
@@ -124,6 +128,4 @@ trait ApexChartChartValues
     $this->chart['offsetY'] = $offsetY;
     return $this;
   }
-
-
 }

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AuthenticateRequest;
 use App\Models\User;
+use Exception;
+use Illuminate\Http\Request;
+use function auth;
 
 class AuthController extends Controller
 {
@@ -12,21 +14,18 @@ class AuthController extends Controller
     return view('pages.auth.login');
   }
 
-  public function authenticate(AuthenticateRequest $request)
+  public function authenticate(Request $request)
   {
     try {
-      User::where('email', $request->get('email'))->firstOr(fn() => response()->json(['Mail not found'], 422));
-      $user = User::where('email', $request->get('email'))->where('password', \Hash::make($request->get('password'),
-      ), 422)
-        ->firstOr(fn() => response()->json(['User not found']));
+      User::where('email', $request->get('email'))->firstOr(fn() => response()->json(['Mail not found'])->send());
 
       if (!auth()->attempt(['email' => $request->get('email'), 'password' => $request->get('password')])) {
-        return;
+        return response()->json(['error' => 'Email or password incorrect'], 500);
       }
 
-      $token = \auth()->user()->createToken($request->get('email'));
-      return response()->json(['token' => $token->plainTextToken]);
-    } catch (\Exception $e) {
+      $token = auth()->user()->createToken($request->get('email'));
+      return response()->json(['token' => $token->plainTextToken, 'user' => auth()->user()]);
+    } catch (Exception $e) {
       return response()->json($e->getMessage(), 500);
     }
   }
@@ -36,7 +35,7 @@ class AuthController extends Controller
     try {
       auth()->logout();
       return response()->json(true);
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
       return response()->json($e->getMessage(), 500);
     }
   }

@@ -9,11 +9,11 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ProductTypeFactory extends Factory
 {
-  public function definition()
-  {
-    return [
+    public function definition()
+    {
+        return [
       'name' => $this->faker->colorName,
       'initial_code' => 1
     ];
-  }
+    }
 }

@@ -9,14 +9,14 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class UserFactory extends Factory
 {
-  public function definition()
-  {
-    return [
+    public function definition()
+    {
+        return [
       'name' => $this->faker->name,
       'surname' => $this->faker->lastName,
       'username' => 'demo',
       'email' => 'demo@mail.com',
       'password' => bcrypt('demo')
     ];
-  }
+    }
 }

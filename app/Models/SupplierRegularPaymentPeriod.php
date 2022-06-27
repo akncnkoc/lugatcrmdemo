@@ -3,55 +3,39 @@
 namespace App\Models;
 
 use App\Observers\SupplierRegularPaymentPeriodObserver;
-use Eloquent;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Carbon;
-use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * App\Models\SupplierRegularPaymentPeriod
  *
  * @property int $id
- * @property int|null $supplier_regular_payment_id
- * @property string $repeat_date
+ * @property string $date
  * @property string $price
- * @property int $safe_id
  * @property int $completed
+ * @property int $supplier_regular_payment_id
+ * @property int $safe_id
  * @property int|null $safe_log_id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
- * @property-read int|null $activities_count
- * @property-read \App\Models\Safe $safe
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Safe|null $safe
  * @property-read \App\Models\SafeLog|null $safe_log
  * @property-read \App\Models\SupplierRegularPayment|null $supplier_regular_payment
- * @method static Builder|SupplierRegularPaymentPeriod newModelQuery()
- * @method static Builder|SupplierRegularPaymentPeriod newQuery()
- * @method static \Illuminate\Database\Query\Builder|SupplierRegularPaymentPeriod onlyTrashed()
- * @method static Builder|SupplierRegularPaymentPeriod query()
- * @method static Builder|SupplierRegularPaymentPeriod whereCompleted($value)
- * @method static Builder|SupplierRegularPaymentPeriod whereCreatedAt($value)
- * @method static Builder|SupplierRegularPaymentPeriod whereDeletedAt($value)
- * @method static Builder|SupplierRegularPaymentPeriod whereId($value)
- * @method static Builder|SupplierRegularPaymentPeriod wherePrice($value)
- * @method static Builder|SupplierRegularPaymentPeriod whereRepeatDate($value)
- * @method static Builder|SupplierRegularPaymentPeriod whereSafeId($value)
- * @method static Builder|SupplierRegularPaymentPeriod whereSafeLogId($value)
- * @method static Builder|SupplierRegularPaymentPeriod whereSupplierRegularPaymentId($value)
- * @method static Builder|SupplierRegularPaymentPeriod whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|SupplierRegularPaymentPeriod withTrashed()
- * @method static \Illuminate\Database\Query\Builder|SupplierRegularPaymentPeriod withoutTrashed()
- * @mixin Eloquent
- * @property string $date
- * @method static Builder|SupplierRegularPaymentPeriod whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierRegularPaymentPeriod newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierRegularPaymentPeriod newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierRegularPaymentPeriod query()
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierRegularPaymentPeriod whereCompleted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierRegularPaymentPeriod whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierRegularPaymentPeriod whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierRegularPaymentPeriod whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierRegularPaymentPeriod wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierRegularPaymentPeriod whereSafeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierRegularPaymentPeriod whereSafeLogId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierRegularPaymentPeriod whereSupplierRegularPaymentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierRegularPaymentPeriod whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class SupplierRegularPaymentPeriod extends Model
 {
-  use SoftDeletes;
-
   protected $guarded = [];
 
   protected static function boot()

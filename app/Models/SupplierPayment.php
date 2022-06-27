@@ -3,56 +3,44 @@
 namespace App\Models;
 
 use App\Observers\SupplierPaymentObserver;
-use datetime;
-use Eloquent;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Carbon;
 
 /**
  * App\Models\SupplierPayment
  *
  * @property int $id
- * @property int|null $supplier_id
- * @property string|null $price
- * @property int|null $safe_id
- * @property int|null $tobepaid
- * @property datetime|null $payment_date
+ * @property string $price
+ * @property int $payable
+ * @property string|null $date
  * @property string|null $description
- * @property int|null $regular_payment_id
+ * @property int $supplier_id
+ * @property int $safe_id
  * @property int|null $safe_log_id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
- * @property-read int|null $activities_count
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \App\Models\Safe|null $safe
  * @property-read \App\Models\SafeLog|null $safe_log
  * @property-read \App\Models\Supplier|null $supplier
- * @method static Builder|SupplierPayment newModelQuery()
- * @method static Builder|SupplierPayment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierPayment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierPayment newQuery()
  * @method static \Illuminate\Database\Query\Builder|SupplierPayment onlyTrashed()
- * @method static Builder|SupplierPayment query()
- * @method static Builder|SupplierPayment whereCreatedAt($value)
- * @method static Builder|SupplierPayment whereDeletedAt($value)
- * @method static Builder|SupplierPayment whereDescription($value)
- * @method static Builder|SupplierPayment whereId($value)
- * @method static Builder|SupplierPayment wherePaymentDate($value)
- * @method static Builder|SupplierPayment wherePrice($value)
- * @method static Builder|SupplierPayment whereRegularPaymentId($value)
- * @method static Builder|SupplierPayment whereSafeId($value)
- * @method static Builder|SupplierPayment whereSafeLogId($value)
- * @method static Builder|SupplierPayment whereSupplierId($value)
- * @method static Builder|SupplierPayment whereTobepaid($value)
- * @method static Builder|SupplierPayment whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierPayment query()
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierPayment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierPayment whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierPayment whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierPayment whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierPayment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierPayment wherePayable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierPayment wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierPayment whereSafeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierPayment whereSafeLogId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierPayment whereSupplierId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SupplierPayment whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|SupplierPayment withTrashed()
  * @method static \Illuminate\Database\Query\Builder|SupplierPayment withoutTrashed()
- * @mixin Eloquent
- * @property int $payable
- * @property string|null $date
- * @method static Builder|SupplierPayment whereDate($value)
- * @method static Builder|SupplierPayment wherePayable($value)
+ * @mixin \Eloquent
  */
 class SupplierPayment extends Model
 {

@@ -6,8 +6,11 @@ use App\AppHelper;
 use App\Http\Requests\StaffPaymentRequest;
 use App\Models\Staff;
 use App\Models\StaffPayment;
+use DB;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Throwable;
 use Yajra\DataTables\EloquentDataTable;
 
 class StaffPaymentController extends Controller
@@ -23,73 +26,78 @@ class StaffPaymentController extends Controller
     return view('pages.staff.payment.index', compact('staff'));
   }
 
-  public function get(Request $request, $id)
-  {
-    try {
-      if ($request->ajax()) {
-        try {
-          return response()->json(StaffPayment::with(['staff', 'safe.currency', 'payment_type'])->find($request->get('id')));
-        } catch (\Exception $e) {
-          return response()->json(false, 500);
-        }
-      }
-    } catch (\Throwable $th) {
-      return response()->json(false, 500);
-    }
-  }
-
+  /**
+   * @throws Throwable
+   */
   public function store(StaffPaymentRequest $request, $id)
   {
     try {
-      \DB::beginTransaction();
+      DB::beginTransaction();
       $request->request->add(['staff_id' => $id]);
       $request->merge([
         'price' => AppHelper::currencyToDecimal($request->get('price')),
-        'date' => AppHelper::convertDate($request->get('date'), 'Y-m-d H:i:s')
+        'date'  => AppHelper::convertDate($request->get('date'), 'Y-m-d H:i:s')
       ]);
       StaffPayment::create($request->only(['price', 'safe_id', 'date', 'staff_payment_type_id', 'description', 'staff_id']));
-      \DB::commit();
+      DB::commit();
       return response()->json(true);
-    } catch (\Exception $e) {
-      \DB::rollBack();
+    } catch (Exception $e) {
+      DB::rollBack();
       return response()->json($e->getMessage(), 500);
     }
   }
 
+  public function get(Request $request)
+  {
+    try {
+      return response()->json(StaffPayment::with(['staff', 'safe.currency', 'payment_type'])->find($request->get('id')));
+    } catch (Exception $e) {
+      return response()->json($e->getMessage(), 500);
+    }
+  }
+
+  /**
+   * @throws Throwable
+   */
   public function update(StaffPaymentRequest $request, $id)
   {
     try {
-      \DB::beginTransaction();
+      DB::beginTransaction();
       $staffPayment = StaffPayment::where('id', $id)->firstOr(fn() => redirect()->route('staff.index')->send());
       $request->merge([
         'price' => AppHelper::currencyToDecimal($request->get('price')),
-        'date' => AppHelper::convertDate($request->get('date'), 'Y-m-d H:i:s')
+        'date'  => AppHelper::convertDate($request->get('date'), 'Y-m-d H:i:s')
       ]);
       $staffPayment->update($request->only(['price', 'safe_id', 'date', 'staff_payment_type_id', 'description']));
-      \DB::commit();
+      DB::commit();
       return response()->json(true);
-    } catch (\Exception $e) {
-      \DB::rollBack();
+    } catch (Exception $e) {
+      DB::rollBack();
       return response()->json($e->getMessage(), 500);
     }
   }
 
 
+  /**
+   * @throws Throwable
+   */
   public function delete(Request $request)
   {
     try {
-      \DB::beginTransaction();
+      DB::beginTransaction();
       $staffPayment = StaffPayment::where('id', $request->get('id'))->firstOr(fn() => response()->json(false)->send());
       $staffPayment->delete();
-      \DB::commit();
+      DB::commit();
       return response()->json(true);
-    } catch (\Exception $e) {
-      \DB::rollBack();
-      return response()->json(false, 500);
+    } catch (Exception $e) {
+      DB::rollBack();
+      return response()->json($e->getMessage(), 500);
     }
-
   }
 
+  /**
+   * @throws Exception
+   */
   public function table(Request $request, $id)
   {
     $staffs = StaffPayment::with([

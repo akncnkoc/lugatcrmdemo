@@ -6,15 +6,15 @@
 
 @push('customscripts')
   <script>
-    $("#logout-btn").click(function (){
+    $("#logout-btn").click(function () {
       $.ajax({
         type: "POST",
         url: "{{route('auth.logout')}}",
-        success: function (){
+        success: function () {
           localStorage.removeItem("_api_token");
           window.location.href = '{{route('auth.login')}}'
         },
-        error : function (err){
+        error: function (err) {
           toastr.error('@lang('globals/errors.logout_error')');
         }
       });

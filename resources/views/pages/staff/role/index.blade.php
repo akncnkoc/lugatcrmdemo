@@ -3,8 +3,9 @@
     <x-slot name="title">Personel Rolleri</x-slot>
     <x-slot name="toolbar">
       <div class="d-flex space-x-2">
-        <button class="btn btn-bg-light btn-sm btn-icon-info btn-text-info" data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip" title="Yeni Personel Rolü Ekle"
-          data-staff-role-create-button>
+        <button class="btn btn-bg-light btn-sm btn-icon-info btn-text-info" data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip"
+                title="Yeni Personel Rolü Ekle"
+                data-staff-role-create-button>
           <i class="las la-edit fs-3"></i>
           Ekle
         </button>
@@ -17,15 +18,15 @@
 </x-card.card>
 @push('customscripts')
   <script>
-    $(document).on('click', '[data-staff-role-create-button]', function(event) {
+    $(document).on('click', '[data-staff-role-create-button]', function (event) {
       event.preventDefault();
       $("#staff_role_create_modal").modal("show");
     });
-    $(document).on('click', '[data-staff-role-edit-button]', function(event) {
+    $(document).on('click', '[data-staff-role-edit-button]', function (event) {
       event.preventDefault();
       $("#staff_role_edit_modal").data("editId", $(this).data('staffRoleEditButton')).modal("show");
     });
-    $(document).on('click', '[data-staff-role-delete-button]', function(event) {
+    $(document).on('click', '[data-staff-role-delete-button]', function (event) {
       event.preventDefault();
       let id = $(event.currentTarget).data('staffRoleDeleteButton');
       Swal.fire({
@@ -39,7 +40,7 @@
           confirmButton: "btn fw-bold btn-danger",
           cancelButton: "btn fw-bold btn-active-light-primary"
         }
-      }).then(function(result) {
+      }).then(function (result) {
         if (result.value) {
           $.ajax({
             url: "{{ route('staff_role.delete') }}",
@@ -47,7 +48,7 @@
             data: {
               id: id
             },
-            beforeSend: function() {
+            beforeSend: function () {
               Swal.fire({
                 text: "Personel rolü ve Personel'nin rolleri siliniyor",
                 icon: "info",
@@ -55,7 +56,7 @@
                 showConfirmButton: false,
               })
             },
-            success: function(data) {
+            success: function (data) {
               Swal.close();
               Swal.fire({
                 text: "Personel rolü silindi",
@@ -68,7 +69,7 @@
               })
               initStaffRoleData();
             },
-            error: function(err) {
+            error: function (err) {
               Swal.close();
               Swal.fire({
                 text: "Personel rolü tekrar deneyin!",
@@ -93,10 +94,10 @@
       $.ajax({
         type: "POST",
         url: "{{ route('staff_role.all') }}",
-        beforeSend: function() {
+        beforeSend: function () {
           blockUIStaffRole.block();
         },
-        success: function(data) {
+        success: function (data) {
           let html = ``;
           if (data && data.length > 0) {
             data.map((item, index) => {
@@ -107,26 +108,25 @@
                     <div>
                       <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-2" data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip" title="Düzenle" data-staff-role-edit-button="${item.id}">
                         @include('components.icons.edit')
-                      </button>
-                      <button class="btn btn-icon btn-active-light-primary w-30px h-30px" data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip" title="Sil" data-staff-role-delete-button="${item.id}">
+              </button>
+              <button class="btn btn-icon btn-active-light-primary w-30px h-30px" data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip" title="Sil" data-staff-role-delete-button="${item.id}">
                         @include('components.icons.delete')
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              `;
+              </button>
+            </div>
+          </div>
+        </div>
+`;
             })
           }
           $(".staff-role-zone").html(html);
           $("[data-bs-toggle]").tooltip();
           blockUIStaffRole.release();
         },
-        error: function(err) {
+        error: function (err) {
 
         }
       });
     }
-
 
 
     initStaffRoleData();

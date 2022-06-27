@@ -7,6 +7,7 @@ use Illuminate\View\Component;
 class Table extends Component
 {
   public string $id;
+
   public function __construct($id = "")
   {
     $this->id = $id;

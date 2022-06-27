@@ -6,10 +6,10 @@ use Illuminate\View\Component;
 
 class Repeater extends Component
 {
-
   public string $id;
   public string $buttonText;
   public string $template;
+
   public function __construct($id = "", $buttonText = "Ekle", $template = false)
   {
     $this->id = $id;

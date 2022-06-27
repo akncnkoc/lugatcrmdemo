@@ -14,8 +14,8 @@ class SafeRequest extends FormRequest
   public function rules()
   {
     return [
-      'name' => 'required|min:3|max:50',
-      'total' => 'required',
+      'name'        => 'required|min:3|max:50',
+      'total'       => 'required',
       'currency_id' => 'required|exists:currencies,id'
     ];
   }

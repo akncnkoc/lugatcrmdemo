@@ -116,11 +116,11 @@
               return `
                 <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" data-edit-button="${row.id}">
                   @include('components.icons.edit')
-                </button>
-                <button class="btn btn-icon btn-active-light-primary w-30px h-30px" data-delete-button="${row.id}">
+              </button>
+              <button class="btn btn-icon btn-active-light-primary w-30px h-30px" data-delete-button="${row.id}">
                     @include('components.icons.delete')
-                </button>
-              `;
+              </button>
+`;
             },
           }
         ],

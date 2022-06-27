@@ -4,7 +4,7 @@
     <x-slot name="toolbar">
       <div class="d-flex space-x-2">
         <button class="btn btn-bg-light btn-sm btn-icon-info btn-text-info" data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip"
-          title="Yeni Gider Tipi Ekle" data-product-type-create-button>
+                title="Yeni Gider Tipi Ekle" data-product-type-create-button>
           <i class="las la-edit fs-3"></i>
           Ekle
         </button>
@@ -17,15 +17,15 @@
 </x-card.card>
 @push('customscripts')
   <script>
-    $(document).on('click', '[data-product-type-create-button]', function(event) {
+    $(document).on('click', '[data-product-type-create-button]', function (event) {
       event.preventDefault();
       $("#product_type_create_modal").modal("show");
     });
-    $(document).on('click', '[data-product-type-edit-button]', function(event) {
+    $(document).on('click', '[data-product-type-edit-button]', function (event) {
       event.preventDefault();
       $("#product_type_edit_modal").data("editId", $(this).data('productTypeEditButton')).modal("show");
     });
-    $(document).on('click', '[data-product-type-delete-button]', function(event) {
+    $(document).on('click', '[data-product-type-delete-button]', function (event) {
       event.preventDefault();
       let id = $(event.currentTarget).data('productTypeDeleteButton');
       Swal.fire({
@@ -39,7 +39,7 @@
           confirmButton: "btn fw-bold btn-danger",
           cancelButton: "btn fw-bold btn-active-light-primary"
         }
-      }).then(function(result) {
+      }).then(function (result) {
         if (result.value) {
           $.ajax({
             url: "{{ route('product_type.delete') }}",
@@ -47,7 +47,7 @@
             data: {
               id: id
             },
-            beforeSend: function() {
+            beforeSend: function () {
               Swal.fire({
                 text: "Ürün tipi ve Ürün'nün tipleri siliniyor",
                 icon: "info",
@@ -55,7 +55,7 @@
                 showConfirmButton: false,
               })
             },
-            success: function(data) {
+            success: function (data) {
               Swal.close();
               Swal.fire({
                 text: "Ürün tipi silindi",
@@ -68,7 +68,7 @@
               })
               initproductTypeData();
             },
-            error: function(err) {
+            error: function (err) {
               Swal.close();
               Swal.fire({
                 text: "Ürün tipi tekrar deneyin!",
@@ -93,10 +93,10 @@
       $.ajax({
         type: "POST",
         url: "{{ route('product_type.all') }}",
-        beforeSend: function() {
+        beforeSend: function () {
           blockUIproductType.block();
         },
-        success: function(data) {
+        success: function (data) {
           let html = ``;
           if (data && data.length > 0) {
             data.map((item, index) => {
@@ -106,20 +106,20 @@
                     <div>
                       <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-2" data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip" title="Düzenle" data-product-type-edit-button="${item.id}">
                         @include('components.icons.edit')
-                      </button>
-                      <button class="btn btn-icon btn-active-light-primary w-30px h-30px" data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip" title="Sil" data-product-type-delete-button="${item.id}">
+              </button>
+              <button class="btn btn-icon btn-active-light-primary w-30px h-30px" data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip" title="Sil" data-product-type-delete-button="${item.id}">
                         @include('components.icons.delete')
-                      </button>
-                    </div>
-                  </div>
-              `;
+              </button>
+            </div>
+          </div>
+`;
             })
           }
           $(".product-type-zone").html(html);
           blockUIproductType.release();
           $("[data-bs-toggle]").tooltip();
         },
-        error: function(err) {
+        error: function (err) {
 
         }
       });

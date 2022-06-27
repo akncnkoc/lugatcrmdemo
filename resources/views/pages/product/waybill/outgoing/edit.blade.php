@@ -129,7 +129,7 @@
     var {
       form: editForm,
       validator: editValidator
-    } = validateForm("edit_form", {
+    } = validateBasicForm("edit_form", {
       'customer_id': {
         validators: {
           notEmpty: {

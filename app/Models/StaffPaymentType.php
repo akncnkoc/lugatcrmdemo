@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -11,10 +10,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @property int $id
  * @property string $name
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $created_at
+ * @property string|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \App\Models\StaffPayment $staff_payments
+ * @property-read \App\Models\StaffPayment|null $staff_payments
  * @method static \Illuminate\Database\Eloquent\Builder|StaffPaymentType newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|StaffPaymentType newQuery()
  * @method static \Illuminate\Database\Query\Builder|StaffPaymentType onlyTrashed()

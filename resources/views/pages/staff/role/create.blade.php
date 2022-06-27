@@ -3,7 +3,7 @@
   <x-slot name="body">
     <x-form.form id="staff_role_create_form">
       <div class="row row-cols-1">
-        <x-form.input name="name" label="Ad" placeholder="Ad" required />
+        <x-form.input name="name" label="Ad" placeholder="Ad" required/>
       </div>
       <x-form.button>Kaydet</x-form.button>
     </x-form.form>
@@ -11,13 +11,13 @@
 </x-modal.modal>
 @push('customscripts')
   <script>
-  validateForm("staff_role_create_form", {
+    validateBasicForm("staff_role_create_form", {
       name: {
         validators: {
           notEmpty: {
             message: "Ad doldurulması zorunludur"
           },
-          stringLength:{
+          stringLength: {
             min: 3,
             message: "Ad en az 3 harf'den oluşmak zorundadır."
           }
@@ -29,12 +29,12 @@
         url: "{{ route('staff_role.store') }}",
         type: "POST",
         data: data,
-        success: function(data) {
+        success: function (data) {
           $("#staff_role_create_modal").modal("hide");
           initStaffRoleData();
           toastr.success("Başarılı!");
         },
-        error: function(err) {
+        error: function (err) {
           toastr.error("Bir sorun var daha sonra tekrar deneyin!");
         }
       });

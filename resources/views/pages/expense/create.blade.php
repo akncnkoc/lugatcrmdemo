@@ -7,23 +7,23 @@
                        name="expense_type_id"
                        :asyncload="route('expense_type.select')"
                        required
-                       parent="#create_modal" />
+                       parent="#create_modal"/>
         <x-form.input name="date"
                       :label="__('globals/words.date')"
                       :placeholder="__('globals/words.date')"
                       required
-                      :date="true" />
+                      :date="true"/>
       </div>
       <div class="row row-cols-2">
         <x-form.input name="price"
                       :label="__('globals/words.price')"
                       :placeholder="__('globals/words.price')"
                       money
-                      required />
+                      required/>
         <x-form.select :label="__('layout/aside/menu.safe')" name="safe_id" :asyncload="route('safe.select')" required
-                       parent="#create_modal" />
+                       parent="#create_modal"/>
       </div>
-      <x-form.textarea name="comment" :label="__('globals/words.comment')" />
+      <x-form.textarea name="comment" :label="__('globals/words.comment')"/>
       <x-form.button>@lang('globals/words.save')</x-form.button>
     </x-form.form>
   </x-slot>
@@ -33,7 +33,7 @@
     let {
       form: createForm,
       validator: createValidator
-    } = validateForm("create_form", {
+    } = validateBasicForm("create_form", {
       price: {
         validators: {
           numeric: {

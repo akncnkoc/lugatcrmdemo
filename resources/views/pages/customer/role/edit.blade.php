@@ -4,7 +4,7 @@
     <x-form.form id="customer_role_edit_form">
       <div class="row row-cols-1">
         <x-form.input name="name" :label="__('globals/words.name')" :placeholder="__('globals/words.name')"
-                      required />
+                      required/>
       </div>
       <x-form.button>@lang('globals/words.save')</x-form.button>
     </x-form.form>
@@ -34,7 +34,7 @@
     });
     let {
       form: customerRoleEditForm
-    } = validateForm("customer_role_edit_form", {
+    } = validateBasicForm("customer_role_edit_form", {
       name: {
         validators: {
           notEmpty: {

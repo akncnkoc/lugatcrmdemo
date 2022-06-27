@@ -35,7 +35,7 @@
                      type="checkbox"
                      data-kt-check="true"
                      data-kt-check-target="#table .form-check-input"
-                     value="1" />
+                     value="1"/>
             </div>
           </th>
           <th>@lang('globals/words.no')</th>
@@ -57,174 +57,101 @@
 @endsection
 @push('customscripts')
   <script type="text/javascript">
-    var table = initTable();
-    $(document).on('click', '[data-create-button]', function (event) {
-      event.preventDefault();
-      $("#create_modal").modal("show");
-    });
-    $(document).on('click', '[data-edit-button]', function (event) {
-      event.preventDefault();
-      $("#edit_modal").data("editId", $(this).data('editButton')).modal("show");
-    });
-
-    function initTable(data = {}) {
-      if (table) table.destroy();
-      table = $("#table").DataTable({
-        serverSide: true,
-        processing: true,
-        stateSave: true,
-        select: {
-          style: 'multi',
-          selector: 'td:first-child input[type="checkbox"]',
-          className: 'row-selected'
-        },
-        ajax: {
-          url: '{{ route('customer.table') }}',
-          type: 'POST',
-          data: function (d) {
-            for (const [key, value] of Object.entries(data)) {
-              d[key] = value;
+    let initCustomerTable = (data = {}) => {
+      $("#table").initDatatable({
+        datatableValues: {
+          serverSide: true,
+          processing: true,
+          stateSave: true,
+          select: {
+            style: 'multi',
+            selector: 'td:first-child input[type="checkbox"]',
+            className: 'row-selected'
+          },
+          ajax: {
+            url: '{{ route('customer.table') }}',
+            type: 'POST',
+            data: function (d) {
+              for (const [key, value] of Object.entries(data)) {
+                d[key] = value;
+              }
             }
-          }
-        },
-        columns: [{
-          data: 'DT_RowIndex',
-          name: "id"
-        },
-          {
-            data: "id",
+          },
+          columns: [{
+            data: 'DT_RowIndex',
             name: "id"
           },
-          {
-            data: "name",
-            name: "name",
-            render: function (data, type, row) {
-              let fullname = "";
-              fullname += row.name ?? "";
-              fullname += " ";
-              fullname += row.surname ?? "";
-              return fullname;
+            {
+              data: "id",
+              name: "id"
+            },
+            {
+              data: "name",
+              name: "name",
+              render: function (data, type, row) {
+                let fullname = "";
+                fullname += row.name ?? "";
+                fullname += " ";
+                fullname += row.surname ?? "";
+                return fullname;
+              }
+            },
+            {
+              data: "phone",
+              name: "phone"
+            },
+            {
+              data: "email",
+              name: "email"
+            },
+            {
+              data: 'customer_role.name',
+              name: "customer_role.name"
+            },
+            {
+              data: null
             }
-          },
-          {
-            data: "phone",
-            name: "phone"
-          },
-          {
-            data: "email",
-            name: "email"
-          },
-          {
-            data: 'customer_role.name',
-            name: "customer_role.name"
-          },
-          {
-            data: null
-          }
-        ],
-        columnDefs: [{
-          targets: 0,
-          orderable: false,
-          render: function (data) {
-            return `
+          ],
+          columnDefs: [{
+            targets: 0,
+            orderable: false,
+            render: function (data) {
+              return `
               <div class="form-check form-check-sm form-check-custom form-check-solid">
                   <input class="form-check-input" type="checkbox" value="${data}" />
               </div>`;
-          }
-        },
-          {
-            targets: -1,
-            data: null,
-            orderable: false,
-            className: 'text-center',
-            render: function (data, type, row) {
-              return `
+            }
+          },
+            {
+              targets: -1,
+              data: null,
+              orderable: false,
+              className: 'text-center',
+              render: function (data, type, row) {
+                return `
               <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" data-edit-button="${row.id}"
               data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip" title="@lang('globals/words.edit')">
                 @include('components.icons.edit')
-              </button>
-              <button class="btn btn-icon btn-active-light-primary w-30px h-30px" data-delete-button="${row.id}"
+                </button>
+                <button class="btn btn-icon btn-active-light-primary w-30px h-30px" data-delete-button="${row.id}"
               data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip" title="@lang('globals/words.delete')">
                 @include('components.icons.delete')
-              </button>
-            `;
-            },
-          }
-        ],
-        order: [
-          [1, 'desc']
-        ],
-      })
-      let handleDeleteRows = () => {
-        const deleteButtons = document.querySelectorAll('[data-delete-button]');
-        deleteButtons.forEach(d => {
-          d.addEventListener('click', function (e) {
-            e.preventDefault();
-            const parent = e.target.closest('tr');
-            const id = parent.querySelectorAll('td')[1].innerText;
-            Swal.fire({
-              text: "@lang('globals/check_messages.want_to_delete', ['attr' => __('globals/words.customer')])",
-              icon: "warning",
-              showCancelButton: true,
-              buttonsStyling: false,
-              confirmButtonText: "@lang('globals/words.yes')",
-              cancelButtonText: "@lang('globals/words.cancel')",
-              customClass: {
-                confirmButton: "btn fw-bold btn-danger",
-                cancelButton: "btn fw-bold btn-active-light-primary"
-              }
-            }).then(function (result) {
-              if (result.value) {
-                $.ajax({
-                  url: "{{ route('customer.delete') }}",
-                  type: "POST",
-                  data: {
-                    id: id
-                  },
-                  beforeSend: function () {
-                    Swal.fire({
-                      text: "@lang('globals/infos.loading')",
-                      icon: "info",
-                      buttonsStyling: false,
-                      showConfirmButton: false,
-                    })
-                  },
-                  success: function (data) {
-                    Swal.close();
-                    Swal.fire({
-                      text: "@lang('globals/success_messages.deleted', ['attr' => __('globals/words.customer')])",
-                      icon: "success",
-                      buttonsStyling: false,
-                      confirmButtonText: "@lang('globals/words.okey')",
-                      customClass: {
-                        confirmButton: "btn fw-bold btn-primary",
-                      }
-                    })
-                    table.ajax.reload();
-                  },
-                  error: function (err) {
-                    Swal.close();
-                    Swal.fire({
-                      text: "@lang('globals/error_messages.delete_error', ['attr'  => __('globals/words.customer')])",
-                      icon: "error",
-                      buttonsStyling: false,
-                      confirmButtonText: "@lang('globals/words.okey')",
-                      customClass: {
-                        confirmButton: "btn fw-bold btn-primary",
-                      }
-                    });
-                  }
-                });
-              }
-            });
-          })
-        });
-      }
-      table.on('draw', () => {
-        $('[data-bs-toggle="tooltip"]').tooltip();
-        handleDeleteRows();
+                </button>
+`;
+              },
+            }
+          ],
+          order: [
+            [1, 'desc']
+          ],
+        },
+        deleteAjaxUrl: "{{ route('customer.delete') }}",
+        deleteRowText: "@lang('globals/check_messages.want_to_delete', ['attr' => __('globals/words.customer')])",
+        loadingText: "@lang('globals/infos.loading')",
+        deleteSuccessText: "@lang('globals/success_messages.deleted', ['attr' => __('globals/words.customer')])",
+        deleteErrorText: "@lang('globals/error_messages.delete_error', ['attr'  => __('globals/words.customer')])"
       });
-      return table;
     }
+    initCustomerTable();
   </script>
 @endpush

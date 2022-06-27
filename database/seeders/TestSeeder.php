@@ -26,20 +26,16 @@ use Illuminate\Database\Seeder;
 
 class TestSeeder extends Seeder
 {
-  public function run()
-  {
-    $products = 20;
-    $suppliers = 5;
-    $customer = 10;
-    $staffs = 10;
-    $expenses = 15;
-    $waybills = 100;
-    $faker = Factory::create();
-    $faker->addProvider(new Commerce($faker));
-    $barcode = new Barcode($faker);
-
-
-
-
-  }
+    public function run()
+    {
+        $products = 20;
+        $suppliers = 5;
+        $customer = 10;
+        $staffs = 10;
+        $expenses = 15;
+        $waybills = 100;
+        $faker = Factory::create();
+        $faker->addProvider(new Commerce($faker));
+        $barcode = new Barcode($faker);
+    }
 }

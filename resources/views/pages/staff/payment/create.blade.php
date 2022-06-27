@@ -3,15 +3,15 @@
   <x-slot name="body">
     <x-form.form id="create_form">
       <div class="row row-cols-2">
-        <x-form.input name="price" label="Fiyat" placeholder="Fiyat" money required />
-        <x-form.select label="Kasa" name="safe_id" :asyncload="route('safe.select')" required parent="#create_modal" />
+        <x-form.input name="price" label="Fiyat" placeholder="Fiyat" money required/>
+        <x-form.select label="Kasa" name="safe_id" :asyncload="route('safe.select')" required parent="#create_modal"/>
       </div>
       <div class="row row-cols-2">
-        <x-form.select label="Ödeme Türü" name="staff_payment_type_id" :asyncload="route('staff-payment-type.select')" required parent="#create_modal" />
-        <x-form.input name="date" label="Tarih" placeholder="Tarih" required :date="true" />
+        <x-form.select label="Ödeme Türü" name="staff_payment_type_id" :asyncload="route('staff-payment-type.select')" required parent="#create_modal"/>
+        <x-form.input name="date" label="Tarih" placeholder="Tarih" required :date="true"/>
       </div>
       <div class="row row-cols-1">
-        <x-form.textarea name="description" label="Açıklama" />
+        <x-form.textarea name="description" label="Açıklama"/>
         <x-form.button>Kaydet</x-form.button>
       </div>
     </x-form.form>
@@ -22,7 +22,7 @@
     let {
       form: createForm,
       validator: createValidator
-    } = validateForm("create_form", {
+    } = validateBasicForm("create_form", {
       price: {
         validators: {
           numeric: {
@@ -67,23 +67,23 @@
         url: "{{ route('staff-payment.store', $staff->id) }}",
         type: "POST",
         data: data,
-        success: function(data) {
+        success: function (data) {
           $("#create_modal").modal("hide");
-          table.ajax.reload(null,false);
+          table.ajax.reload(null, false);
           submitButton.disabled = false;
           toastr.success("Başarılı!");
         },
-        error: function(err) {
+        error: function (err) {
           toastr.error("Bir sorun var daha sonra tekrar deneyin!");
         }
       });
     }, () => {
       console.log("invalidated")
     }, (form, validator) => {
-      $(form).find('.safe_id_select').on('change', function() {
+      $(form).find('.safe_id_select').on('change', function () {
         validator.revalidateField('safe_id');
       });
-      $(form).find('.expense_type_id_select').on('change', function() {
+      $(form).find('.expense_type_id_select').on('change', function () {
         validator.revalidateField('staff_payment_type_id');
       });
     });

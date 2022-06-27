@@ -3,7 +3,7 @@
   <x-slot name="body">
     <x-form.form id="staff_payment_type_create_form">
       <div class="row row-cols-1">
-        <x-form.input name="name" label="Ad" placeholder="Ad" required />
+        <x-form.input name="name" label="Ad" placeholder="Ad" required/>
       </div>
       <x-form.button>Kaydet</x-form.button>
     </x-form.form>
@@ -11,7 +11,7 @@
 </x-modal.modal>
 @push('customscripts')
   <script>
-    validateForm("staff_payment_type_create_form", {
+    validateBasicForm("staff_payment_type_create_form", {
       name: {
         validators: {
           notEmpty: {
@@ -29,12 +29,12 @@
         url: "{{ route('staff-payment-type.store') }}",
         type: "POST",
         data: data,
-        success: function(data) {
+        success: function (data) {
           $("#staff_payment_type_create_modal").modal("hide");
           initStaffPaymentTypeData();
           toastr.success("Başarılı!");
         },
-        error: function(err) {
+        error: function (err) {
           toastr.error("Bir sorun var daha sonra tekrar deneyin!");
         }
       });

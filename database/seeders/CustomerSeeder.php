@@ -16,10 +16,10 @@ class CustomerSeeder extends Seeder
      */
     public function run()
     {
-      $faker = Factory::create('tr_TR');
-      $faker->addProvider(new Commerce($faker));
-      foreach (range(1, 20) as $item) {
-        Customer::create([
+        $faker = Factory::create('tr_TR');
+        $faker->addProvider(new Commerce($faker));
+        foreach (range(1, 20) as $item) {
+            Customer::create([
           'name' => $faker->firstName,
           'phone' => $faker->phoneNumber,
           'surname' => $faker->lastName,
@@ -31,6 +31,6 @@ class CustomerSeeder extends Seeder
           'gender' => $faker->boolean,
           'customer_role_id' => 1
         ]);
-      }
+        }
     }
 }

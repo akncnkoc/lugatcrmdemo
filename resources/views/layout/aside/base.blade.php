@@ -9,7 +9,7 @@
      data-kt-drawer-toggle="#kt_aside_mobile_toggle">
   <div class="aside-logo flex-column-auto">
     <a href="?page=index">
-      <img alt="Logo" src="{{asset('media/logos/logo.png')}}" class="h-25px logo" />
+      <img alt="Logo" src="{{asset('media/logos/logo.png')}}" class="h-25px logo"/>
     </a>
   </div>
   <div class="aside-menu flex-column-fluid">

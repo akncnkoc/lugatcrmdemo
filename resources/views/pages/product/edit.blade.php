@@ -3,26 +3,26 @@
   <x-slot name="body">
     <x-form.form id="edit_form">
       <div class="row row-cols-1">
-        <x-form.input name="name" label="Ürün Adı" placeholder="Ürün Adı" required />
+        <x-form.input name="name" label="Ürün Adı" placeholder="Ürün Adı" required/>
       </div>
       <div class="row row-cols-2">
-        <x-form.input name="model_code" label="Model Kodu" placeholder="Model Kodu" />
+        <x-form.input name="model_code" label="Model Kodu" placeholder="Model Kodu"/>
         <x-form.select label="Ürün Tipi" name="product_type_id" :asyncload="route('product_type.select')" required editing
-          hint="Ürün tipi ürünün genel modelini belirtir ve ürün raporunun kategorilenebilmesi için gereklidir."
-          parent="#edit_modal" />
+                       hint="Ürün tipi ürünün genel modelini belirtir ve ürün raporunun kategorilenebilmesi için gereklidir."
+                       parent="#edit_modal"/>
       </div>
       <div class="row row-cols-2">
-        <x-form.input name="buy_price" label="Alış Fiyatı" placeholder="Alış Fiyatı" money required />
-        <x-form.select label="Kasa" name="buy_price_safe_id" editing :asyncload="route('safe.select')" required parent="#edit_modal" />
+        <x-form.input name="buy_price" label="Alış Fiyatı" placeholder="Alış Fiyatı" money required/>
+        <x-form.select label="Kasa" name="buy_price_safe_id" editing :asyncload="route('safe.select')" required parent="#edit_modal"/>
       </div>
       <div class="row row-cols-2">
-        <x-form.input name="sale_price" label="Satış Fiyatı" placeholder="Satış Fiyatı" money required />
-        <x-form.select label="Kasa" name="sale_price_safe_id" editing :asyncload="route('safe.select')" required parent="#edit_modal" />
+        <x-form.input name="sale_price" label="Satış Fiyatı" placeholder="Satış Fiyatı" money required/>
+        <x-form.select label="Kasa" name="sale_price_safe_id" editing :asyncload="route('safe.select')" required parent="#edit_modal"/>
       </div>
       <x-form.select label="Tedarikçiler" name="suppliers" editing :asyncload="route('supplier.select')" required multiple
-        parent="#edit_modal" />
+                     parent="#edit_modal"/>
       <x-form.checkbox label="Kritik Stok Uyarısı" name="critical_stock_alert"
-        hint="Ürün'de kritik stok kaldığı zaman bilgilendirilmek için kullanılır." />
+                       hint="Ürün'de kritik stok kaldığı zaman bilgilendirilmek için kullanılır."/>
       <x-form.button>Kaydet</x-form.button>
     </x-form.form>
   </x-slot>
@@ -32,7 +32,7 @@
   <script>
     var id;
     var blockUI = new KTBlockUI(document.querySelector("#edit_modal_target"));
-    $("#edit_modal").on('shown.bs.modal', function(e) {
+    $("#edit_modal").on('shown.bs.modal', function (e) {
       id = $(e.target).data('editId');
       $.ajax({
         url: "{{ route('product.get') }}",
@@ -43,7 +43,7 @@
         beforeSend: () => {
           blockUI.block();
         },
-        success: function(data) {
+        success: function (data) {
           $(editForm).find('input[name="name"]').val(data.name);
           $(editForm).find('input[name="model_code"]').val(data.model_code);
           $(editForm).find('input[name="buy_price"]').val(data.buy_price).maskMoney("mask")
@@ -65,7 +65,7 @@
           $(editForm).find('input[name="critical_stock_alert"]').prop('checked', data.critical_stock_alert);
           blockUI.release();
         },
-        error: function() {
+        error: function () {
           toastr.error("Yüklemede bir sorun oluştu, tekrar deneyin");
           blockUI.release()
         }
@@ -74,7 +74,7 @@
     var {
       form: editForm,
       validator: editValidator
-    } = validateForm("edit_form", {
+    } = validateBasicForm("edit_form", {
       name: {
         validators: {
           notEmpty: {
@@ -139,25 +139,25 @@
         url: "{{ route('product.update') }}",
         type: "POST",
         data: data,
-        success: function(data) {
+        success: function (data) {
           $("#edit_modal").modal("hide");
-          table.ajax.reload(null,false);
+          table.ajax.reload(null, false);
           toastr.success("Başarılı!");
         },
-        error: function(err) {
+        error: function (err) {
           toastr.error("Bir sorun var daha sonra tekrar deneyin!");
         }
       });
     }, () => {
       console.log("invalidated")
     }, (form, validator) => {
-      $(form).find('.buy_price_safe_id_edit_select').on('change', function() {
+      $(form).find('.buy_price_safe_id_edit_select').on('change', function () {
         validator.revalidateField('buy_price_safe_id');
       });
-      $(form).find('.sale_price_safe_id_edit_select').on('change', function() {
+      $(form).find('.sale_price_safe_id_edit_select').on('change', function () {
         validator.revalidateField('sale_price_safe_id');
       });
-      $(form).find('.product_type_id_edit_select').on('change', function() {
+      $(form).find('.product_type_id_edit_select').on('change', function () {
         validator.revalidateField('product_type_id');
       });
     });

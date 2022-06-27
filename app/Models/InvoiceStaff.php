@@ -2,39 +2,21 @@
 
 namespace App\Models;
 
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Carbon;
-use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * App\Models\InvoiceStaff
  *
- * @property int $id
- * @property int|null $invoice_id
- * @property int|null $staff_id
- * @property float|null $staff_share
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
- * @property-read int|null $activities_count
  * @property-read \App\Models\Invoice|null $invoice
  * @property-read \App\Models\Staff|null $staff
  * @method static Builder|InvoiceStaff newModelQuery()
  * @method static Builder|InvoiceStaff newQuery()
  * @method static Builder|InvoiceStaff query()
- * @method static Builder|InvoiceStaff whereCreatedAt($value)
- * @method static Builder|InvoiceStaff whereId($value)
- * @method static Builder|InvoiceStaff whereInvoiceId($value)
- * @method static Builder|InvoiceStaff whereStaffId($value)
- * @method static Builder|InvoiceStaff whereStaffShare($value)
- * @method static Builder|InvoiceStaff whereUpdatedAt($value)
- * @mixin Eloquent
+ * @mixin \Eloquent
  */
 class InvoiceStaff extends Model
 {
-
   protected static $logAttributes = [];
   protected $guarded = [];
 

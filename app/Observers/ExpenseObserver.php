@@ -10,11 +10,11 @@ class ExpenseObserver
   public function created(Expense $expense)
   {
     $safe_log = $expense->safe_log()->create([
-      'price' => $expense->price,
-      'content' => sprintf("%s gider tipinde kasadan %s %s para çıkışı oldu", $expense->expense_type->name, $expense->price, $expense->safe->currency->code),
-      'safe_id' => $expense->safe->id,
+      'price'        => $expense->price,
+      'content'      => sprintf("%s gider tipinde kasadan %s %s para çıkışı oldu", $expense->expense_type->name, $expense->price, $expense->safe->currency->code),
+      'safe_id'      => $expense->safe->id,
       'process_type' => AppHelper::OUTPUT,
-      'date' => $expense->date
+      'date'         => $expense->date
     ]);
     $expense->safe_log()->associate($safe_log)->saveQuietly();
   }
@@ -26,11 +26,11 @@ class ExpenseObserver
       $expense->saveQuietly(['safe_log_id', null]);
     }
     $safe_log = $expense->safe_log()->create([
-      'price' => $expense->price,
-      'content' => sprintf("%s gider tipinde kasadan %s %s para çıkışı oldu", $expense->expense_type->name, $expense->price, $expense->safe->currency->code),
-      'safe_id' => $expense->safe->id,
+      'price'        => $expense->price,
+      'content'      => sprintf("%s gider tipinde kasadan %s %s para çıkışı oldu", $expense->expense_type->name, $expense->price, $expense->safe->currency->code),
+      'safe_id'      => $expense->safe->id,
       'process_type' => AppHelper::OUTPUT,
-      'date' => $expense->date
+      'date'         => $expense->date
     ]);
     $expense->safe_log()->associate($safe_log)->saveQuietly();
   }

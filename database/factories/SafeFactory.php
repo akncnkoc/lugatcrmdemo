@@ -10,12 +10,12 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class SafeFactory extends Factory
 {
-  public function definition()
-  {
-    return [
+    public function definition()
+    {
+        return [
       'name' => $this->faker->name,
       'total' => 0,
       'currency_id' => Currency::factory()
     ];
-  }
+    }
 }

@@ -3,13 +3,13 @@
 //
 
 .bootstrap-maxlength {
-    z-index: 1040 !important;
+  z-index: 1040 !important;
 
-    &.badge {
-        display: inline-flex !important;
-    }
+  &.badge {
+    display: inline-flex !important;
+  }
 
-    .modal & {
-        z-index: ($zindex-modal + 5) !important;
-    }
+  .modal & {
+    z-index: ($zindex-modal + 5) !important;
+  }
 }

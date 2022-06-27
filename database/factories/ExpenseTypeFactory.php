@@ -9,10 +9,10 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ExpenseTypeFactory extends Factory
 {
-  public function definition()
-  {
-    return [
+    public function definition()
+    {
+        return [
       'name' => $this->faker->name
     ];
-  }
+    }
 }

@@ -26,13 +26,13 @@
     </div>
     <div class="fs-3 mb-4">Ürün Sayısı</div>
     <div class="row row-cols-2">
-      <x-form.input name="filter_min_product" label="Min. Ürün Sayısı" placeholder="Min. Ürün Sayısı" value="1" />
-      <x-form.input name="filter_max_product" label="Maks. Ürün Sayısı" placeholder="Maks. Ürün Sayısı" />
+      <x-form.input name="filter_min_product" label="Min. Ürün Sayısı" placeholder="Min. Ürün Sayısı" value="1"/>
+      <x-form.input name="filter_max_product" label="Maks. Ürün Sayısı" placeholder="Maks. Ürün Sayısı"/>
     </div>
     <div class="fs-3 mb-4">Giriş Tarihi</div>
     <div class="row row-cols-2">
-      <x-form.input name="filter_min_date" label="Min. Tarih" placeholder="Min. Tarih" date />
-      <x-form.input name="filter_max_date" label="Maks. Tarih" placeholder="Maks. Tarih" date />
+      <x-form.input name="filter_min_date" label="Min. Tarih" placeholder="Min. Tarih" date/>
+      <x-form.input name="filter_max_date" label="Maks. Tarih" placeholder="Maks. Tarih" date/>
     </div>
     <div class="d-flex justify-content-end">
       <button class="btn btn-bg-light btn-icon-info btn-text-info" data-bs-custom-class="tooltip-dark" type="button"

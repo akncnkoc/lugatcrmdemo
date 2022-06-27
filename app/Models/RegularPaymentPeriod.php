@@ -9,14 +9,14 @@ use Illuminate\Database\Eloquent\Model;
  * App\Models\RegularPaymentPeriod
  *
  * @property int $id
- * @property int|null $regular_payment_id
  * @property string $repeat_date
  * @property string $price
- * @property int $safe_id
  * @property int $completed
+ * @property int $safe_id
  * @property int|null $safe_log_id
+ * @property int|null $regular_payment_id
  * @property-read \App\Models\RegularPayment|null $regular_payment
- * @property-read \App\Models\Safe $safe
+ * @property-read \App\Models\Safe|null $safe
  * @property-read \App\Models\SafeLog|null $safe_log
  * @method static \Illuminate\Database\Eloquent\Builder|RegularPaymentPeriod newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|RegularPaymentPeriod newQuery()

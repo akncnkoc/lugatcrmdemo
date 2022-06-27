@@ -9,27 +9,27 @@
     <div class="row row-cols-1">
       <x-form.select :label="__('globals/words.expense_type')"
                      name="filter_expense_type_id"
-                     :asyncload="route('expense_type.select')" />
+                     :asyncload="route('expense_type.select')"/>
     </div>
     <div class="row row-cols-2">
       <x-form.input name="filter_min_price"
                     :label="__('globals/words.min_price')"
                     :placeholder="__('globals/words.min_price')"
-                    money />
+                    money/>
       <x-form.input name="filter_max_price"
                     :label="__('globals/words.max_price')"
                     :placeholder="__('globals/words.min_price')"
-                    money />
+                    money/>
     </div>
     <div class="row row-cols-2">
       <x-form.input name="filter_min_date"
                     :label="__('globals/words.min_date')"
                     :placeholder="__('globals/words.min_date')"
-                    :date="true" />
+                    :date="true"/>
       <x-form.input name="filter_max_date"
                     :label="__('globals/words.max_date')"
                     :placeholder="__('globals/words.max_date')"
-                    :date="true" />
+                    :date="true"/>
     </div>
     <div class="d-flex justify-content-end">
       <button class="btn btn-bg-light btn-icon-info btn-text-info"

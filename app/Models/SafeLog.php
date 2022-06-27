@@ -3,59 +3,43 @@
 namespace App\Models;
 
 use App\Observers\SafeLogObserver;
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Carbon;
-use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * App\Models\SafeLog
  *
  * @property int $id
  * @property string|null $content
- * @property string|null $price
- * @property int|null $safe_id
- * @property string|null $enter_date
- * @property int|null $input
- * @property string|null $commission
+ * @property string $price
+ * @property string $normal_price
+ * @property int $process_type
+ * @property string $commission
+ * @property string|null $date
+ * @property int $safe_id
  * @property int|null $cash_register_id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Activitylog\Models\Activity[] $activities
- * @property-read int|null $activities_count
- * @property-read \App\Models\CurrencyType $currency
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\CashRegister|null $cash_register
  * @property-read \App\Models\Safe|null $safe
  * @method static Builder|SafeLog newModelQuery()
  * @method static Builder|SafeLog newQuery()
- * @method static \Illuminate\Database\Query\Builder|SafeLog onlyTrashed()
  * @method static Builder|SafeLog query()
  * @method static Builder|SafeLog whereCashRegisterId($value)
  * @method static Builder|SafeLog whereCommission($value)
  * @method static Builder|SafeLog whereContent($value)
  * @method static Builder|SafeLog whereCreatedAt($value)
- * @method static Builder|SafeLog whereDeletedAt($value)
- * @method static Builder|SafeLog whereEnterDate($value)
+ * @method static Builder|SafeLog whereDate($value)
  * @method static Builder|SafeLog whereId($value)
- * @method static Builder|SafeLog whereInput($value)
+ * @method static Builder|SafeLog whereNormalPrice($value)
  * @method static Builder|SafeLog wherePrice($value)
+ * @method static Builder|SafeLog whereProcessType($value)
  * @method static Builder|SafeLog whereSafeId($value)
  * @method static Builder|SafeLog whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|SafeLog withTrashed()
- * @method static \Illuminate\Database\Query\Builder|SafeLog withoutTrashed()
- * @mixin Eloquent
- * @property-read \App\Models\CashRegister|null $cash_register
- * @property string $normal_price
- * @property int $process_type
- * @property string|null $date
- * @method static Builder|SafeLog whereDate($value)
- * @method static Builder|SafeLog whereNormalPrice($value)
- * @method static Builder|SafeLog whereProcessType($value)
+ * @mixin \Eloquent
  */
 class SafeLog extends Model
 {
-
   protected static $logAttributes = [];
   protected $guarded = [];
 

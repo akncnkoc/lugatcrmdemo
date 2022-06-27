@@ -16,10 +16,10 @@ class ExpenseRequest extends FormRequest
   public function rules()
   {
     return [
-      'price' => [new PriceGreaterThenOne()],
-      'date' => 'date_format:d-m-Y',
+      'price'           => [new PriceGreaterThenOne()],
+      'date'            => 'date_format:d-m-Y',
       'expense_type_id' => 'exists:expense_types,id',
-      "safe_id" => 'exists:safes,id'
+      "safe_id"         => 'exists:safes,id'
     ];
   }
 }

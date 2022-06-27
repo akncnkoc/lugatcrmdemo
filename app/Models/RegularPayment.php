@@ -12,25 +12,24 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  * @property string|null $comment
  * @property int $regular_payment_type_id
+ * @property string|null $created_at
+ * @property string|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\RegularPaymentPeriod[] $periods
  * @property-read int|null $periods_count
- * @property-read \App\Models\RegularPaymentType $regular_payment_type
+ * @property-read \App\Models\RegularPaymentType|null $regular_payment_type
  * @method static \Illuminate\Database\Eloquent\Builder|RegularPayment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|RegularPayment newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|RegularPayment query()
  * @method static \Illuminate\Database\Eloquent\Builder|RegularPayment whereComment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RegularPayment whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RegularPayment whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RegularPayment whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RegularPayment whereRegularPaymentTypeId($value)
- * @mixin \Eloquent
- * @property string|null $created_at
- * @property string|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|RegularPayment whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RegularPayment whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class RegularPayment extends Model
 {
-
   public $timestamps = false;
   protected $guarded = [];
 
@@ -50,5 +49,4 @@ class RegularPayment extends Model
   {
     return $this->hasMany(RegularPaymentPeriod::class, 'regular_payment_id');
   }
-
 }

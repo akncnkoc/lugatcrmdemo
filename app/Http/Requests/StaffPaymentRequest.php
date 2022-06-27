@@ -11,11 +11,12 @@ class StaffPaymentRequest extends FormRequest
   {
     return true;
   }
+
   public function rules()
   {
     return [
-      'price' => [new PriceGreaterThenOne()],
-      'safe_id' => 'exists:safes,id',
+      'price'                 => [new PriceGreaterThenOne()],
+      'safe_id'               => 'exists:safes,id',
       'staff_payment_type_id' => 'exists:staff_payment_types,id',
     ];
   }

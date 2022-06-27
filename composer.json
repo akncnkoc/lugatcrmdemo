@@ -20,7 +20,10 @@
     "mbezhanov/faker-provider-collection": "*",
     "snlbaral/faker-ecommerce": "^2.0",
     "spatie/laravel-activitylog": "*",
-    "yajra/laravel-datatables-oracle": "*"
+    "stechstudio/laravel-php-cs-fixer": "^3.1",
+    "yajra/laravel-datatables-oracle": "*",
+    "ext-simplexml": "*",
+    "ext-curl": "*"
   },
   "require-dev": {
     "fakerphp/faker": "^1.9.1",
@@ -56,7 +59,8 @@
     ],
     "post-create-project-cmd": [
       "@php artisan key:generate --ansi"
-    ]
+    ],
+    "php-cs-fixer": "php-cs-fixer --rules=@PSR4"
   },
   "extra": {
     "laravel": {

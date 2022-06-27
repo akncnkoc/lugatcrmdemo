@@ -4,63 +4,75 @@ namespace App\Http\Controllers;
 
 use App\AppHelper;
 use App\Models\ProductType;
+use DB;
+use Exception;
 use Illuminate\Http\Request;
+use Throwable;
 
 class ProductTypeController extends Controller
 {
-  public function get(Request $request)
+  public function all()
   {
-    if ($request->ajax()) {
-      return ProductType::where('id', $request->get('id'))->firstOrFail();
-    }
+    return ProductType::all();
   }
-  public function all(Request $request)
-  {
-    if ($request->ajax()) {
-      return ProductType::all();
-    }
-  }
+
   public function select(Request $request)
   {
     return AppHelper::_select2($request, ProductType::class);
   }
+
+  /**
+   * @throws Throwable
+   */
   public function store(Request $request)
   {
     try {
-      \DB::beginTransaction();
+      DB::beginTransaction();
       ProductType::create($request->only(['name', 'initial_code']));
-      \DB::commit();
+      DB::commit();
       return response()->json(true);
-    } catch (\Exception $e) {
-      \DB::rollBack();
+    } catch (Exception $e) {
+      DB::rollBack();
       return response()->json($e->getMessage(), 500);
     }
   }
+
+  /**
+   * @throws Throwable
+   */
   public function update(Request $request)
   {
     try {
-      \DB::beginTransaction();
+      DB::beginTransaction();
       $role = ProductType::where('id', $request->get('id'))->firstOrFail();
       $role->update($request->only(['name', 'initial_code']));
-      \DB::commit();
+      DB::commit();
       return response()->json(true);
-    } catch (\Exception $e) {
-      \DB::rollBack();
-      return response()->json(false, 500);
+    } catch (Exception $e) {
+      DB::rollBack();
+      return response()->json($e->getMessage(), 500);
     }
   }
 
+  public function get(Request $request)
+  {
+    return ProductType::where('id', $request->get('id'))->firstOrFail();
+  }
+
+  /**
+   * @throws Throwable
+   */
   public function delete(Request $request)
   {
     try {
-      \DB::beginTransaction();
+      DB::beginTransaction();
       $type = ProductType::where('id', $request->get('id'))->firstOrFail();
       $type->delete();
-      \DB::commit();
+      DB::commit();
       return response()->json(true);
-    } catch (\Exception $e) {
-      \DB::rollBack();
-      return response()->json(false, 500);
+    } catch (Exception $e) {
+      DB::rollBack();
+      return response()->json($e->getMessage(), 500);
     }
   }
 }

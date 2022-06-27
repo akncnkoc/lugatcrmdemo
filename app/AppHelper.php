@@ -3,9 +3,7 @@
 namespace App;
 
 use App\Models\Currency;
-use App\Models\CurrencyType;
 use Illuminate\Support\Carbon;
-use function App\Http\Controllers\recexpand;
 
 class AppHelper
 {
@@ -47,7 +45,7 @@ class AppHelper
   public static function convertedPrice($model, $primaryCurrency, $column = "price")
   {
     $convertedRate = $model->safe->currency->banknote_sell / $primaryCurrency->banknote_sell;
-    return round(self::currencyToDecimal($model->$column) * $convertedRate,2);
+    return round(self::currencyToDecimal($model->$column) * $convertedRate, 2);
   }
 
   public static function currencyToDecimal($value): float
@@ -101,16 +99,18 @@ class AppHelper
 
   public static function convertDate($date, $format = "d.m.Y H:i:s")
   {
-    if ($date)
+    if ($date) {
       return Carbon::parse($date)->format($format);
-    else
+    } else {
       return Carbon::now()->format('Y-m-d H:i:s');
+    }
   }
 
   public static function convertDateGet($date = null, $format = "d.m.Y H:i:s")
   {
-    if ($date != null)
+    if ($date != null) {
       return Carbon::parse($date)->format($format);
+    }
   }
 
   public static function isValidTelephoneNumber(string $telephone, int $minDigits = 9, int $maxDigits = 14): bool
@@ -129,12 +129,19 @@ class AppHelper
 
   public static function formatFileSizeUnits($bytes, $getNumber = false)
   {
-    if ($bytes >= 1073741824) $bytes = !$getNumber ? number_format($bytes / 1073741824, 2) . ' GB' : number_format($bytes / 1073741824, 2);
-    elseif ($bytes >= 1048576) $bytes = !$getNumber ? number_format($bytes / 1048576, 2) . ' MB' : number_format($bytes / 1048576, 2);
-    elseif ($bytes >= 1024) $bytes = !$getNumber ? number_format($bytes / 1024, 2) . ' KB' : number_format($bytes / 1024, 2);
-    elseif ($bytes > 1) $bytes = !$getNumber ? $bytes . ' bayt' : $bytes;
-    elseif ($bytes == 1) $bytes = !$getNumber ? $bytes . ' bayt' : $bytes;
-    else $bytes = !$getNumber ? '0 bayt' : 0;
+    if ($bytes >= 1073741824) {
+      $bytes = !$getNumber ? number_format($bytes / 1073741824, 2) . ' GB' : number_format($bytes / 1073741824, 2);
+    } elseif ($bytes >= 1048576) {
+      $bytes = !$getNumber ? number_format($bytes / 1048576, 2) . ' MB' : number_format($bytes / 1048576, 2);
+    } elseif ($bytes >= 1024) {
+      $bytes = !$getNumber ? number_format($bytes / 1024, 2) . ' KB' : number_format($bytes / 1024, 2);
+    } elseif ($bytes > 1) {
+      $bytes = !$getNumber ? $bytes . ' bayt' : $bytes;
+    } elseif ($bytes == 1) {
+      $bytes = !$getNumber ? $bytes . ' bayt' : $bytes;
+    } else {
+      $bytes = !$getNumber ? '0 bayt' : 0;
+    }
     return $bytes;
   }
 
@@ -237,7 +244,7 @@ class AppHelper
     $response = array();
     foreach ($items['data'] as $item) {
       $response[] = array(
-        "id" => $item[$key],
+        "id"   => $item[$key],
         "text" => $item[$text]
       );
     }
@@ -290,5 +297,69 @@ class AppHelper
       $month[] = Carbon::now()->month($m)->getTranslatedMonthName();
     }
     return $month;
+  }
+
+  public static function getApexChartLocaleConfiguration()
+  {
+    return [
+      "months"      => [
+        __('globals/dates.january'),
+        __('globals/dates.february'),
+        __('globals/dates.march'),
+        __('globals/dates.april'),
+        __('globals/dates.may'),
+        __('globals/dates.june'),
+        __('globals/dates.july'),
+        __('globals/dates.august'),
+        __('globals/dates.september'),
+        __('globals/dates.october'),
+        __('globals/dates.november'),
+        __('globals/dates.december')
+      ],
+      "shortMonths" => [
+        __('globals/dates.january_short'),
+        __('globals/dates.february_short'),
+        __('globals/dates.march_short'),
+        __('globals/dates.april_short'),
+        __('globals/dates.may_short'),
+        __('globals/dates.june_short'),
+        __('globals/dates.july_short'),
+        __('globals/dates.august_short'),
+        __('globals/dates.september_short'),
+        __('globals/dates.october_short'),
+        __('globals/dates.november_short'),
+        __('globals/dates.december_short')
+      ],
+      "days"        => [
+        __('globals/dates.sunday'),
+        __('globals/dates.monday'),
+        __('globals/dates.tuesday'),
+        __('globals/dates.wednesday'),
+        __('globals/dates.thursday'),
+        __('globals/dates.friday'),
+        __('globals/dates.saturday')
+      ],
+      "shortDays"   => [
+        __('globals/dates.sunday_short'),
+        __('globals/dates.monday_short'),
+        __('globals/dates.tuesday_short'),
+        __('globals/dates.wednesday_short'),
+        __('globals/dates.thursday_short'),
+        __('globals/dates.friday_short'),
+        __('globals/dates.saturday_short')
+      ],
+      "toolbar"     => [
+        "exportToSVG"   => __('globals/words.exporttosvg'),
+        "exportToCSV" => __('globals/words.exporttocsv'),
+        "exportToPNG"   => __('globals/words.exporttopng'),
+        "menu"          => __('globals/words.menu'),
+        "selection"     => __('globals/words.selection'),
+        "selectionZoom" => __('globals/words.selection_zoom'),
+        "zoomIn"        => __('globals/words.zoom_in'),
+        "zoomOut"       => __('globals/words.zoom_out'),
+        "pan"           => __('globals/words.pan'),
+        "reset"         => __('globals/words.reset_zoom')
+      ]
+    ];
   }
 }

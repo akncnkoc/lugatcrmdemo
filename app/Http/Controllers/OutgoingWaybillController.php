@@ -7,31 +7,22 @@ use App\Models\OutgoingWaybill;
 use App\Models\OutgoingWaybillProduct;
 use App\Models\Product;
 use App\Models\ProductLog;
+use DB;
+use Exception;
 use Illuminate\Http\Request;
+use Throwable;
 use Yajra\DataTables\EloquentDataTable;
 
 class OutgoingWaybillController extends Controller
 {
-  public function index(Request $request)
+  public function index()
   {
     return view('pages.product.waybill.outgoing.index');
   }
 
-  public function get(Request $request)
-  {
-    try {
-      if ($request->ajax()) {
-        try {
-          return response()->json(OutgoingWaybill::with('products.sale_price_safe', 'products.product', 'customer')->find($request->get('id')));
-        } catch (\Exception $e) {
-          return response()->json(false, 500);
-        }
-      }
-    } catch (\Throwable $th) {
-      return response()->json(false, 500);
-    }
-  }
-
+  /**
+   * @throws Exception
+   */
   public function table(Request $request)
   {
     $incomingWaybills = OutgoingWaybill::with([
@@ -55,12 +46,12 @@ class OutgoingWaybillController extends Controller
 
           if (!$searchedSale) {
             $totaledSalePrices[] = [
-              'currency_id' => $incomingWaybillProduct->sale_price_safe->currency->id,
+              'currency_id'   => $incomingWaybillProduct->sale_price_safe->currency->id,
               'currency_code' => $incomingWaybillProduct->sale_price_safe->currency->code,
-              'total' => (double)$incomingWaybillProduct->sale_price
+              'total'         => (float)$incomingWaybillProduct->sale_price
             ];
           } else {
-            $totaledSalePrices[$searchedSaleIndex]['total'] += (double)$incomingWaybillProduct->sale_price;
+            $totaledSalePrices[$searchedSaleIndex]['total'] += (float)$incomingWaybillProduct->sale_price;
           }
         });
 
@@ -95,82 +86,99 @@ class OutgoingWaybillController extends Controller
       ->make();
   }
 
+  public function get(Request $request)
+  {
+    try {
+      return response()->json(OutgoingWaybill::with('products.sale_price_safe', 'products.product', 'customer')->find($request->get('id')));
+    } catch (Exception $e) {
+      return response()->json($e->getMessage(), 500);
+    }
+  }
+
+  /**
+   * @throws Throwable
+   */
   public function store(Request $request)
   {
     try {
       $request->merge([
         'date' => AppHelper::convertDate($request->get('date'), 'Y-m-d H:i:s')
       ]);
-      \DB::beginTransaction();
+      DB::beginTransaction();
       $incomingWaybill = OutgoingWaybill::create([
         'waybill_date' => $request->get('date'),
-        'customer_id' => $request->get('customer_id')
+        'customer_id'  => $request->get('customer_id')
       ]);
       if ($request->has('waybill_product')) {
         foreach ($request->get('waybill_product') as $waybill_product) {
           for ($i = 0; $i < (int)$waybill_product['quantity']; $i++) {
             $product = Product::findOrFail($waybill_product['product_id']);
             $incomingWaybill->products()->create([
-              'sale_price' => AppHelper::currencyToDecimal($waybill_product['sale_price']),
+              'sale_price'         => AppHelper::currencyToDecimal($waybill_product['sale_price']),
               'sale_price_safe_id' => $waybill_product['sale_price_safe_id'],
-              'product_id' => $product->id,
-              'waybill_id' => $incomingWaybill->id
+              'product_id'         => $product->id,
+              'waybill_id'         => $incomingWaybill->id
             ]);
           }
         }
       }
-      \DB::commit();
+      DB::commit();
       return response()->json(true);
     } catch (Exception $e) {
-      \DB::rollBack();
+      DB::rollBack();
       return response()->json($e->getMessage(), 500);
     }
   }
 
+  /**
+   * @throws Throwable
+   */
   public function update(Request $request)
   {
     try {
       $request->merge([
         'waybill_date' => AppHelper::convertDate($request->get('waybill_date'), 'Y-m-d H:i:s')
       ]);
-      \DB::beginTransaction();
+      DB::beginTransaction();
       $incomingWaybill = OutgoingWaybill::where('id', $request->get('id'))->firstOr(fn() => response()->json(false)->send());
       $incomingWaybill->update([
         'waybill_date' => $request->get('waybill_date'),
-        'customer_id' => $request->get('customer_id')
+        'customer_id'  => $request->get('customer_id')
       ]);
       if ($request->has('waybill_product_edit')) {
         foreach ($request->get('waybill_product_edit') as $waybillProductSendItem) {
           $waybillProductItem = OutgoingWaybillProduct::where('id', $waybillProductSendItem['id']);
           $waybillProductItem->update([
-            'sale_price' => AppHelper::currencyToDecimal($waybillProductSendItem['sale_price']),
+            'sale_price'         => AppHelper::currencyToDecimal($waybillProductSendItem['sale_price']),
             'sale_price_safe_id' => $waybillProductSendItem['sale_price_safe_id'],
           ]);
         }
       }
-      \DB::commit();
+      DB::commit();
       return response()->json(true);
-    } catch (\Exception $e) {
-      \DB::rollBack();
+    } catch (Exception $e) {
+      DB::rollBack();
       return response()->json($e->getMessage(), 500);
     }
   }
 
+  /**
+   * @throws Throwable
+   */
   public function delete(Request $request)
   {
     try {
-      \DB::beginTransaction();
+      DB::beginTransaction();
       $incomingWaybill = OutgoingWaybill::where('id', $request->get('id'))->firstOr(fn() => response()->json(false)->send());
       $incomingWaybill->products->each(function (OutgoingWaybillProduct $item) use ($incomingWaybill) {
-        ProductLog::where('product_id', $item->product_id)->where('waybill_id', $incomingWaybill->id)->get()->each->forceDelete();
-        $item->forceDelete();
+        ProductLog::where('product_id', $item->product_id)->where('waybill_id', $incomingWaybill->id)->get()->each(fn(ProductLog $productLog) => $productLog->forceDelete());
       });
       $incomingWaybill->delete();
 
-      \DB::commit();
+      DB::commit();
       return response()->json(true);
-    } catch (\Exception $e) {
-      \DB::rollBack();
+    } catch (Exception $e) {
+      DB::rollBack();
       return response()->json($e->getMessage(), 500);
     }
   }

@@ -6,7 +6,6 @@ use App\ApexChart\ApexChart;
 
 class ApexAreaChart extends ApexChart
 {
-
   public function __construct($id)
   {
     parent::__construct();
@@ -24,13 +23,13 @@ class ApexAreaChart extends ApexChart
     return $this;
   }
 
-  public function setLegendShown(bool $show): static
+  public function setLegendShown(bool $show = false): static
   {
     $this->legend['show'] = $show;
     return $this;
   }
 
-  public function setDataLabelsEnabled(bool $enabled): static
+  public function setDataLabelsEnabled(bool $enabled = false): static
   {
     $this->dataLabels['enabled'] = $enabled;
     return $this;

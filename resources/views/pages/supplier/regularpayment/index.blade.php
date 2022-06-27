@@ -28,7 +28,7 @@
           <th class="w-10px pe-2">
             <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
               <input class="form-check-input" type="checkbox" data-kt-check="true"
-                     data-kt-check-target="#table .form-check-input" value="1" />
+                     data-kt-check-target="#table .form-check-input" value="1"/>
             </div>
           </th>
           <th>No</th>
@@ -129,10 +129,10 @@
           d.addEventListener('click', function (e) {
             e.preventDefault();
             const parent = e.target.closest('tr');
-            const supplier_name = parent.querySelectorAll('td')[2].innerText;
+            const name = parent.querySelectorAll('td')[2].innerText;
             const id = parent.querySelectorAll('td')[1].innerText;
             Swal.fire({
-              text: supplier_name + " adlı tedarikçinin irsaliyesini silmek istiyor musunuz ?",
+              html: "Tedarikçi'nin <b>" + name + "</b> adlı ödeme planını silmek istiyor musunuz ?",
               icon: "warning",
               showCancelButton: true,
               buttonsStyling: false,
@@ -145,14 +145,14 @@
             }).then(function (result) {
               if (result.value) {
                 $.ajax({
-                  url: "{{ route('incoming-waybill.delete') }}",
+                  url: "{{ route('supplier-regular-payment.delete') }}",
                   type: "POST",
                   data: {
                     id: id
                   },
                   beforeSend: function () {
                     Swal.fire({
-                      text: supplier_name + " adlı tedarikçinin irsaliyesi siliniyor...",
+                      text: "Tedarikçi'nin " + name + " adlı ödeme planını siliniyor ?",
                       icon: "info",
                       buttonsStyling: false,
                       showConfirmButton: false,
@@ -161,7 +161,7 @@
                   success: function (data) {
                     Swal.close();
                     Swal.fire({
-                      text: "Gelen irsaliye silindi",
+                      text: "Düzenli Ödeme silindi",
                       icon: "success",
                       buttonsStyling: false,
                       confirmButtonText: "Tamam",
@@ -174,7 +174,7 @@
                   error: function (err) {
                     Swal.close();
                     Swal.fire({
-                      text: "Gelen irsaliye silinemedi tekrar deneyin!",
+                      text: "Düzenli Ödeme silinemedi tekrar deneyin!",
                       icon: "error",
                       buttonsStyling: false,
                       confirmButtonText: "Tamam",

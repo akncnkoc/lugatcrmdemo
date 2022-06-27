@@ -8,27 +8,27 @@ use Tests\DuskTestCase;
 
 class ExpenseTest extends DuskTestCase
 {
-  /**
-   * @return void
-   * @throws \Throwable
-   */
-  public function test_user_can_show_expenses(): void
-  {
-    $this->browse(function (Browser $browser) {
-      $browser->visitRoute('expense.index')
+    /**
+     * @return void
+     * @throws \Throwable
+     */
+    public function test_user_can_show_expenses(): void
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visitRoute('expense.index')
         ->assertSee('Gider Listesi')
         ->storeConsoleLog('expense_index_log')
         ->pause(2000);
-    });
-  }
+        });
+    }
 
-  /**
-   * @throws \Throwable
-   */
-  public function test_user_can_add_expense(): void
-  {
-    $this->browse(function (Browser $browser) {
-      $browser->refresh()
+    /**
+     * @throws \Throwable
+     */
+    public function test_user_can_add_expense(): void
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->refresh()
         ->waitUntilMissing('.page-loading')
         ->assertMissing('.page-loading')
         ->pause(2000)
@@ -49,16 +49,16 @@ class ExpenseTest extends DuskTestCase
         ->assertValue('#create_form textarea[name="comment"]', "Yorum")
         ->click("#create_form button[type='submit']")
         ->pause(3000);
-    });
-  }
+        });
+    }
 
-  /**
-   * @throws \Throwable
-   */
-  public function test_user_can_update_expense(): void
-  {
-    $this->browse(function (Browser $browser) {
-      $browser->refresh()
+    /**
+     * @throws \Throwable
+     */
+    public function test_user_can_update_expense(): void
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->refresh()
         ->waitUntilMissing('.page-loading')
         ->assertMissing('.page-loading')
         ->pause(2000)
@@ -79,6 +79,6 @@ class ExpenseTest extends DuskTestCase
         ->assertSeeIn('.safe_id_edit_select + .select2', 'EURO')
         ->assertValue('#edit_form textarea[name="comment"]', "Yeni Yorum Geldi")
         ->click("#edit_form button[type='submit']");
-    });
-  }
+        });
+    }
 }

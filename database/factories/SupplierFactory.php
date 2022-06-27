@@ -9,12 +9,12 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class SupplierFactory extends Factory
 {
-  public function definition()
-  {
-    return [
+    public function definition()
+    {
+        return [
       'name' => $this->faker->company,
       'email' => $this->faker->companyEmail,
       'phone' => $this->faker->phoneNumber,
     ];
-  }
+    }
 }

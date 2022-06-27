@@ -7,14 +7,14 @@ use Illuminate\Database\Seeder;
 
 class VariantSeeder extends Seeder
 {
-  /**
-   * Run the database seeds.
-   *
-   * @return void
-   */
-  public function run()
-  {
-    $variants = [
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $variants = [
       ['name' => 'Boyut', 'variant_id' => 'empty'],
       ['name' => '80x150'],
       ['name' => '80x300'],
@@ -346,17 +346,18 @@ class VariantSeeder extends Seeder
       ['name' => '250 gr.'],
       ['name' => '60 gr.'],
     ];
-    $beforeVariant = null;
-    foreach ($variants as $variant){
-      if (isset($variant['variant_id'])){
         $beforeVariant = null;
-      }
-      $createvariant = Variant::create([
+        foreach ($variants as $variant) {
+            if (isset($variant['variant_id'])) {
+                $beforeVariant = null;
+            }
+            $createvariant = Variant::create([
         'name' => $variant['name'],
         'variant_id' => $beforeVariant
       ]);
-      if ($beforeVariant == null)
-        $beforeVariant = $createvariant->id;
+            if ($beforeVariant == null) {
+                $beforeVariant = $createvariant->id;
+            }
+        }
     }
-  }
 }

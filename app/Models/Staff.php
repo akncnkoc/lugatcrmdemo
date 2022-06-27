@@ -3,62 +3,51 @@
 namespace App\Models;
 
 use App\Observers\StaffObserver;
-use Eloquent;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Carbon;
-use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * App\Models\Staff
  *
  * @property int $id
- * @property string|null $name
+ * @property string $name
  * @property string|null $surname
  * @property string|null $phone
  * @property string|null $email
- * @property string|null $salary
- * @property int|null $salary_safe_id
- * @property int|null $staff_role_id
+ * @property string $salary
  * @property string|null $comment
- * @property float $default_invoice_share
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property-read Collection|\Spatie\Activitylog\Models\Activity[] $activities
- * @property-read int|null $activities_count
- * @property-read Collection|\App\Models\InvoiceStaff[] $invoice_staffs
- * @property-read int|null $invoice_staffs_count
- * @property-read Collection|\App\Models\Invoice[] $invoices
+ * @property int $gender
+ * @property int $staff_role_id
+ * @property int|null $salary_safe_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Invoice[] $invoices
  * @property-read int|null $invoices_count
- * @property-read Collection|\App\Models\StaffPayment[] $payments
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\StaffPayment[] $payments
  * @property-read int|null $payments_count
  * @property-read \App\Models\Safe|null $salary_safe
  * @property-read \App\Models\StaffRole|null $staff_role
- * @method static Builder|Staff newModelQuery()
- * @method static Builder|Staff newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Staff newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Staff newQuery()
  * @method static \Illuminate\Database\Query\Builder|Staff onlyTrashed()
- * @method static Builder|Staff query()
- * @method static Builder|Staff whereComment($value)
- * @method static Builder|Staff whereCreatedAt($value)
- * @method static Builder|Staff whereDefaultInvoiceShare($value)
- * @method static Builder|Staff whereDeletedAt($value)
- * @method static Builder|Staff whereEmail($value)
- * @method static Builder|Staff whereId($value)
- * @method static Builder|Staff whereName($value)
- * @method static Builder|Staff wherePhone($value)
- * @method static Builder|Staff whereSalary($value)
- * @method static Builder|Staff whereSalarySafeId($value)
- * @method static Builder|Staff whereStaffRoleId($value)
- * @method static Builder|Staff whereSurname($value)
- * @method static Builder|Staff whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Staff query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Staff whereComment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Staff whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Staff whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Staff whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Staff whereGender($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Staff whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Staff whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Staff wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Staff whereSalary($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Staff whereSalarySafeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Staff whereStaffRoleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Staff whereSurname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Staff whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|Staff withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Staff withoutTrashed()
- * @mixin Eloquent
- * @property int $gender
- * @method static Builder|Staff whereGender($value)
+ * @mixin \Eloquent
  */
 class Staff extends Model
 {

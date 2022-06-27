@@ -7,24 +7,17 @@ use App\Http\Requests\ProductRequest;
 use App\Models\IncomingWaybillProduct;
 use App\Models\Product;
 use DB;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Throwable;
 use Yajra\DataTables\EloquentDataTable;
 
 class ProductController extends Controller
 {
-  public function index(Request $request)
+  public function index()
   {
     return view('pages.product.index');
-  }
-
-  public function get(Request $request)
-  {
-    try {
-      return response()->json(Product::with('buy_price_safe', 'sale_price_safe', 'product_type', 'suppliers.supplier')->find($request->get('id')));
-    } catch (\Throwable $th) {
-      return response()->json(false, 500);
-    }
   }
 
   public function table(Request $request)
@@ -91,20 +84,33 @@ class ProductController extends Controller
           }
         })
         ->make();
-    } catch (\Throwable $th) {
-      return response()->json(false, 500);
+    } catch (Exception $e) {
+      return response()->json($e->getMessage(), 500);
     }
   }
 
+  public function get(Request $request)
+  {
+    try {
+      return response()->json(Product::with('buy_price_safe', 'sale_price_safe', 'product_type', 'suppliers.supplier')->find($request->get('id')));
+    } catch (Exception $e) {
+      return response()->json($e->getMessage(), 500);
+    }
+  }
+
+  /**
+   * @throws Throwable
+   */
   public function store(ProductRequest $request)
   {
     try {
       $request->merge([
-        'buy_price' => AppHelper::currencyToDecimal($request->get('buy_price')),
-        'sale_price' => AppHelper::currencyToDecimal($request->get('sale_price')),
+        'buy_price'            => AppHelper::currencyToDecimal($request->get('buy_price')),
+        'sale_price'           => AppHelper::currencyToDecimal($request->get('sale_price')),
         'critical_stock_alert' => $request->has('critical_stock_alert')
       ]);
-      $product = Product::create($request->only([
+      $product = Product::create($request->only(
+        [
           'name',
           'model_code',
           'product_type_id',
@@ -118,29 +124,33 @@ class ProductController extends Controller
       if ($request->has('suppliers')) {
         foreach ($request->get('suppliers') as $supplier) {
           $product->suppliers()->create([
-            'product_id' => $product->id,
+            'product_id'  => $product->id,
             'supplier_id' => $supplier
           ]);
         }
       }
       return response()->json(true);
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
       DB::rollBack();
-      return response()->json(false, 500);
+      return response()->json($e->getMessage(), 500);
     }
   }
 
+  /**
+   * @throws Throwable
+   */
   public function update(ProductRequest $request)
   {
     try {
       DB::beginTransaction();
       $request->merge([
-        'buy_price' => AppHelper::currencyToDecimal($request->get('buy_price')),
-        'sale_price' => AppHelper::currencyToDecimal($request->get('sale_price')),
+        'buy_price'            => AppHelper::currencyToDecimal($request->get('buy_price')),
+        'sale_price'           => AppHelper::currencyToDecimal($request->get('sale_price')),
         'critical_stock_alert' => $request->has('critical_stock_alert')
       ]);
       $product = Product::where('id', $request->get('id'))->firstOrFail();
-      $product->update($request->only([
+      $product->update($request->only(
+        [
           'name',
           'model_code',
           'buy_price',
@@ -155,19 +165,22 @@ class ProductController extends Controller
       if ($request->has('suppliers')) {
         foreach ($request->get('suppliers') as $supplier) {
           $product->suppliers()->create([
-            'product_id' => $product->id,
+            'product_id'  => $product->id,
             'supplier_id' => $supplier
           ]);
         }
       }
       DB::commit();
       return response()->json(true);
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
       DB::rollBack();
-      return response()->json(false, 500);
+      return response()->json($e->getMessage(), 500);
     }
   }
 
+  /**
+   * @throws Throwable
+   */
   public function delete(Request $request)
   {
     try {
@@ -176,15 +189,15 @@ class ProductController extends Controller
       if ($product->suppliers()->count() > 0) {
         $product->suppliers->each->delete();
       }
-      if ($product->sub_products()->count() > 0) {
-        $product->sub_products->each->delete();
+      if ($product->incoming_waybill_products()->count() > 0) {
+        $product->incoming_waybill_products->each(fn (IncomingWaybillProduct $incomingWaybillProduct) => $incomingWaybillProduct->delete());
       }
       $product->delete();
       DB::commit();
       return response()->json(true);
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
       DB::rollBack();
-      return response()->json(false, 500);
+      return response()->json($e->getMessage(), 500);
     }
   }
 

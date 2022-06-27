@@ -5,20 +5,22 @@ namespace App\Http\Controllers;
 use App\AppHelper;
 use App\Models\Product;
 use App\Models\ProductLog;
-use Illuminate\Http\Request;
+use Exception;
 use Yajra\DataTables\EloquentDataTable;
 
 class ProductLogController extends Controller
 {
-  public function index(Request $request, $product_id)
+  public function index($product_id)
   {
-    if (!$product_id) redirect()->route('product.index')->send();
+    if (!$product_id) {
+      redirect()->route('product.index')->send();
+    }
     $product = Product::where('id', $product_id)->firstOr(fn() => redirect()->route('product.index'));
 
     return view('pages.product.log.index', compact('product'));
   }
 
-  public function table(Request $request, $product_id)
+  public function table($product_id)
   {
     try {
       $product_logs = ProductLog::where('product_id', $product_id);
@@ -27,11 +29,20 @@ class ProductLogController extends Controller
         ->editColumn('date', function ($row) {
           return AppHelper::convertDate($row->date);
         })
-        ->editColumn('process_type', function ($row){
-          if ($row->process_type == AppHelper::PRODUCT_IN) return "Giriş";
-          if ($row->process_type == AppHelper::PRODUCT_OUT) return "Çıkış";
-          if ($row->process_type == AppHelper::PRODUCT_REBATE) return "İade";
-          if ($row->process_type == AppHelper::PRODUCT_SOLD) return "Satılmış";
+        ->editColumn('process_type', function ($row) {
+          if ($row->process_type == AppHelper::PRODUCT_IN) {
+            return "Giriş";
+          }
+          if ($row->process_type == AppHelper::PRODUCT_OUT) {
+            return "Çıkış";
+          }
+          if ($row->process_type == AppHelper::PRODUCT_REBATE) {
+            return "İade";
+          }
+          if ($row->process_type == AppHelper::PRODUCT_SOLD) {
+            return "Satılmış";
+          }
+          return "Bilinmiyor";
         })
 //        ->filter(function (Builder $query) use ($request) {
 //          if (!empty($request->get('name'))) {
@@ -86,8 +97,8 @@ class ProductLogController extends Controller
 //          }
 //        })
         ->make();
-    } catch (\Throwable $th) {
-      return response()->json(false, 500);
+    } catch (Exception $e) {
+      return response()->json($e->getMessage(), 500);
     }
   }
 }
