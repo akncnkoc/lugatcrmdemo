@@ -3,19 +3,17 @@
   Giderler
 @endsection
 @section('toolbar')
-  <a class="btn btn-bg-light btn-icon-info btn-text-info" id="createbutton" data-bs-custom-class="tooltip-dark"
-     data-bs-placement="top"
-     data-bs-toggle="tooltip" title="Yeni Gider Ekle" data-create-button>
-    <i class="las la-edit fs-3"></i>
-    Ekle
-  </a>
+  <x-tooltip-button :title="__('pages/expense.expense_add')" data-create-button>
+    @include('components.icons.create')
+    @lang('pages/expense.expense_add')
+  </x-tooltip-button>
 @endsection
 @section('content')
   @include('pages.expense.create')
   @include('pages.expense.edit')
   <x-card.card>
     <x-slot name="header">
-      <x-slot name="title">Gider Listesi</x-slot>
+      <x-slot name="title">@lang('pages/expense.expense_list')</x-slot>
       <x-slot name="toolbar">
         <div class="d-flex space-x-2">
           @include('pages.expense.filter')
@@ -32,11 +30,11 @@
                      data-kt-check-target="#table .form-check-input" value="1"/>
             </div>
           </th>
-          <th>No</th>
-          <th>Gider Tipi</th>
-          <th>Kasa</th>
-          <th>Tutar</th>
-          <th>Fiş Tarihi</th>
+          <th>@lang('globals/words.number')</th>
+          <th>@lang('globals/words.expense_type')</th>
+          <th>@lang('layout/aside/menu.safe')</th>
+          <th>@lang('globals/words.price')</th>
+          <th>@lang('globals/words.date')</th>
           <th class="text-center min-w-100px">İşlemler</th>
         </x-table.thead>
         <x-table.tbody></x-table.tbody>
@@ -49,165 +47,111 @@
 @endsection
 @push('customscripts')
   <script type="text/javascript">
-    var table = initTable();
-
-    function initTable(data = {}) {
-      if (table) table.destroy();
-      table = $("#table").DataTable({
-        serverSide: true,
-        processing: true,
-        stateSave: true,
-        select: {
-          style: 'multi',
-          selector: 'td:first-child input[type="checkbox"]',
-          className: 'row-selected'
-        },
-        ajax: {
-          url: '{{ route('expense.table') }}',
-          type: 'POST',
-          data: function (d) {
-            for (const [key, value] of Object.entries(data)) {
-              d[key] = value;
-            }
-          }
-        },
-        columns: [{
-          data: 'DT_RowIndex',
-          name: "id"
-        },
+    const ExpenseIndexTemplate = function () {
+      let table = $("#table");
+      const initData = (data = {}) => {
+        const datatableColumns = [
+          {
+            data: 'DT_RowIndex',
+            name: "id"
+          },
           {
             data: "id",
             name: "id"
           },
           {
-            data: "expense_type.name",
-            name: "expense_type.name"
+            data: "name",
+            name: "name",
+            render: function (data, type, row) {
+              let fullname = "";
+              fullname += row.name ?? "";
+              fullname += " ";
+              fullname += row.surname ?? "";
+              return fullname;
+            }
           },
           {
-            data: "safe.name",
-            name: "safe.name"
+            data: "phone",
+            name: "phone"
           },
           {
-            data: 'price'
+            data: "email",
+            name: "email"
           },
           {
-            data: 'date'
+            data: 'customer_role.name',
+            name: "customer_role.name"
           },
           {
             data: null
           }
-        ],
-        columnDefs: [{
-          targets: 0,
-          orderable: false,
-          render: function (data) {
-            return `
+        ];
+        table.initDatatable({
+          datatableValues: {
+            serverSide: true,
+            processing: true,
+            stateSave: true,
+            select: {
+              style: 'multi',
+              selector: 'td:first-child input[type="checkbox"]',
+              className: 'row-selected'
+            },
+            ajax: {
+              url: '{{ route('customer.table') }}',
+              type: 'POST',
+              data: function (d) {
+                for (const [key, value] of Object.entries(data)) {
+                  d[key] = value;
+                }
+              }
+            },
+            columns: datatableColumns,
+            columnDefs: [
+              {
+                targets: 0,
+                orderable: false,
+                render: function (data) {
+                  return `
               <div class="form-check form-check-sm form-check-custom form-check-solid">
                   <input class="form-check-input" type="checkbox" value="${data}" />
               </div>`;
-          }
-        },
-          {
-            targets: -1,
-            data: null,
-            orderable: false,
-            className: 'text-center',
-            render: function (data, type, row) {
-              return `
-                <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" data-edit-button="${row.id}">
-                @include('components.icons.edit')
-              </button>
-              <button class="btn btn-icon btn-active-light-primary w-30px h-30px" data-delete-button="${row.id}">
+                }
+              },
+              {
+                targets: -1,
+                data: null,
+                orderable: false,
+                className: 'text-center',
+                render: function (data, type, row) {
+                  return `
+                  <div data-item-id="${row.id}">
+                  @component('components.tooltip-icon-button', ["attributes" => "title='".__('globals/words.edit')."' data-edit-button"])
+                  @include('components.icons.edit')
+                  @endcomponent
+                  @component('components.tooltip-icon-button', ["attributes" => "title='".__('globals/words.delete')."' data-delete-button"])
                   @include('components.icons.delete')
-              </button>
-`;
-            },
-          }
-        ],
-        order: [
-          [1, 'desc']
-        ],
-      })
-      let handleDeleteRows = () => {
-        const deleteButtons = document.querySelectorAll('[data-delete-button]');
-        deleteButtons.forEach(d => {
-          d.addEventListener('click', function (e) {
-            e.preventDefault();
-            const parent = e.target.closest('tr');
-            const expense_type_name = parent.querySelectorAll('td')[2].innerText;
-            const id = parent.querySelectorAll('td')[1].innerText;
-            Swal.fire({
-              text: expense_type_name + " türündeki gideri silmek istoyor musunuz ?",
-              icon: "warning",
-              showCancelButton: true,
-              buttonsStyling: false,
-              confirmButtonText: "Evet, Sil!",
-              cancelButtonText: "İptal Et",
-              customClass: {
-                confirmButton: "btn fw-bold btn-danger",
-                cancelButton: "btn fw-bold btn-active-light-primary"
+                  @endcomponent
+                  </div>`;
+                },
               }
-            }).then(function (result) {
-              if (result.value) {
-                $.ajax({
-                  url: "{{ route('expense.delete') }}",
-                  type: "POST",
-                  data: {
-                    id: id
-                  },
-                  beforeSend: function () {
-                    Swal.fire({
-                      text: expense_type_name + " türündeki gider siliniyor...",
-                      icon: "info",
-                      buttonsStyling: false,
-                      showConfirmButton: false,
-                    })
-                  },
-                  success: function (data) {
-                    Swal.close();
-                    Swal.fire({
-                      text: "Gider silindi",
-                      icon: "success",
-                      buttonsStyling: false,
-                      confirmButtonText: "Tamam",
-                      customClass: {
-                        confirmButton: "btn fw-bold btn-primary",
-                      }
-                    })
-                    table.ajax.reload();
-                  },
-                  error: function (err) {
-                    Swal.close();
-                    Swal.fire({
-                      text: "Gider silinemedi tekrar deneyin!",
-                      icon: "error",
-                      buttonsStyling: false,
-                      confirmButtonText: "Tamam",
-                      customClass: {
-                        confirmButton: "btn fw-bold btn-primary",
-                      }
-                    });
-                  }
-                });
-              }
-            });
-          })
+            ],
+            order: [
+              [1, 'desc']
+            ],
+          },
+          deleteAjaxUrl: "{{ route('expense.delete') }}",
+          deleteRowText: "@lang('globals/check_messages.want_to_delete', ['attr' => __('globals/words.expense')])",
+          loadingText: "@lang('globals/infos.loading')",
+          deleteSuccessText: "@lang('globals/success_messages.deleted', ['attr' => __('globals/words.expense')])",
+          deleteErrorText: "@lang('globals/error_messages.delete_error', ['attr'  => __('globals/words.expense')])",
+          afterLoad: datatableAfterLoad
         });
       }
-      table.on('draw', () => {
-        $('[data-bs-toggle="tooltip"]').tooltip();
-        $('[data-create-button]').click(function (event) {
-          event.preventDefault();
-          $("#create_modal").modal("show");
-        });
-        $('[data-edit-button]').click(function (event) {
-          event.preventDefault();
-          $("#edit_modal").data("editId", $(this).data('editButton')).modal("show");
-        });
+      let datatableAfterLoad = () => {
         KTMenu.createInstances();
-        handleDeleteRows();
-      });
-      return table;
-    }
+      }
+      return {table, initData};
+    }();
+    ExpenseIndexTemplate.initData();
   </script>
 @endpush

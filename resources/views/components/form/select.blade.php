@@ -45,7 +45,7 @@
     $(".{{$className}}").select2({
       searchInputPlaceholder: '{{$label}} Arayın',
       @if($parent) dropdownParent: $("{{$parent}}"), @endif
-        @if($multiple) tags: true, @endif
+      @if($multiple) tags: true, @endif
       language: "tr",
       placeholder: "{{$label}}",
       allowClear: true,
@@ -56,12 +56,11 @@
         method: 'post',
         delay: 250,
         data: function (params) {
-          var query = {
+          return {
             search: params.term,
             page: params.page || 1,
             _token: "{{csrf_token()}}",
-          }
-          return query;
+          };
         },
         processResults: function (data, params) {
           params.page = params.page || 1;

@@ -3,15 +3,10 @@
   @lang('pages/customer.customers')
 @endsection
 @section('toolbar')
-  <a class="btn btn-bg-light btn-icon-info btn-text-info"
-     data-bs-custom-class="tooltip-dark"
-     data-bs-placement="top"
-     data-bs-toggle="tooltip"
-     title="@lang('pages/customer.customer_add')"
-     data-create-button>
-    <i class="las la-edit fs-3"></i>
+  <x-tooltip-button :title="__('pages/customer.customer_add')" data-create-button>
+    @include('components.icons.create')
     @lang('globals/words.add')
-  </a>
+  </x-tooltip-button>
 @endsection
 @section('content')
   @include('pages.customer.create')
@@ -38,9 +33,9 @@
                      value="1"/>
             </div>
           </th>
-          <th>@lang('globals/words.no')</th>
+          <th>@lang('globals/words.number')</th>
           <th>@lang('globals/words.name') @lang('globals/words.surname')
-            <span class="fs-8">(@lang('globals/words.title_0')</span>
+            <span class="fs-8">(@lang('globals/words.title_0'))</span>
           </th>
           <th>@lang('globals/words.phone')</th>
           <th>@lang('globals/words.email')</th>
@@ -57,101 +52,108 @@
 @endsection
 @push('customscripts')
   <script type="text/javascript">
-    let initCustomerTable = (data = {}) => {
-      $("#table").initDatatable({
-        datatableValues: {
-          serverSide: true,
-          processing: true,
-          stateSave: true,
-          select: {
-            style: 'multi',
-            selector: 'td:first-child input[type="checkbox"]',
-            className: 'row-selected'
-          },
-          ajax: {
-            url: '{{ route('customer.table') }}',
-            type: 'POST',
-            data: function (d) {
-              for (const [key, value] of Object.entries(data)) {
-                d[key] = value;
+    const CustomerIndexTemplate = function (){
+      let table = $("#table");
+      let initData = (data = {}) => {
+        $(table).initDatatable({
+          datatableValues: {
+            serverSide: true,
+            processing: true,
+            stateSave: true,
+            select: {
+              style: 'multi',
+              selector: 'td:first-child input[type="checkbox"]',
+              className: 'row-selected'
+            },
+            ajax: {
+              url: '{{ route('customer.table') }}',
+              type: 'POST',
+              data: function (d) {
+                for (const [key, value] of Object.entries(data)) {
+                  d[key] = value;
+                }
               }
-            }
-          },
-          columns: [{
-            data: 'DT_RowIndex',
-            name: "id"
-          },
-            {
-              data: "id",
+            },
+            columns: [
+              {
+              data: 'DT_RowIndex',
               name: "id"
             },
-            {
-              data: "name",
-              name: "name",
-              render: function (data, type, row) {
-                let fullname = "";
-                fullname += row.name ?? "";
-                fullname += " ";
-                fullname += row.surname ?? "";
-                return fullname;
+              {
+                data: "id",
+                name: "id"
+              },
+              {
+                data: "name",
+                name: "name",
+                render: function (data, type, row) {
+                  let fullname = "";
+                  fullname += row.name ?? "";
+                  fullname += " ";
+                  fullname += row.surname ?? "";
+                  return fullname;
+                }
+              },
+              {
+                data: "phone",
+                name: "phone"
+              },
+              {
+                data: "email",
+                name: "email"
+              },
+              {
+                data: 'customer_role.name',
+                name: "customer_role.name"
+              },
+              {
+                data: null
               }
-            },
-            {
-              data: "phone",
-              name: "phone"
-            },
-            {
-              data: "email",
-              name: "email"
-            },
-            {
-              data: 'customer_role.name',
-              name: "customer_role.name"
-            },
-            {
-              data: null
-            }
-          ],
-          columnDefs: [{
-            targets: 0,
-            orderable: false,
-            render: function (data) {
-              return `
+            ],
+            columnDefs: [
+              {
+              targets: 0,
+              orderable: false,
+              render: function (data) {
+                return `
               <div class="form-check form-check-sm form-check-custom form-check-solid">
                   <input class="form-check-input" type="checkbox" value="${data}" />
               </div>`;
-            }
+              }
+            },
+              {
+                targets: -1,
+                data: null,
+                orderable: false,
+                className: 'text-center',
+                render: function (data, type, row) {
+                  return `
+                    <div data-item-id="${row.id}">
+                      @component('components.tooltip-icon-button', ["attributes" => "title='".__('globals/words.edit')."' data-edit-button"])
+                        @include('components.icons.edit')
+                      @endcomponent
+                      @component('components.tooltip-icon-button', ["attributes" => "title='".__('globals/words.delete')."' data-delete-button"])
+                        @include('components.icons.delete')
+                      @endcomponent
+                    </div>
+                  `;
+                },
+              }
+            ],
+            order: [
+              [1, 'desc']
+            ],
           },
-            {
-              targets: -1,
-              data: null,
-              orderable: false,
-              className: 'text-center',
-              render: function (data, type, row) {
-                return `
-              <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" data-edit-button="${row.id}"
-              data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip" title="@lang('globals/words.edit')">
-                @include('components.icons.edit')
-                </button>
-                <button class="btn btn-icon btn-active-light-primary w-30px h-30px" data-delete-button="${row.id}"
-              data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip" title="@lang('globals/words.delete')">
-                @include('components.icons.delete')
-                </button>
-`;
-              },
-            }
-          ],
-          order: [
-            [1, 'desc']
-          ],
-        },
-        deleteAjaxUrl: "{{ route('customer.delete') }}",
-        deleteRowText: "@lang('globals/check_messages.want_to_delete', ['attr' => __('globals/words.customer')])",
-        loadingText: "@lang('globals/infos.loading')",
-        deleteSuccessText: "@lang('globals/success_messages.deleted', ['attr' => __('globals/words.customer')])",
-        deleteErrorText: "@lang('globals/error_messages.delete_error', ['attr'  => __('globals/words.customer')])"
-      });
-    }
-    initCustomerTable();
+          deleteAjaxUrl: "{{ route('customer.delete') }}",
+          deleteRowText: "@lang('globals/check_messages.want_to_delete', ['attr' => __('globals/words.customer')])",
+          loadingText: "@lang('globals/infos.loading')",
+          deleteSuccessText: "@lang('globals/success_messages.deleted', ['attr' => __('globals/words.customer')])",
+          deleteErrorText: "@lang('globals/error_messages.delete_error', ['attr'  => __('globals/words.customer')])"
+        });
+      }
+      return {initData};
+    }();
+
+    CustomerIndexTemplate.initData();
   </script>
 @endpush

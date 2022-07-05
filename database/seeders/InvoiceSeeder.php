@@ -15,12 +15,12 @@ use Illuminate\Database\Seeder;
 
 class InvoiceSeeder extends Seeder
 {
-    public function run()
-    {
-        $faker = Factory::create();
-        foreach (range(1, 50) as $item) {
-            $isCargo = $faker->boolean;
-            $invoice = Invoice::create([
+  public function run()
+  {
+    $faker = Factory::create();
+    foreach (range(1, 50) as $item) {
+      $isCargo = $faker->boolean;
+      $invoice = Invoice::create([
         'description' => $faker->sentence,
         'customer_id' => Customer::inRandomOrder()
           ->first()->id,
@@ -28,11 +28,11 @@ class InvoiceSeeder extends Seeder
         'invoice_contract_number' => $faker->numberBetween(1, 1500000),
         'has_cargo' => $isCargo
       ]);
-            $totaledPrices = [];
-            $cargo = null;
-            if ($isCargo) {
-                $paided = $faker->boolean;
-                $cargoArray = [
+      $totaledPrices = [];
+      $cargo = null;
+      if ($isCargo) {
+        $paided = $faker->boolean;
+        $cargoArray = [
           'price' => $faker->numberBetween(100, 500),
           'due_date' => $faker->dateTimeBetween('-1 years', '+1 years'),
           'cargo_type_id' => CargoType::inRandomOrder()
@@ -50,14 +50,14 @@ class InvoiceSeeder extends Seeder
           'paided' => $paided,
           'date_of_paid' => $paided ? $faker->dateTimeBetween('-1 years', '+1 years') : null
         ];
-                $cargo = Cargo::create($cargoArray);
-            }
-            foreach (range(1, 4) as $invoiceProduct) {
-                $incoming_waybill_product = IncomingWaybillProduct::where('sold', false)
+        $cargo = Cargo::create($cargoArray);
+      }
+      foreach (range(1, 4) as $invoiceProduct) {
+        $incoming_waybill_product = IncomingWaybillProduct::where('sold', false)
           ->where('rebate', false)
           ->inRandomOrder()
           ->first();
-                $invoice->invoice_products()
+        $invoice->invoice_products()
           ->create([
             'invoice_id' => $invoice->id,
             'product_code' => $incoming_waybill_product->product_code,
@@ -67,13 +67,13 @@ class InvoiceSeeder extends Seeder
             'cash_register_id' => CashRegister::inRandomOrder()
               ->first()->id,
             'price' => mt_rand(100 * pow(10, 2), rand(500, $incoming_waybill_product->product->sale_price) * pow(
-                10,
-                2
-            )) /
+                  10,
+                  2
+                )) /
               pow(10, 2),
             'cargo_id' => $isCargo ? $cargo->id : null
           ]);
-            }
-        }
+      }
     }
+  }
 }

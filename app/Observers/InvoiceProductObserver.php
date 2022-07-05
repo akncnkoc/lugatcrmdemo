@@ -29,7 +29,7 @@ class InvoiceProductObserver
       'normal_price'     => $invoiceProduct->price,
       'safe_id'          => $invoiceProduct->safe_id,
       'date'             => $invoiceProduct->invoice->invoice_date,
-      'process_type'     => AppHelper::INPUT,
+      'process_type'     => AppHelper::PRODUCT_SOLD,
       'cash_register_id' => $invoiceProduct->cash_register_id,
     ]);
     $incoming_waybill_product = $invoiceProduct->incoming_waybill_product;
@@ -48,7 +48,8 @@ class InvoiceProductObserver
       ),
       'product_id' => $incoming_waybill_product->product->id,
       'waybill_id' => $incoming_waybill_product->waybill->id,
-      'date'       => $incoming_waybill_product->waybill->date
+      'date'       => $incoming_waybill_product->waybill->date,
+      'process_type' => AppHelper::PRODUCT_SOLD
     ]);
     $invoiceProduct->incoming_waybill_product->updateQuietly(['sold' => true, 'date_of_sale' => $invoiceProduct->invoice->invoice_date]);
     $invoiceProduct->safe_log()->associate($safe_log)->save();

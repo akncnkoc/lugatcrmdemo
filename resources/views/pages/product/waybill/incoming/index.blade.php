@@ -1,20 +1,19 @@
 @extends('layout.default')
 @section('page-title')
-  Gelen İrsaliyeler
+  @lang('pages/waybill.incoming_waybill')
 @endsection
 @section('toolbar')
-  <a class="btn btn-bg-light btn-icon-info btn-text-info" data-bs-custom-class="tooltip-dark" data-bs-placement="top"
-     data-bs-toggle="tooltip" title="Yeni Gelen İrsaliye Ekle" data-create-button>
-    <i class="las la-edit fs-3"></i>
-    Ekle
-  </a>
+  <x-tooltip-button :title="__('pages/waybill.incoming_waybill_add_hint')" data-create-button>
+    @include('components.icons.create')
+    @lang('globals/words.add')
+  </x-tooltip-button>
 @endsection
 @section('content')
   @include('pages.product.waybill.incoming.create')
   @include('pages.product.waybill.incoming.edit')
   <x-card.card>
     <x-slot name="header">
-      <x-slot name="title">Gelen İrsaliye Listesi</x-slot>
+      <x-slot name="title">@lang('pages/waybill.incoming_waybill_list')</x-slot>
       <x-slot name="toolbar">
         <div class="d-flex space-x-2">
           @include('pages.product.waybill.incoming.filter')
@@ -31,12 +30,12 @@
                      data-kt-check-target="#table .form-check-input" value="1"/>
             </div>
           </th>
-          <th>No</th>
-          <th>Tedarikçi</th>
-          <th>İrsaliye Satış Toplamı</th>
-          <th>Ürün Sayısı</th>
-          <th>Tarih</th>
-          <th class="text-center min-w-100px">İşlemler</th>
+          <th>@lang('globals/words.number')</th>
+          <th>@lang('layout/aside/menu.supplier')</th>
+          <th>@lang('pages/waybill.waybill_sale_total')</th>
+          <th>@lang('pages/waybill.product_count')</th>
+          <th>@lang('globals/words.date')</th>
+          <th class="text-center min-w-100px">@lang('globals/words.actions')</th>
         </x-table.thead>
         <x-table.tbody></x-table.tbody>
       </x-table.table>
@@ -49,167 +48,102 @@
 @endsection
 @push('customscripts')
   <script type="text/javascript">
-    var table = initIncomingWaybillTable();
-    $(document).on('click', '[data-create-button]', function (event) {
-      event.preventDefault();
-      $("#create_modal").modal("show");
-    });
-    $(document).on('click', '[data-edit-button]', function (event) {
-      event.preventDefault();
-      $("#edit_modal").data("editId", $(this).data('editButton')).modal("show");
-    });
-
-    function initIncomingWaybillTable(data = {}) {
-      if (table) table.destroy();
-      table = $("#table").DataTable({
-        serverSide: true,
-        processing: true,
-        stateSave: true,
-        select: {
-          style: 'multi',
-          selector: 'td:first-child input[type="checkbox"]',
-          className: 'row-selected'
-        },
-        ajax: {
-          url: '{{ route('incoming-waybill.table') }}',
-          type: 'POST',
-          data: function (d) {
-            for (const [key, value] of Object.entries(data)) {
-              d[key] = value;
-            }
-          }
-        },
-        columns: [{
-          data: 'DT_RowIndex',
-          name: "id"
-        },
-          {
-            data: "id",
-            name: "id"
-          },
-          {
-            data: "supplier.name",
-            name: "supplier.name",
-          },
-          {
-            data: "waybill_totaled_prices",
-            name: "waybill_totaled_prices"
-          },
-          {
-            data: "totaled_entered_product",
-            name: "totaled_entered_product"
-          },
-          {
-            data: 'date',
-            name: "date"
-          },
-          {
-            data: null
-          }
-        ],
-        columnDefs: [{
-          targets: 0,
-          orderable: false,
-          render: function (data) {
-            return `
+    const IncomingWaybillIndexTemplate = function () {
+      const table = $("table");
+      const initData = (data = {}) => {
+        table.initDatatable({
+          datatableValues: {
+            serverSide: true,
+            processing: true,
+            stateSave: true,
+            select: {
+              style: 'multi',
+              selector: 'td:first-child input[type="checkbox"]',
+              className: 'row-selected'
+            },
+            ajax: {
+              url: '{{ route('incoming-waybill.table') }}',
+              type: 'POST',
+              data: function (d) {
+                for (const [key, value] of Object.entries(data)) {
+                  d[key] = value;
+                }
+              }
+            },
+            columns: [
+              {
+                data: 'DT_RowIndex',
+                name: "id"
+              },
+              {
+                data: "id",
+                name: "id"
+              },
+              {
+                data: "supplier.name",
+                name: "supplier.name",
+              },
+              {
+                data: "waybill_totaled_prices",
+                name: "waybill_totaled_prices"
+              },
+              {
+                data: "totaled_entered_product",
+                name: "totaled_entered_product"
+              },
+              {
+                data: 'date',
+                name: "date"
+              },
+              {
+                data: null
+              }
+            ],
+            columnDefs: [
+              {
+                targets: 0,
+                orderable: false,
+                render: function (data) {
+                  return `
               <div class="form-check form-check-sm form-check-custom form-check-solid">
                   <input class="form-check-input" type="checkbox" value="${data}" />
               </div>`;
-          }
-        },
-          {
-            targets: -1,
-            data: null,
-            orderable: false,
-            className: 'text-center',
-            render: function (data, type, row) {
-              return `
-              <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3" data-edit-button="${row.id}" data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip" title="Düzenle">
-                @include('components.icons.edit')
-              </button>
-              <button class="btn btn-icon btn-active-light-primary w-30px h-30px" data-delete-button="${row.id}" data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip" title="Sil">
-                @include('components.icons.delete')
-              </button>
-            `;
-            },
-          }
-        ],
-        order: [
-          [1, 'desc']
-        ],
-      })
-      let handleDeleteRows = () => {
-        const deleteButtons = document.querySelectorAll('[data-delete-button]');
-        deleteButtons.forEach(d => {
-          d.addEventListener('click', function (e) {
-            e.preventDefault();
-            const parent = e.target.closest('tr');
-            const supplier_name = parent.querySelectorAll('td')[2].innerText;
-            const id = parent.querySelectorAll('td')[1].innerText;
-            Swal.fire({
-              text: supplier_name + " adlı tedarikçinin irsaliyesini silmek istiyor musunuz ?",
-              icon: "warning",
-              showCancelButton: true,
-              buttonsStyling: false,
-              confirmButtonText: "Evet, Sil!",
-              cancelButtonText: "İptal Et",
-              customClass: {
-                confirmButton: "btn fw-bold btn-danger",
-                cancelButton: "btn fw-bold btn-active-light-primary"
+                }
+              },
+              {
+                targets: -1,
+                data: null,
+                orderable: false,
+                className: 'text-center',
+                render: function (data, type, row) {
+                  return `
+                    <div data-item-id="${row.id}">
+                      @component('components.tooltip-icon-button', ["attributes" => "title='".__('globals/words.edit')."' data-edit-button"])
+                      @include('components.icons.edit')
+                      @endcomponent
+                      @component('components.tooltip-icon-button', ["attributes" => "title='".__('globals/words.delete')."' data-delete-button"])
+                      @include('components.icons.delete')
+                      @endcomponent
+                    </div>
+                  `;
+                },
               }
-            }).then(function (result) {
-              if (result.value) {
-                $.ajax({
-                  url: "{{ route('incoming-waybill.delete') }}",
-                  type: "POST",
-                  data: {
-                    id: id
-                  },
-                  beforeSend: function () {
-                    Swal.fire({
-                      text: supplier_name + " adlı tedarikçinin irsaliyesi siliniyor...",
-                      icon: "info",
-                      buttonsStyling: false,
-                      showConfirmButton: false,
-                    })
-                  },
-                  success: function (data) {
-                    Swal.close();
-                    Swal.fire({
-                      text: "Gelen irsaliye silindi",
-                      icon: "success",
-                      buttonsStyling: false,
-                      confirmButtonText: "Tamam",
-                      customClass: {
-                        confirmButton: "btn fw-bold btn-primary",
-                      }
-                    })
-                    table.ajax.reload();
-                  },
-                  error: function (err) {
-                    Swal.close();
-                    Swal.fire({
-                      text: "Gelen irsaliye silinemedi tekrar deneyin!",
-                      icon: "error",
-                      buttonsStyling: false,
-                      confirmButtonText: "Tamam",
-                      customClass: {
-                        confirmButton: "btn fw-bold btn-primary",
-                      }
-                    });
-                  }
-                });
-              }
-            });
-          })
-        });
+            ],
+            order: [
+              [1, 'desc']
+            ],
+          },
+          deleteAjaxUrl: "{{ route('incoming-waybill.delete') }}",
+          deleteRowText: "@lang('globals/check_messages.want_to_delete', ['attr' => __('pages/waybill.incoming_waybill')])",
+          loadingText: "@lang('globals/infos.loading')",
+          deleteSuccessText: "@lang('globals/success_messages.deleted', ['attr' => __('pages/waybill.incoming_waybill')])",
+          deleteErrorText: "@lang('globals/error_messages.delete_error', ['attr'  => __('pages/waybill.incoming_waybill')])"
+        })
       }
-      table.on('draw', () => {
-        $('[data-bs-toggle="tooltip"]').tooltip();
-        handleDeleteRows();
-      });
-      return table;
+      return {table,initData};
+    }();
 
-    }
+    IncomingWaybillIndexTemplate.initData();
+
   </script>
 @endpush

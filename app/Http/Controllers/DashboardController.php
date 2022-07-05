@@ -137,7 +137,7 @@ class DashboardController extends Controller
     }
     $current_year_safes->map(function (SafeLog $safeLog) use (&$totaled_prices, $primaryCurrency) {
       $month = Carbon::parse($safeLog->date)->monthName;
-      $totaled_prices[$month][$safeLog->safe->name . " (" . $safeLog->safe->currency->code . ")"] +=
+        $totaled_prices[$month][$safeLog->safe->name . " (" . $safeLog->safe->currency->code . ")"] +=
         AppHelper::convertedPrice($safeLog, $primaryCurrency);
     });
     return response()->json(array_values($totaled_prices));

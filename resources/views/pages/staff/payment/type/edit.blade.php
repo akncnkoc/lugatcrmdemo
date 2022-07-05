@@ -11,59 +11,70 @@
 </x-modal.modal>
 @push('customscripts')
   <script>
-    var id;
-    var blockUI = new KTBlockUI(document.querySelector("#staff_payment_type_edit_modal_target"));
-    $("#staff_payment_type_edit_modal").on('shown.bs.modal', function (e) {
-      id = $(e.target).data('editId');
-      $.ajax({
-        url: "{{ route('staff-payment-type.get') }}",
-        data: {
-          id
-        },
-        type: "POST",
-        beforeSend: () => {
-          blockUI.block();
-        },
-        success: function (data) {
-          $(staffPaymentTypeEditForm).find('input[name="name"]').val(data.name);
-          blockUI.release();
-        },
-        error: {}
-      });
-    });
-    let {
-      form: staffPaymentTypeEditForm
-    } = validateBasicForm("staff_payment_type_edit_form", {
-      name: {
-        validators: {
-          notEmpty: {
-            message: "Ad doldurulması zorunludur"
-          },
-          stringLength: {
-            min: 3,
-            message: "Ad en az 3 harf'den oluşmak zorundadır."
+    const StaffPaymentTypeEditTemplate = function () {
+      let id;
+      let edit_modal = $("#staff_payment_type_edit_modal");
+      let modal_target = document.querySelector("#staff_payment_type_edit_modal_target");
+      let block_ui_modal_target = new KTBlockUI(modal_target);
+      let validations = {
+        name: {
+          validators: {
+            notEmpty: {
+              message: "Ad doldurulması zorunludur"
+            },
+            stringLength: {
+              min: 3,
+              message: "Ad en az 3 harf'den oluşmak zorundadır."
+            }
           }
         }
+      };
+      const formValidated = (form) => {
+        let data = $(form).serializeArray();
+        data.push({name: "id", value: id});
+        $.ajax({
+          url: "{{ route('staff-payment-type.update') }}",
+          type: "POST",
+          data: data,
+          success: function (data) {
+            edit_modal.modal("hide");
+            StaffPaymentTypeIndexTemplate.initData();
+            toastr.success("Başarılı!");
+          },
+          error: function (err) {
+            edit_modal.modal("hide");
+            toastr.error("Bir sorun var daha sonra tekrar deneyin!");
+          }
+        });
       }
-    }, (form) => {
-      let data = $(form).serializeArray();
-      data.push({
-        name: "id",
-        value: id
-      });
-      $.ajax({
-        url: "{{ route('staff-payment-type.update') }}",
-        type: "POST",
-        data: data,
-        success: function (data) {
-          $("#staff_payment_type_edit_modal").modal("hide");
-          initStaffPaymentTypeData();
-          toastr.success("Başarılı!");
-        },
-        error: function (err) {
-          toastr.error("Bir sorun var daha sonra tekrar deneyin!");
-        }
-      });
-    });
+      const modalShowAction = (e) => {
+        $(form).find('input[name="name"]').focus();
+        id = $(e.target).data('itemId');
+        $.ajax({
+          url: "{{ route('staff-payment-type.get') }}",
+          data: {
+            id
+          },
+          type: "POST",
+          beforeSend: () => {
+            block_ui_modal_target.block();
+          },
+          success: function (data) {
+            $(form).find('input[name="name"]').val(data.name);
+            block_ui_modal_target.release();
+          },
+          error: () => {
+            edit_modal.modal("hide");
+            toastr.error("@lang('globals/error_messages.fetch_error', ['attr' => __('globals/words.staff_payment_type')])");
+          }
+        });
+      };
+      const {form} = validateBasicForm("staff_payment_type_edit_form", validations, formValidated);
+      return {edit_modal, modalShowAction};
+    }();
+
+
+    StaffPaymentTypeEditTemplate.edit_modal.on('shown.bs.modal', StaffPaymentTypeEditTemplate.modalShowAction);
+
   </script>
 @endpush

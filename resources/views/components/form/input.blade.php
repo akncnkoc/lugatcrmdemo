@@ -21,6 +21,7 @@
          placeholder="{{$placeholder}}"
          @if($value) value="{{$value}}" @endif
          @if($disabled) disabled @endif
+    @isset($attributes) {!! $attributes !!} @endisset
   />
 </div>
 

@@ -1,17 +1,12 @@
-<x-card.card cardscroll="300" target="customer_role_card_target">
+<x-card.card cardscroll="300" target="customer_role_card_container">
   <x-slot name="header">
     <x-slot name="title">@lang('globals/words.customer_role')</x-slot>
     <x-slot name="toolbar">
       <div class="d-flex space-x-2">
-        <button class="btn btn-bg-light btn-sm btn-icon-info btn-text-info"
-                data-bs-custom-class="tooltip-dark"
-                data-bs-placement="top"
-                data-bs-toggle="tooltip"
-                title="@lang('pages/customer.create_new_customer_role_hint')"
-                data-customer-role-create-button>
-          <i class="las la-edit fs-3"></i>
+        <x-tooltip-button :title="__('pages/customer.create_new_customer_role_hint')" data-customer-role-create-button>
+          @include('components.icons.create')
           @lang('globals/words.add')
-        </button>
+        </x-tooltip-button>
       </div>
     </x-slot>
   </x-slot>
@@ -21,29 +16,17 @@
 </x-card.card>
 @push('customscripts')
   <script>
-    $(document).on('click', '[data-customer-role-create-button]', function (event) {
-      event.preventDefault();
-      $("#customer_role_create_modal").modal("show");
-    });
-    $(document).on('click', '[data-customer-role-edit-button]', function (event) {
-      event.preventDefault();
-      $("#customer_role_edit_modal").data("editId", $(this).data('customerRoleEditButton')).modal("show");
-    });
-    $(document).on('click', '[data-customer-role-delete-button]', function (event) {
-      event.preventDefault();
-      let id = $(event.currentTarget).data('customerRoleDeleteButton');
-      Swal.fire({
-        text: "@lang('globals/check_messages.want_to_delete', ['attr' => __('globals/words.customer_role')])",
-        icon: "warning",
-        showCancelButton: true,
-        buttonsStyling: false,
-        confirmButtonText: "@lang('globals/words.yes')",
-        cancelButtonText: "@lang('globals/words.cancel')",
-        customClass: {
-          confirmButton: "btn fw-bold btn-danger",
-          cancelButton: "btn fw-bold btn-active-light-primary"
-        }
-      }).then(function (result) {
+
+    const CustomerRoleIndexTemplate = function () {
+      const create_modal = $("#customer_role_create_modal");
+      const edit_modal = $("#customer_role_edit_modal");
+      const create_button_selector = "[data-customer-role-create-button]";
+      const edit_button_selector = "[data-customer-role-edit-button]";
+      const delete_button_selector = "[data-customer-role-delete-button]";
+      const block_ui_customer_role_card_container = new KTBlockUI(document.querySelector("#customer_role_card_container"), {
+        message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> @lang('globals/infos.loading') </div>',
+      });
+      let deleteResultAction =  (result, id) => {
         if (result.value) {
           $.ajax({
             url: "{{ route('customer_role.delete') }}",
@@ -51,8 +34,10 @@
             data: {
               id: id
             },
-            success: function (data) {
+            beforeSend: function (){
               Swal.close();
+            },
+            success: function (data) {
               Swal.fire({
                 text: "@lang('globals/success_messages.deleted', ['attr'  => __('globals/words.customer_role')])",
                 icon: "success",
@@ -62,7 +47,7 @@
                   confirmButton: "btn fw-bold btn-primary",
                 }
               })
-              initCustomerRoleData();
+              initData();
             },
             error: function (err) {
               Swal.close();
@@ -78,56 +63,77 @@
             }
           });
         }
-      });
-    });
-  </script>
-  <script>
-    var blockUICustomerRole = new KTBlockUI(document.querySelector("#customer_role_card_target"), {
-      message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> @lang('globals/infos.loading') </div>',
-    });
-    var initCustomerRoleData = () => {
-      $.ajax({
-        type: "POST",
-        url: "{{ route('customer_role.all') }}",
-        beforeSend: function () {
-          blockUICustomerRole.block();
-        },
-        success: function (data) {
-          let html = ``;
-          if (data && data.length > 0) {
-            data.map((item, index) => {
-              html += `
+      }
+      const initButtons = function () {
+        $(document).on('click', create_button_selector, function (event) {
+          event.preventDefault();
+          create_modal.modal("show");
+        });
+        $(document).on('click', edit_button_selector, function (event) {
+          event.preventDefault();
+          edit_modal.data("editId", $(this).parent().data('customerRoleId')).modal("show");
+        });
+        $(document).on('click', delete_button_selector, function (event) {
+          event.preventDefault();
+          let id = $(event.currentTarget).data('customerRoleDeleteButton');
+          Swal.fire({
+            text: "@lang('globals/check_messages.want_to_delete', ['attr' => __('globals/words.customer_role')])",
+            icon: "warning",
+            showCancelButton: true,
+            buttonsStyling: false,
+            confirmButtonText: "@lang('globals/words.yes')",
+            cancelButtonText: "@lang('globals/words.cancel')",
+            customClass: {
+              confirmButton: "btn fw-bold btn-danger",
+              cancelButton: "btn fw-bold btn-active-light-primary"
+            }
+          }).then((res) => deleteResultAction(res, id));
+        });
+      }
+      const initData = () => {
+        $.ajax({
+          type: "POST",
+          url: "{{ route('customer_role.all') }}",
+          beforeSend: function () {
+            block_ui_customer_role_card_container.block();
+          },
+          success: function (data) {
+            let html = ``;
+            if (data && data.length > 0) {
+              data.map((item, index) => {
+                html += `
                 <div class="col">
                   <div class="d-flex justify-content-between align-items-center border py-2 px-4 rounded">
                     <div>${item.name}</div>
-                    <div>
-                      <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-2"
-                      data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip"
-                      title="@lang('globals/words.edit')" data-customer-role-edit-button="${item.id}">
+                    <div data-customer-role-id="${item.id}">
+                      @component('components.tooltip-icon-button', ["attributes" => "title='".__('globals/words.edit')."' data-customer-role-edit-button"])
                         @include('components.icons.edit')
-              </button>
-              <button class="btn btn-icon btn-active-light-primary w-30px h-30px" data-bs-custom-class="tooltip-dark"
-               data-bs-placement="top" data-bs-toggle="tooltip" title="@lang('globals/words.delete')"
-               data-customer-role-delete-button="${item.id}">
+                      @endcomponent
+                      @component('components.tooltip-icon-button', ["attributes" => "title='".__('globals/words.delete')."' data-customer-role-delete-button"])
                         @include('components.icons.delete')
-              </button>
-            </div>
-          </div>
-        </div>
-`;
-            })
+                      @endcomponent
+                    </div>
+                  </div>
+                </div>`;
+              })
+            }
+            $(".customer-role-zone").html(html);
+            $("[data-bs-toggle]").tooltip();
+            block_ui_customer_role_card_container.release();
+          },
+          error: function (err) {
+            block_ui_customer_role_card_container.release();
+            toastr.error("@lang('globals/error_messages.fetch_error', ['attr' => __('globals/words.customer_role')])")
           }
-          $(".customer-role-zone").html(html);
-          $("[data-bs-toggle]").tooltip();
-          blockUICustomerRole.release();
-        },
-        error: function (err) {
-          blockUICustomerRole.release();
-          toastr.error("@lang('globals/error_messages.fetch_error', ['attr' => __('globals/words.customer_role')])")
-        }
-      });
-    }
-    initCustomerRoleData();
+        });
+      }
+      return {initButtons, initData}
+    }();
+
+    CustomerRoleIndexTemplate.initButtons();
+    CustomerRoleIndexTemplate.initData();
+
+
   </script>
 @endpush
 

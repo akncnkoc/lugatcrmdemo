@@ -3,15 +3,10 @@
     <x-slot name="title">@lang('pages/expense.expense_types')</x-slot>
     <x-slot name="toolbar">
       <div class="d-flex space-x-2">
-        <button class="btn btn-bg-light btn-sm btn-icon-info btn-text-info"
-                data-bs-custom-class="tooltip-dark"
-                data-bs-placement="top"
-                data-bs-toggle="tooltip"
-                title="@lang('pages/expense.expense_type_add')"
-                data-expense-type-create-button>
-          <i class="las la-edit fs-3"></i>
+        <x-tooltip-button :title="__('pages/expense.create_new_expense_type_hint')" data-expense-type-create-button>
+          @include('components.icons.create')
           @lang('globals/words.add')
-        </button>
+        </x-tooltip-button>
       </div>
     </x-slot>
   </x-slot>
@@ -21,35 +16,29 @@
 </x-card.card>
 @push('customscripts')
   <script>
-    $(document).on('click', '[data-expense-type-create-button]', function (event) {
-      event.preventDefault();
-      $("#expense_type_create_modal").modal("show");
-    });
-    $(document).on('click', '[data-expense-type-edit-button]', function (event) {
-      event.preventDefault();
-      $("#expense_type_edit_modal").data("editId", $(this).data('expenseTypeEditButton')).modal("show");
-    });
-    $(document).on('click', '[data-expense-type-delete-button]', function (event) {
-      event.preventDefault();
-      let id = $(event.currentTarget).data('expenseTypeDeleteButton');
-      Swal.fire({
-        text: "@lang('globals/check_messages.want_to_delete', ['attr'  => __('globals/words.expense_type')])",
-        icon: "warning",
-        showCancelButton: true,
-        buttonsStyling: false,
-        confirmButtonText: "@lang('globals/words.yes')",
-        cancelButtonText: "@lang('globals/words.cancel')",
-        customClass: {
-          confirmButton: "btn fw-bold btn-danger",
-          cancelButton: "btn fw-bold btn-active-light-primary"
-        }
-      }).then(function (result) {
+
+    const ExpenseTypeIndexTemplate = function () {
+      let create_button_selector = "[data-expense-type-create-button]",
+        create_modal = $("#expense_type_create_modal"),
+        edit_button_selector = "[data-expense-type-edit-button]",
+        edit_modal = $("#expense_type_edit_modal"),
+        delete_button_selector = "[data-expense-type-delete-button]",
+        block_ui_target = document.querySelector("#expense_type_card_target");
+
+      let block_ui_expense_type_target = new KTBlockUI(block_ui_target, {
+        message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> @lang('globals/infos.loading')... </div>',
+      });
+
+      let deleteResultAction = (result, id) => {
         if (result.value) {
           $.ajax({
             url: "{{ route('expense_type.delete') }}",
             type: "POST",
             data: {
               id: id
+            },
+            beforeSend: () => {
+              Swal.close();
             },
             success: function (data) {
               Swal.close();
@@ -62,10 +51,9 @@
                   confirmButton: "btn fw-bold btn-primary",
                 }
               })
-              initExpenseTypeData();
+              initData();
             },
             error: function (err) {
-              Swal.close();
               Swal.fire({
                 text: "@lang('globals/error_messages.delete_error', ['attr' => __('globals/words.expense_type')])",
                 icon: "error",
@@ -78,53 +66,72 @@
             }
           });
         }
-      });
-    });
-  </script>
-  <script>
-    var blockUIExpenseType = new KTBlockUI(document.querySelector("#expense_type_card_target"), {
-      message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> @lang('globals/infos.loading')... </div>',
-    });
-    var initExpenseTypeData = () => {
-      $.ajax({
-        type: "POST",
-        url: "{{ route('expense_type.all') }}",
-        beforeSend: function () {
-          blockUIExpenseType.block();
-        },
-        success: function (data) {
-          let html = ``;
-          if (data && data.length > 0) {
-            data.map((item, index) => {
-              html += `
+      }
+      const initButtons = () => {
+        $(document).on('click', create_button_selector, function (event) {
+          event.preventDefault();
+          create_modal.modal("show");
+        });
+        $(document).on('click', edit_button_selector, function (event) {
+          event.preventDefault();
+          edit_modal.data("editId", $(this).parent().data('expenseTypeId')).modal("show");
+        });
+        $(document).on('click', delete_button_selector, function (event) {
+          event.preventDefault();
+          let id = $(event.currentTarget).data('expenseTypeDeleteButton');
+          Swal.fire({
+            text: "@lang('globals/check_messages.want_to_delete', ['attr'  => __('globals/words.expense_type')])",
+            icon: "warning",
+            showCancelButton: true,
+            buttonsStyling: false,
+            confirmButtonText: "@lang('globals/words.yes')",
+            cancelButtonText: "@lang('globals/words.cancel')",
+            customClass: {
+              confirmButton: "btn fw-bold btn-danger",
+              cancelButton: "btn fw-bold btn-active-light-primary"
+            }
+          }).then((res) => deleteResultAction(res, id));
+        });
+      }
+      const initData = () => {
+        $.ajax({
+          type: "POST",
+          url: "{{ route('expense_type.all') }}",
+          beforeSend: function () {
+            block_ui_expense_type_target.block();
+          },
+          success: function (data) {
+            let html = ``;
+            if (data && data.length > 0) {
+              data.map((item, index) => {
+                html += `
                   <div class="d-flex justify-content-between align-items-center border py-2 px-4 rounded">
                     <div>${item.name}</div>
-                    <div>
-                      <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-2"
-                      data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip"
-                      title="@lang('globals/words.edit')" data-expense-type-edit-button="${item.id}">
+                    <div data-expense-type-id="${item.id}">
+                      @component('components.tooltip-icon-button', ["attributes" => "title='".__('globals/words.edit')."' data-expense-type-edit-button"])
                         @include('components.icons.edit')
-              </button>
-              <button class="btn btn-icon btn-active-light-primary w-30px h-30px" data-bs-custom-class="tooltip-dark"
-               data-bs-placement="top" data-bs-toggle="tooltip" title="@lang('globals/words.delete')"
-               data-expense-type-delete-button="${item.id}">
+                      @endcomponent
+                      @component('components.tooltip-icon-button', ["attributes" => "title='".__('globals/words.delete')."' data-expense-type-delete-button"])
                         @include('components.icons.delete')
-              </button>
-            </div>
-          </div>
-`;
-            })
+                      @endcomponent
+                    </div>
+                  </div>`;
+              })
+            }
+            $(".expense-type-zone").html(html);
+            block_ui_expense_type_target.release();
+            $("[data-bs-toggle]").tooltip();
+          },
+          error: function (err) {
+            toastr.error("@lang('globals/error_messages.fetch_error', ['attr'  => __('globals/words.expense_type')])")
           }
-          $(".expense-type-zone").html(html);
-          blockUIExpenseType.release();
-          $("[data-bs-toggle]").tooltip();
-        },
-        error: function (err) {
-          toastr.error("@lang('globals/error_messages.fetch_error', ['attr'  => __('globals/words.expense_type')])")
-        }
-      });
-    }
-    initExpenseTypeData();
+        });
+      }
+      return {initButtons, initData};
+    }();
+    ExpenseTypeIndexTemplate.initButtons();
+    ExpenseTypeIndexTemplate.initData();
+
   </script>
 @endpush
 

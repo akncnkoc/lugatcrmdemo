@@ -12,67 +12,76 @@
 </x-modal.modal>
 @push('customscripts')
   <script>
-    var id;
-    var blockUI = new KTBlockUI(document.querySelector("#product_type_edit_modal_target"));
-    $("#product_type_edit_modal").on('shown.bs.modal', function (e) {
-      id = $(e.target).data('editId');
-      $.ajax({
-        url: "{{ route('product_type.get') }}",
-        data: {
-          id
+    const ProductTypeEditTemplate = function (){
+      let id;
+      let modal = $("#product_type_edit_modal");
+      let modal_target = document.querySelector("#product_type_edit_modal_target");
+      let block_ui_modal_target = new KTBlockUI(modal_target);
+      let validations ={
+        name: {
+          validators: {
+            notEmpty: {
+              message: "Ad doldurulması zorunludur"
+            },
+            stringLength: {
+              min: 3,
+              message: "Ad en az 3 harf'den oluşmak zorundadır."
+            }
+          }
         },
-        type: "POST",
-        beforeSend: () => {
-          blockUI.block();
-        },
-        success: function (data) {
-          $(productTypeEditForm).find('input[name="name"]').val(data.name);
-          $(productTypeEditForm).find('input[name="initial_code"]').val(data.initial_code);
-          blockUI.release();
-        },
-        error: {}
-      });
-    });
-    let {
-      form: productTypeEditForm
-    } = validateBasicForm("product_type_edit_form", {
-      name: {
-        validators: {
-          notEmpty: {
-            message: "Ad doldurulması zorunludur"
+        initial_code: {
+          validators: {
+            notEmpty: {
+              message: "Başlangıç kodu doldurulması zorunludur"
+            }
+          }
+        }
+      };
+      const showAction =  (e) => {
+        id = $(e.target).data('itemId');
+        $.ajax({
+          url: "{{ route('product_type.get') }}",
+          data: {
+            id
           },
-          stringLength: {
-            min: 3,
-            message: "Ad en az 3 harf'den oluşmak zorundadır."
+          type: "POST",
+          beforeSend: () => {
+            block_ui_modal_target.block();
+          },
+          success: function (data) {
+            $(form).find('input[name="name"]').val(data.name);
+            $(form).find('input[name="initial_code"]').val(data.initial_code);
+            block_ui_modal_target.release();
+          },
+          error: function (err){
+            $(e.target).modal('hide');
+            toastr.error("@lang('globals/error_messages.fetch_error', ['attr' => __('globals/words.product_type')])")
           }
-        }
-      },
-      initial_code: {
-        validators: {
-          notEmpty: {
-            message: "Başlangıç kodu doldurulması zorunludur"
-          }
-        }
+        });
       }
-    }, (form) => {
-      let data = $(form).serializeArray();
-      data.push({
-        name: "id",
-        value: id
-      });
-      $.ajax({
-        url: "{{ route('product_type.update') }}",
-        type: "POST",
-        data: data,
-        success: function (data) {
-          $("#product_type_edit_modal").modal("hide");
-          initproductTypeData();
-          toastr.success("Başarılı!");
-        },
-        error: function (err) {
-          toastr.error("Bir sorun var daha sonra tekrar deneyin!");
-        }
-      });
-    });
+      let formValidated = (form) => {
+        let data = $(form).serializeArray();
+        data.push({
+          name: "id",
+          value: id
+        });
+        $.ajax({
+          url: "{{ route('product_type.update') }}",
+          type: "POST",
+          data: data,
+          success: function (data) {
+            modal.modal("hide");
+            ProductTypeIndexTemplate.initData();
+            toastr.success("Başarılı!");
+          },
+          error: function (err) {
+            toastr.error("Bir sorun var daha sonra tekrar deneyin!");
+          }
+        });
+      };
+      const {form} = validateBasicForm("product_type_edit_form", validations, formValidated);
+      return {modal, showAction};
+    }();
+    ProductTypeEditTemplate.modal.on('shown.bs.modal', ProductTypeEditTemplate.showAction);
   </script>
 @endpush

@@ -3,12 +3,10 @@
     <x-slot name="title">Personel Ödeme Tipleri</x-slot>
     <x-slot name="toolbar">
       <div class="d-flex space-x-2">
-        <button class="btn btn-bg-light btn-sm btn-icon-info btn-text-info" data-bs-custom-class="tooltip-dark"
-                data-bs-placement="top" data-bs-toggle="tooltip" title="Yeni Gider Tipi Ekle"
-                data-staff-payment-type-create-button>
-          <i class="las la-edit fs-3"></i>
-          Ekle
-        </button>
+        <x-tooltip-button data-staff-payment-type-create-button>
+          @include('components.icons.create')
+          @lang('globals/words.add')
+        </x-tooltip-button>
       </div>
     </x-slot>
   </x-slot>
@@ -18,29 +16,19 @@
 </x-card.card>
 @push('customscripts')
   <script>
-    $(document).on('click', '[data-staff-payment-type-create-button]', function (event) {
-      event.preventDefault();
-      $("#staff_payment_type_create_modal").modal("show");
-    });
-    $(document).on('click', '[data-staff-payment-type-edit-button]', function (event) {
-      event.preventDefault();
-      $("#staff_payment_type_edit_modal").data("editId", $(this).data('staffPaymentTypeEditButton')).modal("show");
-    });
-    $(document).on('click', '[data-staff-payment-type-delete-button]', function (event) {
-      event.preventDefault();
-      let id = $(event.currentTarget).data('staffPaymentTypeDeleteButton');
-      Swal.fire({
-        text: "Personel ödeme tipini silmek istiyor musunuz ?",
-        icon: "warning",
-        showCancelButton: true,
-        buttonsStyling: false,
-        confirmButtonText: "Evet, Sil!",
-        cancelButtonText: "İptal Et",
-        customClass: {
-          confirmButton: "btn fw-bold btn-danger",
-          cancelButton: "btn fw-bold btn-active-light-primary"
-        }
-      }).then(function (result) {
+    const StaffPaymentTypeIndexTemplate = function () {
+      let create_button_selector = "[data-staff-payment-type-create-button]",
+        create_modal = $("#staff_payment_type_create_modal"),
+        edit_button_selector = "[data-staff-payment-type-edit-button]",
+        edit_modal = $("#staff_payment_type_edit_modal"),
+        delete_button_selector = "[data-staff-payment-type-delete-button]",
+        block_ui_target = document.querySelector("#staff_payment_type_card_target");
+
+      let block_ui_modal_target = new KTBlockUI(block_ui_target, {
+        message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> @lang('globals/infos.loading')... </div>',
+      });
+
+      let deleteResultAction = (result, id) => {
         if (result.value) {
           $.ajax({
             url: "{{ route('staff-payment-type.delete') }}",
@@ -48,34 +36,28 @@
             data: {
               id: id
             },
-            beforeSend: function () {
-              Swal.fire({
-                text: "Personel ödeme tipini ve ödemeleri siliniyor",
-                icon: "info",
-                buttonsStyling: false,
-                showConfirmButton: false,
-              })
+            beforeSend: () => {
+              Swal.close();
             },
             success: function (data) {
               Swal.close();
               Swal.fire({
-                text: "Personel ödeme tipi silindi",
+                text: "@lang('globals/success_messages.deleted', ['attr' => __('globals/words.staff_payment_type')])",
                 icon: "success",
                 buttonsStyling: false,
-                confirmButtonText: "Tamam",
+                confirmButtonText: "@lang('globals/words.okey')",
                 customClass: {
                   confirmButton: "btn fw-bold btn-primary",
                 }
               })
-              initStaffPaymentTypeData();
+              initData();
             },
             error: function (err) {
-              Swal.close();
               Swal.fire({
-                text: "Personel ödeme tipi tekrar deneyin!",
+                text: "@lang('globals/error_messages.delete_error', ['attr' => __('globals/words.staff_payment_type')])",
                 icon: "error",
                 buttonsStyling: false,
-                confirmButtonText: "Tamam",
+                confirmButtonText: "@lang('globals/words.okey')",
                 customClass: {
                   confirmButton: "btn fw-bold btn-primary",
                 }
@@ -83,51 +65,72 @@
             }
           });
         }
-      });
-    });
-  </script>
-  <script>
-    var blockUIStaffPaymentType = new KTBlockUI(document.querySelector("#staff_payment_type_card_target"), {
-      message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> Yükleniyor...</div>',
-    });
-    var initStaffPaymentTypeData = () => {
-      $.ajax({
-        type: "POST",
-        url: "{{ route('staff-payment-type.all') }}",
-        beforeSend: function () {
-          blockUIStaffPaymentType.block();
-        },
-        success: function (data) {
-          let html = ``;
-          if (data && data.length > 0) {
-            data.map((item, index) => {
-              html += `
+      }
+      const initButtons = () => {
+        $(document).on('click', create_button_selector, function (event) {
+          event.preventDefault();
+          create_modal.modal("show");
+        });
+        $(document).on('click', edit_button_selector, function (event) {
+          event.preventDefault();
+          edit_modal.data("itemId", $(this).parent().data('itemId')).modal("show");
+        });
+        $(document).on('click', delete_button_selector, function (event) {
+          event.preventDefault();
+          let id = $(event.currentTarget).parent().data('itemId');
+          Swal.fire({
+            text: "@lang('globals/check_messages.want_to_delete', ['attr'  => __('globals/words.staff_payment_type')])",
+            icon: "warning",
+            showCancelButton: true,
+            buttonsStyling: false,
+            confirmButtonText: "@lang('globals/words.yes')",
+            cancelButtonText: "@lang('globals/words.cancel')",
+            customClass: {
+              confirmButton: "btn fw-bold btn-danger",
+              cancelButton: "btn fw-bold btn-active-light-primary"
+            }
+          }).then((res) => deleteResultAction(res, id));
+        });
+      }
+      const initData = () => {
+        $.ajax({
+          type: "POST",
+          url: "{{ route('staff-payment-type.all') }}",
+          beforeSend: function () {
+            block_ui_modal_target.block();
+          },
+          success: function (data) {
+            let html = ``;
+            if (data && data.length > 0) {
+              data.map((item, index) => {
+                html += `
                   <div class="d-flex justify-content-between align-items-center border py-2 px-4 rounded">
                     <div>${item.name}</div>
-                    <div>
-                      <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-2" data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip" title="Düzenle" data-staff-payment-type-edit-button="${item.id}">
-                        @include('components.icons.edit')
-              </button>
-              <button class="btn btn-icon btn-active-light-primary w-30px h-30px" data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip" title="Sil" data-staff-payment-type-delete-button="${item.id}">
-                        @include('components.icons.delete')
-              </button>
-            </div>
-          </div>
-`;
-            })
+                    <div data-item-id="${item.id}">
+                      @component('components.tooltip-icon-button', ["attributes" => "title='".__('globals/words.edit')."' data-staff-payment-type-edit-button"])
+                      @include('components.icons.edit')
+                      @endcomponent
+                      @component('components.tooltip-icon-button', ["attributes" => "title='".__('globals/words.delete')."' data-staff-payment-type-delete-button"])
+                      @include('components.icons.delete')
+                      @endcomponent
+                </div>
+              </div>`;
+              })
+            }
+            $(".staff-payment-type-zone").html(html);
+            block_ui_modal_target.release();
+            $("[data-bs-toggle]").tooltip();
+          },
+          error: function (err) {
+            toastr.error("@lang('globals/error_messages.fetch_error', ['attr'  => __('globals/words.staff_payment_type')])")
           }
-          $(".staff-payment-type-zone").html(html);
-          blockUIStaffPaymentType.release();
-          $("[data-bs-toggle]").tooltip();
-        },
-        error: function (err) {
-
-        }
-      });
-    }
-    initStaffPaymentTypeData();
+        });
+      }
+      return {initButtons, initData};
+    }();
+    StaffPaymentTypeIndexTemplate.initButtons();
+    StaffPaymentTypeIndexTemplate.initData();
   </script>
 @endpush
-
 @include('pages.staff.payment.type.create')
 @include('pages.staff.payment.type.edit')

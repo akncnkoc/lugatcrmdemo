@@ -6,7 +6,6 @@
         <x-form.input name="name" label="Ad" placeholder="Ad" required/>
         <x-form.input name="total" label="Şunki Total" placeholder="Şuanki Total" money disabled/>
         <x-form.select :asyncload="route('currency.select')" name="currency_id" label="Para Birimi" required
-                       disabled
                        parent="#edit_modal"
                        editing
                        hint="Para birimi kasanın hangi kuru kullancagını belirtir."
@@ -19,11 +18,12 @@
 
 @push('customscripts')
   <script>
-    const SafeEditTemplate = function (){
+    const SafeEditTemplate = function () {
       let id;
+      let edit_modal = $("#edit_modal");
       let block_ui_edit_modal_target = new KTBlockUI(document.querySelector("#edit_modal_target"));
-      let modal_show_action = function (e) {
-        id = $(e.target).data('editId');
+      let modalShowAction = function (e) {
+        id = $(e.target).data('itemId');
         $.ajax({
           url: "{{ route('safe.get') }}",
           data: {
@@ -34,14 +34,18 @@
             block_ui_edit_modal_target.block();
           },
           success: function (data) {
-            if(data && editForm){
-              $(editForm).find('input[name="name"]').val(data.name);
-              $(editForm).find('input[name="total"]').val(data.total)
+            if (data && form) {
+              $(form)
+                .find('input[name="name"]')
+                .val(data.name);
+              $(form)
+                .find('input[name="total"]')
+                .val(data.total)
                 .maskMoney({thousands: ".", decimal: ",", allowZero: true, affixesStay: false, allowNegative: true})
                 .maskMoney('mask');
               if (data.currency) {
                 let currency_option = new Option(data.currency.name, data.currency.id, false, true);
-                $(editForm).find('select[name="currency_id"]').html(currency_option);
+                $(form).find('select[name="currency_id"]').html(currency_option);
               }
             }
 
@@ -63,7 +67,7 @@
           }
         }
       };
-      let valid_form_action = (form) => {
+      let formValidated = (form) => {
         let data = $(form).serializeArray();
         let customizedData = [];
         customizedData.push({
@@ -88,21 +92,19 @@
           }
         });
       };
-      let after_load_action = (form, validator) => {
+      let formAfterLoaded = (form, validator) => {
         $(".currency_id_edit_select").on('change', function () {
           validator.revalidateField('currency_id');
         });
       };
-
-      let {form: editForm} = validateBasicForm("edit_form", validations, valid_form_action, null, after_load_action);
-
+      let {form} = validateBasicForm("edit_form", validations, formValidated, null, formAfterLoaded);
       return {
-        modal_show_action,
+        edit_modal,
+        modalShowAction,
       }
-
     }();
 
-    $("#edit_modal").on('shown.bs.modal', SafeEditTemplate.modal_show_action);
+    SafeEditTemplate.edit_modal.on('shown.bs.modal', SafeEditTemplate.modalShowAction);
 
   </script>
 @endpush

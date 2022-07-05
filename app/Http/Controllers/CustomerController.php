@@ -45,7 +45,7 @@ class CustomerController extends Controller
           if (!empty($request->get('phone'))) {
             $query->where('phone', 'LIKE', "%" . $request->get('phone') . "%");
           }
-          if (!empty($request->get('gender')) && $request->get('gender') != "-1") {
+          if ((!empty($request->get('gender')) || $request->get('gender') == "0") && $request->get('gender') != "-1") {
             $query->where('gender', $request->get('gender'));
           }
           if (!empty($request->get('customer_role'))) {

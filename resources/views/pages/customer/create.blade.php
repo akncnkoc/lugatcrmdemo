@@ -36,44 +36,49 @@
 </x-modal.modal>
 @push('customscripts')
   <script>
-    let createFormValidatorRules = {
-      name: {
-        validators: {
-          notEmpty: {
-            message: "@lang('globals/validation_messages.required', ['field_name' => __('globals/words.name')])"
-          },
-          stringLength: {
-            min: 3, message: "@lang('globals/validation_messages.min', ['field_name' => __('globals/words.name'), 'min' => 3])"
+    const CreateCustomerTemplate = function (){
+      const customer_role_select = '.customer_role_id_select';
+      let validations = {
+        name: {
+          validators: {
+            notEmpty: {
+              message: "@lang('globals/validation_messages.required', ['field_name' => __('globals/words.name')])"
+            },
+            stringLength: {
+              min: 3, message: "@lang('globals/validation_messages.min', ['field_name' => __('globals/words.name'), 'min' => 3])"
+            }
           }
-        }
-      }, customer_role_id: {
-        validators: {
-          notEmpty: {
-            message: "@lang('globals/validation_messages.required', ['field_name' => __('globals/words.role')])"
+        }, customer_role_id: {
+          validators: {
+            notEmpty: {
+              message: "@lang('globals/validation_messages.required', ['field_name' => __('globals/words.role')])"
+            }
           }
         }
       }
-    }
-    let createFormValidated = (form) => {
-      let data = $(form).serializeArray();
-      $.ajax({
-        url: "{{ route('customer.store') }}", type: "POST", data: data, success: function (data) {
-          $("#create_modal").modal("hide");
-          table.ajax.reload(null, false);
-          toastr.success("@lang('globals/success_messages.success', ['attr' => __('globals/words.customer')])");
-        }, error: function (err) {
-          toastr.error("@lang('globals/error_messages.save_error', ['attr' => __('globals/words.customer')])");
-        }
-      });
-    }
-    let createFormInvalidated = null;
-    let createFormAfterLoaded = (form, validator) => {
-      $(form).find('.customer_role_id_select').on('change', function () {
-        validator.revalidateField('customer_role_id');
-      });
-    }
-    let {
-      form: createForm, validator: createValidator
-    } = validateBasicForm("create_form", createFormValidatorRules, createFormValidated, createFormInvalidated, createFormAfterLoaded);
+      let formValidated = (form) => {
+        let data = $(form).serializeArray();
+        $.ajax({
+          url: "{{ route('customer.store') }}", type: "POST", data: data, success: function (data) {
+            $("#create_modal").modal("hide");
+            table.ajax.reload(null, false);
+            toastr.success("@lang('globals/success_messages.success', ['attr' => __('globals/words.customer')])");
+          }, error: function (err) {
+            toastr.error("@lang('globals/error_messages.save_error', ['attr' => __('globals/words.customer')])");
+          }
+        });
+      }
+      let formAfterLoaded = (form, validator) => {
+        $(form).find(customer_role_select).on('change', function () {
+          validator.revalidateField('customer_role_id');
+        });
+      }
+      const init = () => {
+        validateBasicForm("create_form", validations, formValidated, null, formAfterLoaded);
+      }
+      return {init};
+    }();
+
+    CreateCustomerTemplate.init();
   </script>
 @endpush

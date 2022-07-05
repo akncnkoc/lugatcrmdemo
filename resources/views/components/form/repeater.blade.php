@@ -11,8 +11,8 @@
   </div>
   @if(!$template)
     <div class="form-group">
-      <a href="javascript:" data-repeater-create class="btn btn-info fs-5">
-        <i class="la la-plus"></i>
+      <a href="javascript:" data-repeater-create class="btn btn-sm btn-info">
+        @include('components.icons.create')
         {{$buttonText}}
       </a>
     </div>

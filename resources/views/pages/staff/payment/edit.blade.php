@@ -22,95 +22,106 @@
 
 @push('customscripts')
   <script>
-    var id;
-    var blockUI = new KTBlockUI(document.querySelector("#edit_modal_target"));
-    $("#edit_modal").on('shown.bs.modal', function (e) {
-      id = $(e.target).data('editId');
-      $.ajax({
-        url: `{{ route('staff-payment.get') }}/${id}`,
-        data: {
-          id
+    const StaffPaymentEditTemplate = function () {
+      let id;
+      let modal_target = document.querySelector("#edit_modal_target");
+      let block_ui_modal_target = new KTBlockUI(modal_target);
+      let edit_modal = $("#edit_modal");
+      let validations = {
+        price: {
+          validators: {
+            numeric: {
+              thousandsSeparator: ".",
+              message: "Fiyat gereklidir",
+              decimalSeparator: ",",
+            },
+          }
         },
-        type: "POST",
-        beforeSend: () => {
-          blockUI.block();
+        date: {
+          validators: {
+            date: {
+              format: 'DD-MM-YYYY',
+              message: 'Geçerli bir tarih girin',
+            },
+            notEmpty: {
+              message: 'Tarih boş geçilemez',
+            },
+          }
         },
-        success: function (data) {
-          $(editForm).find('input[name="price"]').val(data.price).maskMoney("mask")
-          $(editForm).find('input[name="date"]').val(data.date).flatpickr();
-          let payment_type_option = new Option(data.payment_type.name, data.payment_type.id, false, true);
-          $(editForm).find('select[name="staff_payment_type_id"]').html(payment_type_option);
-          let safe_option = new Option(data.safe.name, data.safe.id, false, true);
-          $(editForm).find('select[name="safe_id"]').html(safe_option);
-          $(editForm).find('textarea[name="description"]').val(data.description);
-          blockUI.release();
+        'safe_id': {
+          validators: {
+            notEmpty: {
+              message: "Kasa seçilmesi zorunludur"
+            }
+          }
         },
-        error: {}
-      });
-    });
-    let {
-      form: editForm,
-      validator: editValidator
-    } = validateBasicForm("edit_form", {
-      price: {
-        validators: {
-          numeric: {
-            thousandsSeparator: ".",
-            message: "Fiyat gereklidir",
-            decimalSeparator: ",",
-          },
-        }
-      },
-      date: {
-        validators: {
-          date: {
-            format: 'DD-MM-YYYY',
-            message: 'Geçerli bir tarih girin',
-          },
-          notEmpty: {
-            message: 'Tarih boş geçilemez',
-          },
-        }
-      },
-      'safe_id': {
-        validators: {
-          notEmpty: {
-            message: "Kasa seçilmesi zorunludur"
+        'staff_payment_type_id': {
+          validators: {
+            notEmpty: {
+              message: "Gider tipi seçilmesi zorunludur"
+            }
           }
         }
-      },
-      'staff_payment_type_id': {
-        validators: {
-          notEmpty: {
-            message: "Gider tipi seçilmesi zorunludur"
+      };
+      const formValidated = (form, submitButton) => {
+        let data = $(form).serializeArray();
+        $.ajax({
+          url: `{{ route('staff-payment.update') }}/${id}`,
+          type: "POST",
+          data: data,
+          success: function (data) {
+            $("#edit_modal").modal("hide");
+            table.ajax.reload(null, false);
+            submitButton.disabled = false;
+            toastr.success("Başarılı!");
+          },
+          error: function (err) {
+            toastr.error("Bir sorun var daha sonra tekrar deneyin!");
           }
-        }
-      }
-    }, (form, submitButton) => {
-      let data = $(form).serializeArray();
-      $.ajax({
-        url: `{{ route('staff-payment.update') }}/${id}`,
-        type: "POST",
-        data: data,
-        success: function (data) {
-          $("#edit_modal").modal("hide");
-          table.ajax.reload(null, false);
-          submitButton.disabled = false;
-          toastr.success("Başarılı!");
-        },
-        error: function (err) {
-          toastr.error("Bir sorun var daha sonra tekrar deneyin!");
-        }
-      });
-    }, () => {
-      console.log("invalidated")
-    }, (form, validator) => {
-      $(form).find('.safe_id_edit_select').on('change', function () {
-        validator.revalidateField('safe_id');
-      });
-      $(form).find('.staff_payment_type_id_edit_select').on('change', function () {
-        validator.revalidateField('staff_payment_type_id');
-      });
-    });
+        });
+      };
+      const showModalAction = function (e) {
+        id = $(e.target).data('editId');
+        $.ajax({
+          url: `{{ route('staff-payment.get') }}/${id}`,
+          data: {
+            id
+          },
+          type: "POST",
+          beforeSend: () => {
+            block_ui_modal_target.block();
+          },
+          success: function (data) {
+            $(form).find('input[name="price"]').val(data.price).maskMoney("mask")
+            $(form).find('input[name="date"]').val(data.date).flatpickr();
+            let payment_type_option = new Option(data.payment_type.name, data.payment_type.id, false, true);
+            $(form).find('select[name="staff_payment_type_id"]').html(payment_type_option);
+            let safe_option = new Option(data.safe.name, data.safe.id, false, true);
+            $(form).find('select[name="safe_id"]').html(safe_option);
+            $(form).find('textarea[name="description"]').val(data.description);
+            block_ui_modal_target.release();
+          },
+          error: function (){
+            toastr.error("@lang('globals/error_messages.fetch_error', ['attr' => __('globals/words.expense')])")
+            block_ui_modal_target.release();
+            edit_modal.modal('hide');
+          }
+        });
+      };
+      const afterFormValidated = (form, validator) => {
+        $(form).find('.safe_id_edit_select').on('change', function () {
+          validator.revalidateField('safe_id');
+        });
+        $(form).find('.staff_payment_type_id_edit_select').on('change', function () {
+          validator.revalidateField('staff_payment_type_id');
+        });
+      };
+      const {form} = validateBasicForm("edit_form", validations, formValidated, null, afterFormValidated);
+
+      return {edit_modal, showModalAction};
+    }();
+
+    StaffPaymentEditTemplate.edit_modal.on('shown.bs.modal', StaffPaymentEditTemplate.showModalAction);
+
   </script>
 @endpush

@@ -1,13 +1,12 @@
 <x-card.card cardscroll="300" target="product_type_card_target">
   <x-slot name="header">
-    <x-slot name="title">Ürün Tipleri</x-slot>
+    <x-slot name="title">@lang('globals/words.product_type')</x-slot>
     <x-slot name="toolbar">
       <div class="d-flex space-x-2">
-        <button class="btn btn-bg-light btn-sm btn-icon-info btn-text-info" data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip"
-                title="Yeni Gider Tipi Ekle" data-product-type-create-button>
-          <i class="las la-edit fs-3"></i>
-          Ekle
-        </button>
+        <x-tooltip-button :title="__('pages/product.create_new_product_type_hint')" data-product-type-create-button>
+          @include('components.icons.create')
+          @lang('globals/words.add')
+        </x-tooltip-button>
       </div>
     </x-slot>
   </x-slot>
@@ -17,29 +16,15 @@
 </x-card.card>
 @push('customscripts')
   <script>
-    $(document).on('click', '[data-product-type-create-button]', function (event) {
-      event.preventDefault();
-      $("#product_type_create_modal").modal("show");
-    });
-    $(document).on('click', '[data-product-type-edit-button]', function (event) {
-      event.preventDefault();
-      $("#product_type_edit_modal").data("editId", $(this).data('productTypeEditButton')).modal("show");
-    });
-    $(document).on('click', '[data-product-type-delete-button]', function (event) {
-      event.preventDefault();
-      let id = $(event.currentTarget).data('productTypeDeleteButton');
-      Swal.fire({
-        text: "Ürün tipini silmek istiyor musunuz ?",
-        icon: "warning",
-        showCancelButton: true,
-        buttonsStyling: false,
-        confirmButtonText: "Evet, Sil!",
-        cancelButtonText: "İptal Et",
-        customClass: {
-          confirmButton: "btn fw-bold btn-danger",
-          cancelButton: "btn fw-bold btn-active-light-primary"
-        }
-      }).then(function (result) {
+    const ProductTypeIndexTemplate = function () {
+      let product_type_create_modal = $("#product_type_create_modal");
+      let product_type_edit_modal = $("#product_type_edit_modal");
+      let product_type_card_target = document.querySelector("#product_type_card_target");
+      let block_ui_product_type_card_container = new KTBlockUI(product_type_card_target, {
+        message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> Yükleniyor...</div>',
+      });
+
+      const deleteResultAction = (result, id) => {
         if (result.value) {
           $.ajax({
             url: "{{ route('product_type.delete') }}",
@@ -82,49 +67,74 @@
             }
           });
         }
-      });
-    });
-  </script>
-  <script>
-    var blockUIproductType = new KTBlockUI(document.querySelector("#product_type_card_target"), {
-      message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> Yükleniyor...</div>',
-    });
-    var initproductTypeData = () => {
-      $.ajax({
-        type: "POST",
-        url: "{{ route('product_type.all') }}",
-        beforeSend: function () {
-          blockUIproductType.block();
-        },
-        success: function (data) {
-          let html = ``;
-          if (data && data.length > 0) {
-            data.map((item, index) => {
-              html += `
+      }
+      const initButtons = () => {
+        $(document).on('click', '[data-product-type-create-button]', function (event) {
+          event.preventDefault();
+          product_type_create_modal.modal("show");
+        });
+        $(document).on('click', '[data-product-type-edit-button]', function (event) {
+          event.preventDefault();
+          product_type_edit_modal.data("itemId", $(this).parent().data('itemId')).modal("show");
+        });
+        $(document).on('click', '[data-product-type-delete-button]', function (event) {
+          event.preventDefault();
+          let id = $(event.currentTarget).data('productTypeDeleteButton');
+          Swal.fire({
+            text: "@lang('globals/check_messages.want_to_delete', ['attr' => __('globals/words.expense_type')])",
+            icon: "warning",
+            showCancelButton: true,
+            buttonsStyling: false,
+            confirmButtonText: "@lang('globals/words.yes')",
+            cancelButtonText: "@lang('globals/words.cancel')",
+            customClass: {
+              confirmButton: "btn fw-bold btn-danger",
+              cancelButton: "btn fw-bold btn-active-light-primary"
+            }
+          }).then((res) => deleteResultAction(res, id));
+        });
+      }
+      const initData = () => {
+        $.ajax({
+          type: "POST",
+          url: "{{ route('product_type.all') }}",
+          beforeSend: function () {
+            block_ui_product_type_card_container.block();
+          },
+          success: function (data) {
+            let html = ``;
+            if (data && data.length > 0) {
+              data.map((item, index) => {
+                html += `
                   <div class="d-flex justify-content-between align-items-center border py-2 px-4 rounded">
                     <div>${item.name} - ( ${item.initial_code} )</div>
-                    <div>
-                      <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-2" data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip" title="Düzenle" data-product-type-edit-button="${item.id}">
-                        @include('components.icons.edit')
-              </button>
-              <button class="btn btn-icon btn-active-light-primary w-30px h-30px" data-bs-custom-class="tooltip-dark" data-bs-placement="top" data-bs-toggle="tooltip" title="Sil" data-product-type-delete-button="${item.id}">
-                        @include('components.icons.delete')
-              </button>
-            </div>
-          </div>
+                    <div data-item-id="${item.id}">
+                      @component('components.tooltip-icon-button', ["attributes" => "title='".__('globals/words.edit')."' data-product-type-edit-button"])
+                @include('components.icons.edit')
+                @endcomponent
+                @component('components.tooltip-icon-button', ["attributes" => "title='".__('globals/words.delete')."' data-product-type-delete-button"])
+                @include('components.icons.delete')
+                @endcomponent
+                </div>
+              </div>
 `;
-            })
+              })
+            }
+            $(".product-type-zone").html(html);
+            block_ui_product_type_card_container.release();
+            $("[data-bs-toggle]").tooltip();
+          },
+          error: function (err) {
+            block_ui_product_type_card_container.release();
+            toastr.error("@lang('globals/error_messages.fetch_error', ['attr' => __('globals/words.expense_type')])")
           }
-          $(".product-type-zone").html(html);
-          blockUIproductType.release();
-          $("[data-bs-toggle]").tooltip();
-        },
-        error: function (err) {
+        });
+      }
 
-        }
-      });
-    }
-    initproductTypeData();
+      return {initButtons,initData};
+    }();
+    ProductTypeIndexTemplate.initButtons();
+    ProductTypeIndexTemplate.initData();
   </script>
 @endpush
 

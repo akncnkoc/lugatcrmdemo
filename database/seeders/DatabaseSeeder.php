@@ -8,18 +8,18 @@ use Illuminate\Support\Facades\Artisan;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        Artisan::call('migrate:fresh');
-        $this->command->info("Migrated");
-        $currency = new CurrencyController();
-        $currency->currency();
-        $this->call([
+  /**
+   * Seed the application's database.
+   *
+   * @return void
+   */
+  public function run()
+  {
+    Artisan::call('migrate:fresh');
+    $this->command->info("Migrated");
+    $currency = new CurrencyController();
+    $currency->currency();
+    $this->call([
       CargoTypeSeeder::class,
       CargoCompanySeeder::class,
       AmountTypeSeeder::class,
@@ -42,5 +42,5 @@ class DatabaseSeeder extends Seeder
       ExpenseSeeder::class,
       InvoiceSeeder::class
     ]);
-    }
+  }
 }

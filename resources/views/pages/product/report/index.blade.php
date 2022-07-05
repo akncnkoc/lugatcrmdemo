@@ -1,6 +1,6 @@
 @extends('layout.default')
 @section('page-title')
-  {{$product->name}} ürünü'nün raporu
+  @lang('pages/product.product_report', ["attr" => $product->name])
 @endsection
 @section('content')
   <div class="row g-5 g-xl-10">
@@ -12,8 +12,8 @@
               <span class="fs-2hx fw-bolder text-gray-800 me-2 lh-1" id="data-yearly-price-total">0
               </span>
               <span class="badge fs-base">
-                <span id="data-price-exchange-ration"
-                      title="Geçen yıla oranla kazanılan para durumu"
+                <span id="data-price-exchange-ratio"
+                      title="@lang('pages/product.price_compared_to_last_year')"
                       data-bs-toggle="tooltip"
                       data-bs-trigger="hover"
                       data-bs-custom-class="tooltip-dark"
@@ -23,7 +23,7 @@
                 </span>
               </span>
             </div>
-            <span class="fs-6 fw-bold text-gray-400">Bu Yıl Toplam Satış</span>
+            <span class="fs-6 fw-bold text-gray-400">@lang('pages/dashboard.this_year_total_price')</span>
           </div>
           <div id="yearlyPriceReport" class="min-h-auto" style="height: 150px"></div>
         </div>
@@ -38,8 +38,8 @@
               </span>
               <span class="fs-2hx fw-bolder text-gray-800 me-2 lh-1">Adet</span>
               <span class="badge badge-success fs-base">
-                <span id="data-sale-exchange-ration"
-                      title="Geçen yıla oranla satılan adet durumu"
+                <span id="data-sale-exchange-ratio"
+                      title="@lang('pages/product.saled_compared_to_last_year')"
                       data-bs-toggle="tooltip"
                       data-bs-trigger="hover"
                       data-bs-custom-class="tooltip-dark"
@@ -49,7 +49,7 @@
                 </span>
               </span>
             </div>
-            <span class="fs-6 fw-bold text-gray-400">Bu Yıl Toplam Adet Satış</span>
+            <span class="fs-6 fw-bold text-gray-400">@lang('pages/product.this_year_total_saled')</span>
           </div>
           <div id="yearlySaleReport" class="min-h-auto" style="height: 150px"></div>
         </div>
@@ -59,94 +59,102 @@
 @endsection
 @push('customscripts')
   <script>
-    var blockUIYearlyPriceReportCardContainer = new KTBlockUI(document.querySelector
-    ("#yearly-price-report-card-container"), {
-      message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> Yükleniyor...</div>',
-    });
-    var blockUIYearlySaleReportCardContainer = new KTBlockUI(document.querySelector
-    ("#yearly-sale-report-card-container"), {
-      message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> Yükleniyor...</div>',
-    });
-    $.ajax({
-      type: "POST",
-      url: "{{route('product-report.yearly-price-report')}}",
-      data: {
-        id: "{{$product->id}}"
-      },
-      beforeSend: function () {
-        blockUIYearlyPriceReportCardContainer.block();
-      },
-      success: function (data) {
-        if (data) {
-          new ApexCharts(document.getElementById("yearlyPriceReport"),
-            data['yearly_price_chart']).render();
-          new countUp.CountUp("data-yearly-price-total", data['yearly_price_total'], {
-            decimalPlaces: 2,
-            prefix: "{{\App\AppHelper::getPrimaryCurrency()->code}} "
-          }).start();
-          if (data['yearly_price_exchange_ratio'] > 0) {
-            $("#data-price-exchange-ration")
-              .parent()
-              .addClass('badge-success')
-              .prepend(` @include("components.icons.arrowup") `)
-          } else if (data['yearly_price_exchange_ratio'] < 0) {
-            $("#data-price-exchange-ration")
-              .parent()
-              .addClass('badge-danger')
-              .prepend(` @include("components.icons.arrowdown") `)
-          } else {
-            $("#data-price-exchange-ration")
-              .parent()
-              .addClass('badge-warning')
-              .prepend(` @include("components.icons.minus") `)
+    const ProductReportTemplate = function () {
+      let blockUIYearlyPriceReportCardContainer = new KTBlockUI(document.querySelector
+      ("#yearly-price-report-card-container"), {
+        message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> Yükleniyor...</div>',
+      });
+      let blockUIYearlySaleReportCardContainer = new KTBlockUI(document.querySelector
+      ("#yearly-sale-report-card-container"), {
+        message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> Yükleniyor...</div>',
+      });
+      let price_exchange_ratio_container = $("#data-price-exchange-ratio");
+      let sale_exchange_ratio_container = $("#data-sale-exchange-ratio");
+      const init = () => {
+        $.ajax({
+          type: "POST",
+          url: "{{route('product-report.yearly-price-report')}}",
+          data: {
+            id: "{{$product->id}}"
+          },
+          beforeSend: function () {
+            blockUIYearlyPriceReportCardContainer.block();
+          },
+          success: function (data) {
+            if (data) {
+              new ApexCharts(document.getElementById("yearlyPriceReport"),
+                data['yearly_price_chart']).render();
+              new countUp.CountUp("data-yearly-price-total", data['yearly_price_total'], {
+                decimalPlaces: 2,
+                prefix: "{{\App\AppHelper::getPrimaryCurrency()->code}} "
+              }).start();
+              if (data['yearly_price_exchange_ratio'] > 0) {
+                price_exchange_ratio_container
+                  .parent()
+                  .addClass('badge-success')
+                  .prepend(` @include("components.icons.arrowup") `)
+              } else if (data['yearly_price_exchange_ratio'] < 0) {
+                price_exchange_ratio_container
+                  .parent()
+                  .addClass('badge-danger')
+                  .prepend(` @include("components.icons.arrowdown") `)
+              } else {
+                price_exchange_ratio_container
+                  .parent()
+                  .addClass('badge-warning')
+                  .prepend(` @include("components.icons.minus") `)
+              }
+              document.getElementById("data-price-exchange-ratio").innerText = data['yearly_price_exchange_ratio'] + "%"
+            }
+            blockUIYearlyPriceReportCardContainer.release();
+          },
+          error: function (err) {
+            blockUIYearlyPriceReportCardContainer.release();
+            toastr.error('Rapor yüklenirken bir sorun oluştu, daha sonra tekrar deneyin!')
           }
-          document.getElementById("data-price-exchange-ration").innerText = data['yearly_price_exchange_ratio'] + "%"
-        }
-        blockUIYearlyPriceReportCardContainer.release();
-      },
-      error: function (err) {
-        blockUIYearlyPriceReportCardContainer.release();
-        toastr.error('Rapor yüklenirken bir sorun oluştu, daha sonra tekrar deneyin!')
-      }
-    });
-    $.ajax({
-      type: "POST",
-      url: "{{route('product-report.yearly-sale-report')}}",
-      data: {
-        id: "{{$product->id}}"
-      },
-      beforeSend: function () {
-        blockUIYearlySaleReportCardContainer.block();
-      },
-      success: function (data) {
-        if (data) {
-          new ApexCharts(document.getElementById("yearlySaleReport"),
-            data['yearly_sale_chart']).render();
-          new countUp.CountUp("data-yearly-sale-total", data['yearly_sale_total']).start();
-          if (data['yearly_sale_exchange_ratio'] > 0) {
-            $("#data-sale-exchange-ration")
-              .parent()
-              .addClass('badge-success')
-              .prepend(` @include("components.icons.arrowup") `)
-          } else if (data['yearly_sale_exchange_ratio'] < 0) {
-            $("#data-sale-exchange-ration")
-              .parent()
-              .addClass('badge-danger')
-              .prepend(` @include("components.icons.arrowdown") `)
-          } else {
-            $("#data-sale-exchange-ration")
-              .parent()
-              .addClass('badge-warning')
-              .prepend(` @include("components.icons.minus") `)
+        });
+        $.ajax({
+          type: "POST",
+          url: "{{route('product-report.yearly-sale-report')}}",
+          data: {
+            id: "{{$product->id}}"
+          },
+          beforeSend: function () {
+            blockUIYearlySaleReportCardContainer.block();
+          },
+          success: function (data) {
+            if (data) {
+              new ApexCharts(document.getElementById("yearlySaleReport"),
+                data['yearly_sale_chart']).render();
+              new countUp.CountUp("data-yearly-sale-total", data['yearly_sale_total']).start();
+              if (data['yearly_sale_exchange_ratio'] > 0) {
+                sale_exchange_ratio_container
+                  .parent()
+                  .addClass('badge-success')
+                  .prepend(` @include("components.icons.arrowup") `)
+              } else if (data['yearly_sale_exchange_ratio'] < 0) {
+                sale_exchange_ratio_container
+                  .parent()
+                  .addClass('badge-danger')
+                  .prepend(` @include("components.icons.arrowdown") `)
+              } else {
+                sale_exchange_ratio_container
+                  .parent()
+                  .addClass('badge-warning')
+                  .prepend(` @include("components.icons.minus") `)
+              }
+              document.getElementById("data-sale-exchange-ratio").innerText = data['yearly_sale_exchange_ratio'] + "%"
+            }
+            blockUIYearlySaleReportCardContainer.release();
+          },
+          error: function (err) {
+            blockUIYearlySaleReportCardContainer.release();
+            toastr.error('Rapor yüklenirken bir sorun oluştu, daha sonra tekrar deneyin!')
           }
-          document.getElementById("data-sale-exchange-ration").innerText = data['yearly_sale_exchange_ratio'] + "%"
-        }
-        blockUIYearlySaleReportCardContainer.release();
-      },
-      error: function (err) {
-        blockUIYearlySaleReportCardContainer.release();
-        toastr.error('Rapor yüklenirken bir sorun oluştu, daha sonra tekrar deneyin!')
+        });
       }
-    });
+      return {init}
+    }();
+    ProductReportTemplate.init();
   </script>
 @endpush

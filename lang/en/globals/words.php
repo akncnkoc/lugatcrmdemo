@@ -40,5 +40,5 @@ return [
   'filter_clear'  => 'Clear Filter',
   'customer_role' => 'Customer Role',
   'expense_type'  => 'Expense Type',
-  'homepage'      => 'Homepage'
+  'homepage'      => 'Homepage',
 ];

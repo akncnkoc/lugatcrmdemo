@@ -11,59 +11,66 @@
 </x-modal.modal>
 @push('customscripts')
   <script>
-    var id;
-    var blockUI = new KTBlockUI(document.querySelector("#expense_type_edit_modal_target"));
-    $("#expense_type_edit_modal").on('shown.bs.modal', function (e) {
-      id = $(e.target).data('editId');
-      $.ajax({
-        url: "{{ route('expense_type.get') }}",
-        data: {
-          id
-        },
-        type: "POST",
-        beforeSend: () => {
-          blockUI.block();
-        },
-        success: function (data) {
-          $(expenseTypeEditForm).find('input[name="name"]').val(data.name);
-          blockUI.release();
-        },
-        error: {}
-      });
-    });
-    let {
-      form: expenseTypeEditForm
-    } = validateBasicForm("expense_type_edit_form", {
-      name: {
-        validators: {
-          notEmpty: {
-            message: "@lang('globals/validation_messages.required', ['field_name' => __('globals/words.name')])"
-          },
-          stringLength: {
-            min: 3,
-            message: "@lang('globals/validation_messages.min', ['field_name' => __('globals/words.name'), 'min' => 3])"
+    const ExpenseTypeEditTemplate = function () {
+      let id;
+      let edit_modal = $("#expense_type_edit_modal");
+      let modal_target = document.querySelector("#expense_type_edit_modal_target");
+      let block_ui_modal_target = new KTBlockUI(modal_target);
+      let validations = {
+        name: {
+          validators: {
+            notEmpty: {
+              message: "@lang('globals/validation_messages.required', ['field_name' => __('globals/words.name')])"
+            },
+            stringLength: {
+              min: 3,
+              message: "@lang('globals/validation_messages.min', ['field_name' => __('globals/words.name'), 'min' => 3])"
+            }
           }
         }
+      };
+      const formValidated = (form) => {
+        let data = $(form).serializeArray();
+        data.push({
+          name: "id",
+          value: id
+        });
+        $.ajax({
+          url: "{{ route('expense_type.update') }}",
+          type: "POST",
+          data: data,
+          success: function (data) {
+            edit_modal.modal("hide");
+            ExpenseTypeIndexTemplate.initData();
+            toastr.success("@lang('globals/success_messages.success', ['attr' => __('globals/words.expense_type')])");
+          },
+          error: function () {
+            edit_modal.modal("hide");
+            toastr.error("@lang('globals/error_messages.edit_error', ['attr' => __('globals/words.expense_type')])");
+          }
+        });
       }
-    }, (form) => {
-      let data = $(form).serializeArray();
-      data.push({
-        name: "id",
-        value: id
-      });
-      $.ajax({
-        url: "{{ route('expense_type.update') }}",
-        type: "POST",
-        data: data,
-        success: function (data) {
-          $("#expense_type_edit_modal").modal("hide");
-          initExpenseTypeData();
-          toastr.success("@lang('globals/success_messages.success', ['attr' => __('globals/words.expense_type')])");
-        },
-        error: function (err) {
-          toastr.error("@lang('globals/error_messages.edit_error', ['attr' => __('globals/words.expense_type')])");
-        }
-      });
-    });
+      const modalShowAction = (e) => {
+        id = $(e.target).data('editId');
+        $.ajax({
+          url: "{{ route('expense_type.get') }}",
+          data: {
+            id
+          },
+          type: "POST",
+          beforeSend: () => {
+            block_ui_modal_target.block();
+          },
+          success: function (data) {
+            $(form).find('input[name="name"]').val(data.name);
+            block_ui_modal_target.release();
+          },
+          error: {}
+        });
+      };
+      const {form} = validateBasicForm("expense_type_edit_form", validations, formValidated);
+      return {edit_modal, modalShowAction};
+    }();
+    ExpenseTypeEditTemplate.edit_modal.on('shown.bs.modal', ExpenseTypeEditTemplate.modalShowAction);
   </script>
 @endpush
