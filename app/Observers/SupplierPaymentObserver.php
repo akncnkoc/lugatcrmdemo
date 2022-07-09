@@ -13,7 +13,7 @@ class SupplierPaymentObserver
       $safe_log = $supplierPayment->safe_log()->create([
         'price'        => $supplierPayment->price,
         'content'      => sprintf("%s tedarikçisine %s %s para ödemesi oldu", $supplierPayment->supplier->name, $supplierPayment->price, $supplierPayment->safe->currency->code),
-        'process_type' => AppHelper::OUTPUT,
+        'process_type' => AppHelper::SUPPLIER_PAYMENT_OUTPUT,
         'date'         => $supplierPayment->date,
         'safe_id'      => $supplierPayment->safe->id
       ]);
@@ -31,7 +31,7 @@ class SupplierPaymentObserver
       $safe_log = $supplierPayment->safe_log()->create([
         'price'        => $supplierPayment->price,
         'content'      => sprintf("%s tedarikçisine %s %s para ödemesi oldu", $supplierPayment->supplier->name, $supplierPayment->price, $supplierPayment->safe->currency->code),
-        'process_type' => AppHelper::OUTPUT,
+        'process_type' => AppHelper::SUPPLIER_PAYMENT_OUTPUT,
         'date'         => $supplierPayment->date,
         'safe_id'      => $supplierPayment->safe->id
       ]);

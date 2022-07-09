@@ -3,7 +3,7 @@
     <x-slot name="title">@lang('globals/words.customer_role')</x-slot>
     <x-slot name="toolbar">
       <div class="d-flex space-x-2">
-        <x-tooltip-button :title="__('pages/customer.create_new_customer_role_hint')" data-customer-role-create-button>
+        <x-tooltip-button :title="__('pages/customer.create_new_customer_role_hint')" data-create-button>
           @include('components.icons.create')
           @lang('globals/words.add')
         </x-tooltip-button>
@@ -16,17 +16,17 @@
 </x-card.card>
 @push('customscripts')
   <script>
-
     const CustomerRoleIndexTemplate = function () {
       const create_modal = $("#customer_role_create_modal");
       const edit_modal = $("#customer_role_edit_modal");
-      const create_button_selector = "[data-customer-role-create-button]";
-      const edit_button_selector = "[data-customer-role-edit-button]";
-      const delete_button_selector = "[data-customer-role-delete-button]";
-      const block_ui_customer_role_card_container = new KTBlockUI(document.querySelector("#customer_role_card_container"), {
+      const create_button_selector = "[data-create-button]";
+      const edit_button_selector = "[data-edit-button]";
+      const delete_button_selector = "[data-delete-button]";
+      let modal_target = document.querySelector("#customer_role_card_container");
+      const block_ui_customer_role_card_container = new KTBlockUI(modal_target, {
         message: '<div class="blockui-message"><span class="spinner-border text-primary"></span> @lang('globals/infos.loading') </div>',
       });
-      let deleteResultAction =  (result, id) => {
+      let deleteResultAction = (result, id) => {
         if (result.value) {
           $.ajax({
             url: "{{ route('customer_role.delete') }}",
@@ -34,7 +34,7 @@
             data: {
               id: id
             },
-            beforeSend: function (){
+            beforeSend: function () {
               Swal.close();
             },
             success: function (data) {
@@ -65,13 +65,13 @@
         }
       }
       const initButtons = function () {
-        $(document).on('click', create_button_selector, function (event) {
+        $(modal_target).on('click', create_button_selector, function (event) {
           event.preventDefault();
           create_modal.modal("show");
         });
-        $(document).on('click', edit_button_selector, function (event) {
+        $(modal_target).on('click', edit_button_selector, function (event) {
           event.preventDefault();
-          edit_modal.data("editId", $(this).parent().data('customerRoleId')).modal("show");
+          edit_modal.data("itemId", $(this).parent().data('customerRoleId')).modal("show");
         });
         $(document).on('click', delete_button_selector, function (event) {
           event.preventDefault();
@@ -100,21 +100,22 @@
           success: function (data) {
             let html = ``;
             if (data && data.length > 0) {
-              data.map((item, index) => {
+              data.map((item) => {
                 html += `
                 <div class="col">
                   <div class="d-flex justify-content-between align-items-center border py-2 px-4 rounded">
                     <div>${item.name}</div>
                     <div data-customer-role-id="${item.id}">
-                      @component('components.tooltip-icon-button', ["attributes" => "title='".__('globals/words.edit')."' data-customer-role-edit-button"])
-                        @include('components.icons.edit')
-                      @endcomponent
-                      @component('components.tooltip-icon-button', ["attributes" => "title='".__('globals/words.delete')."' data-customer-role-delete-button"])
-                        @include('components.icons.delete')
-                      @endcomponent
-                    </div>
-                  </div>
-                </div>`;
+                      @component('components.tooltip-icon-button', ["attributes" => "title='".__('globals/words.edit')."' data-edit-button"])
+                @include('components.icons.edit')
+                @endcomponent
+                @component('components.tooltip-icon-button', ["attributes" => "title='".__('globals/words.delete')."'
+                 data-delete-button"])
+                @include('components.icons.delete')
+                @endcomponent
+                </div>
+              </div>
+            </div>`;
               })
             }
             $(".customer-role-zone").html(html);
@@ -129,11 +130,8 @@
       }
       return {initButtons, initData}
     }();
-
     CustomerRoleIndexTemplate.initButtons();
     CustomerRoleIndexTemplate.initData();
-
-
   </script>
 @endpush
 

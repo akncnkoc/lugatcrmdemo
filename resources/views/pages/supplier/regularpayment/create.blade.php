@@ -29,168 +29,168 @@
 </x-modal.modal>
 @push('customscripts')
   <script>
-    let safe_select_options = {
-      placeholder: "Kasa Ara",
-      dropdownParent: $("#create_modal"),
-      ajax: {
-        url: "{{route('safe.select')}}",
-        dataType: 'json',
-        method: 'post',
-        delay: 250,
-        data: function (params) {
-          var query = {
-            search: params.term,
-            page: params.page || 1,
-            _token: "{{csrf_token()}}",
-          }
-          return query;
-        },
-        processResults: function (data, params) {
-          params.page = params.page || 1;
-          return {
-            results: data.results,
-            pagination: {
-              more: (params.page * 10) < data.total
+    const SupplierRegularPaymentCreateTemplate = function (){
+      let safe_select_options = {
+        placeholder: "Kasa Ara",
+        dropdownParent: $("#create_modal"),
+        ajax: {
+          url: "{{route('safe.select')}}",
+          dataType: 'json',
+          method: 'post',
+          delay: 250,
+          data: function (params) {
+            var query = {
+              search: params.term,
+              page: params.page || 1,
+              _token: "{{csrf_token()}}",
             }
-          };
-        }
-      },
-      language: "tr",
-      allowClear: true
-    }
-    let price_validator = {
-      validators: {
-        numeric: {
-          thousandsSeparator: ".",
-          message: "Alış fiyatı gereklidir",
-          decimalSeparator: ",",
+            return query;
+          },
+          processResults: function (data, params) {
+            params.page = params.page || 1;
+            return {
+              results: data.results,
+              pagination: {
+                more: (params.page * 10) < data.total
+              }
+            };
+          }
         },
-        greaterThan: {
-          min: 1,
-          message: "Alış fiyatı 0'dan büyük olmalıdır"
+        language: "tr",
+        allowClear: true
+      }
+      let price_validator = {
+        validators: {
+          numeric: {
+            thousandsSeparator: ".",
+            message: "Alış fiyatı gereklidir",
+            decimalSeparator: ",",
+          },
+          greaterThan: {
+            min: 1,
+            message: "Alış fiyatı 0'dan büyük olmalıdır"
+          }
         }
-      }
-    };
-    let safe_validator = {
-      validators: {
-        notEmpty: {
-          message: "Kasa seçilmesi zorunludur"
-        }
-      }
-    };
-    let date_validator = {
-      validators: {
-        date: {
-          format: 'DD-MM-YYYY',
-          message: '@lang('globals/validation_messages.correct_format', ['field_name' => __('globals/words.date'),'format' => '01-01-1990'])',
-        },
-        notEmpty: {
-          message: '@lang('globals/validation_messages.required', ['field_name'  => __('globals/words.date')])',
-        },
-      }
-    }
-    let createRowIndex = 0;
-    let {
-      form: createForm,
-      validator: createValidator
-    } = validateBasicForm("create_form", {
-      name: {
+      };
+      let safe_validator = {
         validators: {
           notEmpty: {
-            message: "@lang('globals/validation_messages.required', ['field_name' => __('globals/words.name')])"
-          },
-          stringLength: {
-            min: 3,
-            max: 50,
-            trim: true,
-            message: "Ad kısmı en az 3 en fazla 50 karakterden oluşabilir"
+            message: "Kasa seçilmesi zorunludur"
           }
-        },
-      }
-    }, (form, submitButton) => {
-      let data = $(form).serializeArray();
-      $.ajax({
-        url: "{{ route('supplier-regular-payment.store', ['supplier_id' => $supplier->id]) }}",
-        type: "POST",
-        data: data,
-        success: function (data) {
-          $("#create_modal").modal("hide");
-          table.ajax.reload(null, false);
-          toastr.success("@lang('globals/success_messages.success', ['attr' => 'Düzenli Ödeme'])");
-          reloadFormRepeater()
-        },
-        error: function (err) {
-          submitButton.disabled = false;
-          toastr.error("@lang('globals/error_messages.save_error', ['attr' => 'Düzenli Ödeme'])");
-        },
-      });
-    }, () => {
-      //invalidated
-    }, (form, validator) => {
-      $('#create_modal').on('change', '.money_input', function (e) {
-        let name = $(e.target).attr('name');
-        validator.revalidateField(name);
-      });
-      $('body').on('change', '.safe_id_select', function (e) {
-        let name = $(e.target).attr('name');
-        validator.revalidateField(name);
-      });
-    });
-    $("#create_modal").on('shown.bs.modal', function (e) {
-      $('#regular_payment_period').repeater({
-        initEmpty: false,
-        isFirstItemUndeletable: true,
-        show: function () {
-          createRowIndex++;
-          $(this).show();
-          $("select.safe_id_select").select2(safe_select_options);
-          $(".money_input").each(function (index, item) {
-            $(item).maskMoney({
-              thousands: ".",
-              decimal: ",",
-              allowZero: true,
-              affixesStay: false,
-              allowNegative: false
-            });
-            $(item).maskMoney("mask");
-          });
-          $(this).find('input[type="checkbox"]').prop('checked', false);
-          $(this).find('.flatpickr-input').remove();
-          $(this).find('.datetime-picker').flatpickr();
-          $(this).find('.flatpickr-input').attr('name', 'regular_payment_period[' + createRowIndex + '][date]');
-
-          createValidator.addField('regular_payment_period[' + createRowIndex + '][date]', date_validator);
-          createValidator.addField('regular_payment_period[' + createRowIndex + '][price]', price_validator);
-          createValidator.addField('regular_payment_period[' + createRowIndex + '][safe_id]', safe_validator);
-        },
-        hide: function (deleteElement) {
-          $(this).slideUp(deleteElement);
-          createValidator.removeField('regular_payment_period[' + createRowIndex + '][date]');
-          createValidator.removeField('regular_payment_period[' + createRowIndex + '][price]');
-          createValidator.removeField('regular_payment_period[' + createRowIndex + '][safe_id]');
-          createRowIndex--;
-        },
-        ready: function () {
-          $('select.safe_id_select').select2(safe_select_options);
         }
-      });
-      createValidator.addField('regular_payment_period[0][date]', date_validator);
-      createValidator.addField('regular_payment_period[0][price]', price_validator);
-      createValidator.addField('regular_payment_period[0][safe_id]', safe_validator);
-    });
+      };
+      let date_validator = {
+        validators: {
+          date: {
+            format: 'DD-MM-YYYY',
+            message: '@lang('globals/validation_messages.correct_format', ['field_name' => __('globals/words.date'),'format' => '01-01-1990'])',
+          },
+          notEmpty: {
+            message: '@lang('globals/validation_messages.required', ['field_name'  => __('globals/words.date')])',
+          },
+        }
+      }
+      let createRowIndex = 0;
+      let validations ={
+        name: {
+          validators: {
+            notEmpty: {
+              message: "@lang('globals/validation_messages.required', ['field_name' => __('globals/words.name')])"
+            },
+            stringLength: {
+              min: 3,
+              max: 50,
+              trim: true,
+              message: "Ad kısmı en az 3 en fazla 50 karakterden oluşabilir"
+            }
+          },
+        }
+      };
+      let create_modal = $("#create_modal");
+      const formValidated =  (form) => {
+        let data = $(form).serializeArray();
+        $.ajax({
+          url: "{{ route('supplier-regular-payment.store', ['supplier_id' => $supplier->id]) }}",
+          type: "POST",
+          data: data,
+          success: function (data) {
+            create_modal.modal("hide");
+            SupplierRegularPaymentIndexTemplate.initData();
+            toastr.success("@lang('globals/success_messages.success', ['attr' => 'Düzenli Ödeme'])");
+            reloadFormRepeater()
+          },
+          error: function (err) {
+            toastr.error("@lang('globals/error_messages.save_error', ['attr' => 'Düzenli Ödeme'])");
+          },
+        });
+      };
+      const afterFormLoaded = (form, validator) => {
+        create_modal.on('change', '.money_input', function (e) {
+          let name = $(e.target).attr('name');
+          validator.revalidateField(name);
+        });
+        create_modal.on('change', '.safe_id_select', function (e) {
+          let name = $(e.target).attr('name');
+          validator.revalidateField(name);
+        });
+      };
+      const showModalAction = (e) => {
+        $('#regular_payment_period').repeater({
+          initEmpty: false,
+          isFirstItemUndeletable: true,
+          show: function () {
+            createRowIndex++;
+            $(this).show();
+            $("select.safe_id_select").select2(safe_select_options);
+            $(".money_input").each(function (index, item) {
+              $(item).maskMoney({
+                thousands: ".",
+                decimal: ",",
+                allowZero: true,
+                affixesStay: false,
+                allowNegative: false
+              });
+              $(item).maskMoney("mask");
+            });
+            $(this).find('input[type="checkbox"]').prop('checked', false);
+            $(this).find('.flatpickr-input').remove();
+            $(this).find('.datetime-picker').flatpickr();
+            $(this).find('.flatpickr-input').attr('name', 'regular_payment_period[' + createRowIndex + '][date]');
 
+            validator.addField('regular_payment_period[' + createRowIndex + '][date]', date_validator);
+            validator.addField('regular_payment_period[' + createRowIndex + '][price]', price_validator);
+            validator.addField('regular_payment_period[' + createRowIndex + '][safe_id]', safe_validator);
+          },
+          hide: function (deleteElement) {
+            $(this).slideUp(deleteElement);
+            validator.removeField('regular_payment_period[' + createRowIndex + '][date]');
+            validator.removeField('regular_payment_period[' + createRowIndex + '][price]');
+            validator.removeField('regular_payment_period[' + createRowIndex + '][safe_id]');
+            createRowIndex--;
+          },
+          ready: function () {
+            $('select.safe_id_select').select2(safe_select_options);
+          }
+        });
+        validator.addField('regular_payment_period[0][date]', date_validator);
+        validator.addField('regular_payment_period[0][price]', price_validator);
+        validator.addField('regular_payment_period[0][safe_id]', safe_validator);
+      };
+      let {validator} = validateBasicForm("create_form",validations,formValidated, null, afterFormLoaded);
 
-    const reloadFormRepeater = () => {
-      $("#regular_payment_period").find('[data-repeater-item]:not(:first-child)').each((index, item) => {
-        $(item).remove();
-      })
+      const reloadFormRepeater = () => {
+        $("#regular_payment_period").find('[data-repeater-item]:not(:first-child)').each((index, item) => {
+          $(item).remove();
+        })
+        $("#regular_payment_period").find('[data-repeater-item]:first-child .datetime-picker').val("")
+        $("#regular_payment_period").find('[data-repeater-item]:first-child .safe_id_select').select2(safe_select_options).val(null).trigger('change');
+        $("#regular_payment_period").find('[data-repeater-item]:first-child .money_input').maskMoney('mask', 0)
+        createRowIndex = 0;
+      }
 
-      $("#regular_payment_period").find('[data-repeater-item]:first-child .datetime-picker').val("")
-      $("#regular_payment_period").find('[data-repeater-item]:first-child .safe_id_select').select2(safe_select_options).val(null).trigger('change');
-      $("#regular_payment_period").find('[data-repeater-item]:first-child .money_input').maskMoney('mask', 0)
-      createRowIndex = 0;
-    }
-
+      return {create_modal, showModalAction};
+    }();
+    SupplierRegularPaymentCreateTemplate.create_modal.on('shown.bs.modal', SupplierRegularPaymentCreateTemplate.showModalAction);
 
   </script>
 @endpush

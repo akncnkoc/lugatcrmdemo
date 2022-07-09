@@ -9,6 +9,7 @@ class SafeLogObserver
 {
   public function creating(SafeLog $safeLog)
   {
+    //TODO: UPDATE THİS
     if ($safeLog->process_type == AppHelper::INPUT || $safeLog->process_type == AppHelper::CASH_REGISTER) {
       $safeLog->safe->update([
         'total' => ($safeLog->safe->total) + $safeLog->price

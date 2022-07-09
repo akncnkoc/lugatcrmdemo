@@ -19,64 +19,63 @@
 </x-modal.modal>
 @push('customscripts')
   <script>
-    let {
-      form: createForm,
-      validator: createValidator
-    } = validateBasicForm("create_form", {
-      price: {
-        validators: {
-          numeric: {
-            thousandsSeparator: ".",
-            message: "Fiyat gereklidir",
-            decimalSeparator: ",",
-          },
-          greaterThan: {
-            min: 1,
-            message: "Fiyat 0'dan büyük olmalıdır"
+    const SupplierPaymentCreateTemplate = function () {
+      let validations = {
+        price: {
+          validators: {
+            numeric: {
+              thousandsSeparator: ".",
+              message: "Fiyat gereklidir",
+              decimalSeparator: ",",
+            },
+            greaterThan: {
+              min: 1,
+              message: "Fiyat 0'dan büyük olmalıdır"
+            }
           }
-        }
-      },
-      date: {
-        validators: {
-          date: {
-            format: 'DD-MM-YYYY',
-            message: 'Geçerli bir tarih girin',
-          },
-          notEmpty: {
-            message: 'Tarih boş geçilemez',
-          },
-        }
-      },
-      'safe_id': {
-        validators: {
-          notEmpty: {
-            message: "Kasa seçilmesi zorunludur"
-          }
-        }
-      },
-    }, (form, submitButton) => {
-      let data = $(form).serializeArray();
-      $.ajax({
-        url: "{{ route('supplier-payment.store', $supplier->id) }}",
-        type: "POST",
-        data: data,
-        success: function (data) {
-          $("#create_modal").modal("hide");
-          table.ajax.reload(null, false);
-          submitButton.disabled = false;
-          toastr.success("Başarılı!");
         },
-        error: function (err) {
-          submitButton.disabled = false;
-          toastr.error("Bir sorun var daha sonra tekrar deneyin!");
-        }
-      });
-    }, () => {
-      console.log("invalidated")
-    }, (form, validator) => {
-      $(form).find('.safe_id_select').on('change', function () {
-        validator.revalidateField('safe_id');
-      });
-    });
+        date: {
+          validators: {
+            date: {
+              format: 'DD-MM-YYYY',
+              message: 'Geçerli bir tarih girin',
+            },
+            notEmpty: {
+              message: 'Tarih boş geçilemez',
+            },
+          }
+        },
+        'safe_id': {
+          validators: {
+            notEmpty: {
+              message: "Kasa seçilmesi zorunludur"
+            }
+          }
+        },
+      };
+      const formValidated = (form, submitButton) => {
+        let data = $(form).serializeArray();
+        $.ajax({
+          url: "{{ route('supplier-payment.store', $supplier->id) }}",
+          type: "POST",
+          data: data,
+          success: function (data) {
+            $("#create_modal").modal("hide");
+            SupplierPaymentIndex.initData();
+            toastr.success("Başarılı!");
+          },
+          error: function (err) {
+            toastr.error("Bir sorun var daha sonra tekrar deneyin!");
+          }
+        });
+      };
+      const afterFormLoaded = (form, validator) => {
+        $(form).find('.safe_id_select').on('change', function () {
+          validator.revalidateField('safe_id');
+        });
+      };
+      validateBasicForm("create_form", validations, formValidated, null, afterFormLoaded);
+      return {};
+    }();
   </script>
 @endpush

@@ -13,36 +13,39 @@
 </x-modal.modal>
 @push('customscripts')
   <script>
-    let {
-      form: createForm,
-      validator: createValidator
-    } = validateBasicForm("create_form", {
-      name: {
-        validators: {
-          notEmpty: {
-            message: "Ad doldurulması zorunludur"
-          },
-          stringLength: {
-            min: 3,
-            message: "Ad en az 3 harf'den oluşmak zorundadır."
+    const SupplierCreateTemplate = function (){
+      let validations = {
+        name: {
+          validators: {
+            notEmpty: {
+              message: "Ad doldurulması zorunludur"
+            },
+            stringLength: {
+              min: 3,
+              message: "Ad en az 3 harf'den oluşmak zorundadır."
+            }
           }
         }
-      }
-    }, (form) => {
-      let data = $(form).serializeArray();
-      $.ajax({
-        url: "{{ route('supplier.store') }}",
-        type: "POST",
-        data: data,
-        success: function (data) {
-          $("#create_modal").modal("hide");
-          table.ajax.reload(null, false);
-          toastr.success("Başarılı!");
-        },
-        error: function (err) {
-          toastr.error("Bir sorun var daha sonra tekrar deneyin!");
-        }
-      });
-    });
+      };
+      let formValidated = (form) => {
+        let data = $(form).serializeArray();
+        $.ajax({
+          url: "{{ route('supplier.store') }}",
+          type: "POST",
+          data: data,
+          success: function (data) {
+            $("#create_modal").modal("hide");
+            table.ajax.reload(null, false);
+            toastr.success("Başarılı!");
+          },
+          error: function (err) {
+            toastr.error("Bir sorun var daha sonra tekrar deneyin!");
+          }
+        });
+      };
+      validateBasicForm("create_form", validations, formValidated);
+      return {};
+    }();
+
   </script>
 @endpush

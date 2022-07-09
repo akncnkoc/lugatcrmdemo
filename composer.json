@@ -9,8 +9,11 @@
   "license": "MIT",
   "require": {
     "php": "^8.0.2",
+    "ext-curl": "*",
+    "ext-simplexml": "*",
     "arielmejiadev/larapex-charts": "^4.0",
     "barryvdh/laravel-ide-helper": "^2.12",
+    "brianium/paratest": "^6.5",
     "guzzlehttp/guzzle": "^7.2",
     "laravel/dusk": "^6.24",
     "laravel/framework": "^9.11",
@@ -21,9 +24,7 @@
     "snlbaral/faker-ecommerce": "^2.0",
     "spatie/laravel-activitylog": "*",
     "stechstudio/laravel-php-cs-fixer": "^3.1",
-    "yajra/laravel-datatables-oracle": "*",
-    "ext-simplexml": "*",
-    "ext-curl": "*"
+    "yajra/laravel-datatables-oracle": "*"
   },
   "require-dev": {
     "fakerphp/faker": "^1.9.1",

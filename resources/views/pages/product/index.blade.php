@@ -63,7 +63,7 @@
               className: 'row-selected'
             },
             ajax: {
-              url: '{{ route('product.table') }}',
+              url: "{{ route('product.table') }}",
               type: 'POST',
               data: data
             },

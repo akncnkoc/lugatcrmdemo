@@ -11,7 +11,7 @@ class SupplierRegularPaymentPeriodObserver
   {
     if ($regularPaymentPeriod->completed) {
       $safeLog = $regularPaymentPeriod->safe_log()->create([
-        'process_type' => AppHelper::OUTPUT,
+        'process_type' => AppHelper::SUPPLIER_PAYMENT_OUTPUT,
         'safe_id'      => $regularPaymentPeriod->safe->id,
         'content'      => $regularPaymentPeriod->supplier_regular_payment->supplier->name . " adlı tedarikçiye " . $regularPaymentPeriod->price . " " . $regularPaymentPeriod->safe->currency->code . " ödeme yapıldı.",
         'price'        => $regularPaymentPeriod->price,

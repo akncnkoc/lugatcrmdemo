@@ -28,37 +28,44 @@
   </div>
 </x-form.form>
 @push('customscripts')
-  <script type="text/javascript">
-    $("#filter_form").submit(function (e) {
-      event.preventDefault();
-    });
-    let min_date = $('input[name="filter_min_date"]'),
-      max_date = $('input[name="filter_max_date"]'),
-      min_price = $('input[name="filter_min_price"]'),
-      max_price = $('input[name="filter_max_price"]'),
-      expense_type = $(".filter_expense_type_id_select");
-    $("[data-filter-clear-button]").click(function () {
-      min_date.val("");
-      max_date.val("");
-      min_price.val("");
-      max_price.val("");
-      expense_type.val(null).trigger('change');
-      initTable({});
-    });
-    $("[data-filter-button]").click(function () {
-      let min_date_val = min_date.val(),
-        max_date_val = max_date.val(),
-        min_price_val = min_price.val(),
-        max_price_val = max_price.val(),
-        expense_type_id = expense_type.val();
-      initTable({
-        min_date: min_date_val,
-        max_date: max_date_val,
-        expense_type: expense_type_id,
-        min_price: min_price_val,
-        max_price: max_price_val
-      });
-    });
+  <script>
+    const StaffPaymentFilterTemplate = function (){
+      let min_date = $('input[name="filter_min_date"]'),
+        max_date = $('input[name="filter_max_date"]'),
+        min_price = $('input[name="filter_min_price"]'),
+        max_price = $('input[name="filter_max_price"]'),
+        expense_type = $(".filter_expense_type_id_select");
+      const init = () => {
+        $("#filter_form").filterForm({
+          onClear: function (e) {
+            min_date.val("");
+            max_date.val("");
+            min_price.val("");
+            max_price.val("");
+            expense_type.val(null).trigger('change');
+            ExpenseIndexTemplate.initData({});
+          },
+          onFilter: function (e) {
+            e.preventDefault();
+            let min_date_val = min_date.val(),
+              max_date_val = max_date.val(),
+              min_price_val = min_price.val(),
+              max_price_val = max_price.val(),
+              expense_type_id = expense_type.val();
+            ExpenseIndexTemplate.initData({
+              min_date: min_date_val,
+              max_date: max_date_val,
+              expense_type: expense_type_id,
+              min_price: min_price_val,
+              max_price: max_price_val
+            });
+          }
+        });
+      }
+      return {init};
+    }();
+
+    ExpenseFilterTemplate.init();
     $("[data-export-excel]").click(function () {
       console.log("çıkar")
     });

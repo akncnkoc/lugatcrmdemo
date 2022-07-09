@@ -25,29 +25,25 @@
           }
         }
       };
-
-      let formValidatedAction = (form) => {
+      let create_modal = $("#customer_role_create_modal");
+      let formValidated = (form) => {
         let data = $(form).serializeArray();
         $.ajax({
           url: "{{ route('customer_role.store') }}",
           type: "POST",
           data: data,
-          success: function (data) {
-            $("#customer_role_create_modal").modal("hide");
+          success: function () {
+            create_modal.modal("hide");
             CustomerRoleIndexTemplate.initData();
             toastr.success("@lang('globals/success_messages.success', ['attr' => __('globals/words.customer_role')])");
           },
-          error: function (err) {
+          error: function () {
             toastr.error("@lang('globals/error_messages.save_error', ['attr' => __('globals/words.customer_role')])");
           }
         });
       };
-
-      const init = function (){
-        validateBasicForm("customer_role_create_form", validations, formValidatedAction);
-      }
-      return {init}
+      validateBasicForm("customer_role_create_form", validations, formValidated);
+      return {}
     }();
-    CustomerRoleCreateTemplate.init();
   </script>
 @endpush

@@ -29,49 +29,50 @@
 </x-modal.modal>
 @push('customscripts')
   <script>
-    let {
-      form: createForm,
-      validator: createValidator
-    } = validateBasicForm("create_form", {
-      name: {
-        validators: {
-          notEmpty: {
-            message: "Ad doldurulması zorunludur"
-          },
-          stringLength: {
-            min: 3,
-            message: "Ad en az 3 harf'den oluşmak zorundadır."
+    const StaffCreateTemplate = function () {
+      const validations = {
+        name: {
+          validators: {
+            notEmpty: {
+              message: "Ad doldurulması zorunludur"
+            },
+            stringLength: {
+              min: 3,
+              message: "Ad en az 3 harf'den oluşmak zorundadır."
+            }
           }
-        }
-      },
-      staff_role_id: {
-        validators: {
-          notEmpty: {
-            message: "Rol seçilmesi zorunludur."
-          }
-        }
-      }
-    }, (form) => {
-      let data = $(form).serializeArray();
-      $.ajax({
-        url: "{{ route('staff.store') }}",
-        type: "POST",
-        data: data,
-        success: function (data) {
-          $("#create_modal").modal("hide");
-          table.ajax.reload(null, false);
-          toastr.success("Başarılı!");
         },
-        error: function (err) {
-          toastr.error("Bir sorun var daha sonra tekrar deneyin!");
+        staff_role_id: {
+          validators: {
+            notEmpty: {
+              message: "Rol seçilmesi zorunludur."
+            }
+          }
         }
-      });
-    }, () => {
-      console.log("invalidated")
-    }, (form, validator) => {
-      $(form).find('.staff_role_id_select').on('change', function () {
-        validator.revalidateField('staff_role_id');
-      });
-    });
+      };
+      const formValidated = (form) => {
+        let data = $(form).serializeArray();
+        $.ajax({
+          url: "{{ route('staff.store') }}",
+          type: "POST",
+          data: data,
+          success: function (data) {
+            $("#create_modal").modal("hide");
+            StaffIndexTemplate.initData();
+            toastr.success("Başarılı!");
+          },
+          error: function (err) {
+            toastr.error("Bir sorun var daha sonra tekrar deneyin!");
+          }
+        });
+      };
+      const afterFormValidated = (form, validator) => {
+        $(form).find('.staff_role_id_select').on('change', function () {
+          validator.revalidateField('staff_role_id');
+        });
+      };
+      validateBasicForm("create_form", validations, formValidated, null, afterFormValidated);
+      return {};
+    }();
   </script>
 @endpush

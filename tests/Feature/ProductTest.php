@@ -2,25 +2,27 @@
 
 namespace Tests\Feature;
 
+use App\Models\Product;
 use App\Models\ProductType;
 use App\Models\Safe;
 use App\Models\Supplier;
 use Tests\TestCase;
+use Throwable;
 
 class ProductTest extends TestCase
 {
-    public function test_user_can_create_product()
-    {
-        ProductType::factory()
+  public function test_user_can_create_product()
+  {
+    ProductType::factory()
       ->count(3)
       ->create();
-        Safe::factory()
+    Safe::factory()
       ->count(3)
       ->create();
-        $suppliers = Supplier::factory()
+    $suppliers = Supplier::factory()
       ->count(3)
       ->create();
-        $data = [
+    $data = [
       'uuid'               => $this->faker->uuid,
       'name'               => $this->faker->randomElement([
         $this->faker->televisions(),
@@ -41,22 +43,22 @@ class ProductTest extends TestCase
       'suppliers'          => $suppliers->pluck('id')
         ->toArray()
     ];
-        $this->post(route('product.store'), $data)
+    $this->post(route('product.store'), $data)
       ->assertStatus(200);
-    }
+  }
 
-    public function test_user_can_create_and_update_product()
-    {
-        ProductType::factory()
+  public function test_user_can_create_and_update_product()
+  {
+    ProductType::factory()
       ->count(3)
       ->create();
-        Safe::factory()
+    Safe::factory()
       ->count(3)
       ->create();
-        $suppliers = Supplier::factory()
+    $suppliers = Supplier::factory()
       ->count(3)
       ->create();
-        $data = [
+    $data = [
       'uuid'               => $this->faker->uuid,
       'name'               => $this->faker->randomElement([
         $this->faker->televisions(),
@@ -77,11 +79,11 @@ class ProductTest extends TestCase
       'suppliers'          => $suppliers->pluck('id')
         ->toArray()
     ];
-        $this->post(route('product.store'), $data)
+    $this->post(route('product.store'), $data)
       ->assertStatus(200);
 
-        $product_id = $this->test_user_can_show_product()->id;
-        $update_data = [
+    $product_id = $this->test_user_can_show_product()->id;
+    $update_data = [
       'id'                 => $product_id,
       'uuid'               => $this->faker->uuid,
       'name'               => $this->faker->randomElement([
@@ -103,27 +105,27 @@ class ProductTest extends TestCase
       'suppliers'          => $suppliers->pluck('id')
         ->toArray()
     ];
-        $this->post(route('product.update'), $update_data)
+    $this->post(route('product.update'), $update_data)
       ->assertStatus(200);
-    }
+  }
 
-    /**
-     * @throws \Throwable
-     */
-    public function test_user_can_show_product()
-    {
-        $post = $this->post(route('product.get'), ['id' => 1]);
-        $post->assertStatus(200);
-        $json = json_decode($post->getContent());
-        return $json;
-    }
+  /**
+   * @throws Throwable
+   */
+  public function test_user_can_show_product()
+  {
+    $post = $this->post(route('product.get'), ['id' => 1]);
+    $post->assertStatus(200);
+    $json = json_decode($post->getContent());
+    return $json;
+  }
 
-    /**
-     * @throws \Throwable
-     */
-    public function test_user_can_delete_product()
-    {
-        $this->post(route('product.delete'), ['id' => 1])
+  /**
+   * @throws Throwable
+   */
+  public function test_user_can_delete_product()
+  {
+    $this->post(route('product.delete'), Product::firstOrFail()->id)
       ->assertStatus(200);
-    }
+  }
 }

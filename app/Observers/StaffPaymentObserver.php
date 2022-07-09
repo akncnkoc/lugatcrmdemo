@@ -11,7 +11,7 @@ class StaffPaymentObserver
   {
     $safe_log = $staffPayment->safe_log()->create([
       'price'        => $staffPayment->price,
-      'process_type' => AppHelper::OUTPUT,
+      'process_type' => AppHelper::STAFF_PAYMENT_OUTPUT,
       'safe_id'      => $staffPayment->safe->id,
       'date'         => $staffPayment->date,
       'content'      => sprintf("%s adlı personele %s  türünden %s %s hakediş södendi.", $staffPayment->staff->getFullName(), $staffPayment->payment_type->name, $staffPayment->price, $staffPayment->safe->currency->code)
@@ -28,7 +28,7 @@ class StaffPaymentObserver
 
     $safe_log = $staffPayment->safe_log()->create([
       'price'        => $staffPayment->price,
-      'process_type' => AppHelper::OUTPUT,
+      'process_type' => AppHelper::STAFF_PAYMENT_OUTPUT,
       'safe_id'      => $staffPayment->safe->id,
       'date'         => $staffPayment->date,
       'content'      => sprintf("%s adlı personele %s  türünden %s %s hakediş södendi.", $staffPayment->staff->getFullName(), $staffPayment->payment_type->name, $staffPayment->price, $staffPayment->safe->currency->code)

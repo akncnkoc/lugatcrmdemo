@@ -83,5 +83,7 @@ return [
   'total' => 'Total',
   'staff_payment_type' => 'Personel Ödeme Tipi',
   'payment_add' => 'Ödeme Ekle',
-  'payment_edit' => 'Ödeme Düzenle'
+  'payment_edit' => 'Ödeme Düzenle',
+  'payments' => 'Ödemeler',
+  'staff_payment' => 'Personel Ödemesi'
 ];

@@ -13,7 +13,7 @@ class InvoiceExpenseObserver
       'price'      => $invoiceExpense->price,
       'content'    => sprintf("%s gider tipinde kasadan %s %s para çıkışı oldu", $invoiceExpense->expense_type->name, $invoiceExpense->price, $invoiceExpense->safe->currency->code),
       'safe_id'    => $invoiceExpense->safe->id,
-      'input'      => AppHelper::OUTPUT,
+      'input'      => AppHelper::EXPENSE_OUTPUT,
       'enter_date' => $invoiceExpense->invoice->invoice_date
     ]);
     $invoiceExpense->safe_log()->associate($safe_log)->saveQuietly();
@@ -29,7 +29,7 @@ class InvoiceExpenseObserver
       'price'      => $invoiceExpense->price,
       'content'    => sprintf("%s gider tipinde kasadan %s %s para çıkışı oldu", $invoiceExpense->expense_type->name, $invoiceExpense->price, $invoiceExpense->safe->currency->code),
       'safe_id'    => $invoiceExpense->safe->id,
-      'input'      => AppHelper::OUTPUT,
+      'input'      => AppHelper::EXPENSE_OUTPUT,
       'enter_date' => $invoiceExpense->invoice->invoice_date
     ]);
     $invoiceExpense->safe_log()->associate($safe_log)->saveQuietly();

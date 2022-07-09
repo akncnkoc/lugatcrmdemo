@@ -44,7 +44,7 @@
         sale_price_safe_selector = 'select[name="sale_price_safe_id"]',
         supplier_selector = 'select[name="suppliers[]"]',
         critical_alert_selector = 'input[name="critical_stock_alert"]';
-      const showAction = (e) => {
+      const showModalAction = (e) => {
         id = $(e.target).data('itemId');
         $.ajax({
           url: "{{ route('product.get') }}",
@@ -93,7 +93,7 @@
             block_ui_modal_target.release();
           },
           error: function () {
-            $(e.target).modal('hide');
+            edit_modal.modal('hide');
             toastr.error("@lang('globals/error_messages.fetch_error', ['attr' => __('layout/aside/menu.product')])")
           }
         });
@@ -183,10 +183,10 @@
         $(form).find(product_type_edit_selector).on('change', () => validator.revalidateField('product_type_id'));
       };
       const {form} = validateBasicForm("edit_form", validations, formValidated, null, formAfterLoaded);
-      return {edit_modal, showAction};
+      return {edit_modal, showModalAction};
     }();
 
-    ProductEditTemplate.edit_modal.on('shown.bs.modal', ProductEditTemplate.showAction);
+    ProductEditTemplate.edit_modal.on('shown.bs.modal', ProductEditTemplate.showModalAction);
 
   </script>
 @endpush

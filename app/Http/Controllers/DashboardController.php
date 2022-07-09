@@ -54,7 +54,8 @@ class DashboardController extends Controller
     $primaryCurrency = AppHelper::getPrimaryCurrency();
     $globalTotal = 0;
     $beforeYearTotal = 0;
-    $year_ago_invoice_products->map(function (InvoiceProduct $invoiceProduct) use (&$beforeYearTotal, $primaryCurrency) {
+    $year_ago_invoice_products->map(function (InvoiceProduct $invoiceProduct) use (&$beforeYearTotal, $primaryCurrency
+    ) {
       $beforeYearTotal += AppHelper::convertedPrice($invoiceProduct, $primaryCurrency);
     });
     foreach ($groupedByDate as $value) {
@@ -98,7 +99,8 @@ class DashboardController extends Controller
 
   public function yearlyExpenseReport()
   {
-    $current_year_expenses = Expense::with(['safe.currency', 'expense_type'])->whereBetween('date', AppHelper::searchedDates('year'))->get();
+    $current_year_expenses =
+      Expense::with(['safe.currency', 'expense_type'])->whereBetween('date', AppHelper::searchedDates('year'))->get();
 
     $labels = AppHelper::getAllMonths();
     $totaled_prices = [];
@@ -111,7 +113,8 @@ class DashboardController extends Controller
     }
     $current_year_expenses->each(function (Expense $expense) use (&$totaled_prices, $primaryCurrency) {
       $month = Carbon::parse($expense->date)->monthName;
-      $totaled_prices[$month][$expense->expense_type->name . " " . $primaryCurrency->code] += AppHelper::convertedPrice($expense, $primaryCurrency);
+      $totaled_prices[$month][$expense->expense_type->name . " " .
+      $primaryCurrency->code] += AppHelper::convertedPrice($expense, $primaryCurrency);
     });
 
 
@@ -121,7 +124,7 @@ class DashboardController extends Controller
   public function yearlySafeReport()
   {
     $current_year_safes = SafeLog::with(['safe.currency'])
-      ->where('process_type', AppHelper::INPUT)
+      ->whereIn('process_type', [AppHelper::OUTPUT, AppHelper::PRODUCT_SOLD])
       ->whereBetween('date', AppHelper::searchedDates('year'))
       ->get();
 
@@ -137,7 +140,7 @@ class DashboardController extends Controller
     }
     $current_year_safes->map(function (SafeLog $safeLog) use (&$totaled_prices, $primaryCurrency) {
       $month = Carbon::parse($safeLog->date)->monthName;
-        $totaled_prices[$month][$safeLog->safe->name . " (" . $safeLog->safe->currency->code . ")"] +=
+      $totaled_prices[$month][$safeLog->safe->name . " (" . $safeLog->safe->currency->code . ")"] +=
         AppHelper::convertedPrice($safeLog, $primaryCurrency);
     });
     return response()->json(array_values($totaled_prices));

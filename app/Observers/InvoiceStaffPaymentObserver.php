@@ -19,7 +19,7 @@ class InvoiceStaffPaymentObserver
         'price'            => $invoiceStaffPayment->share_price,
         'content'          => sprintf("%s adlı personel'e %s %s fatura payı ödendi", $invoiceStaffPayment->staff->getFullName(), $invoiceStaffPayment->share_price, $invoiceStaffPayment->safe->currency->code),
         'enter_date'       => Carbon::now(),
-        'input'            => AppHelper::OUTPUT,
+        'input'            => AppHelper::STAFF_PAYMENT_OUTPUT,
         'safe_id'          => $invoiceStaffPayment->safe->id,
         'commission'       => 0,
         'cash_register_id' => 1

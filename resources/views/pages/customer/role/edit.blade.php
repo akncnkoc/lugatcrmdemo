@@ -12,25 +12,25 @@
 @push('customscripts')
   <script>
     const CustomerRoleEditTemplate = function () {
-      let edit_modal = $("#customer_role_edit_modal");
-      let id;
-      let block_ui_customer_role_edit_modal_container = new KTBlockUI(document.querySelector("#customer_role_edit_modal_target"));
-
-      let validations = {
-        name: {
-          validators: {
-            notEmpty: {
-              message: "@lang('globals/validation_messages.required', ['field_name'  => __('globals/words.name')])"
-            },
-            stringLength: {
-              min: 3,
-              message: "@lang('globals/validation_messages.min', ['field_name' => __('globals/words.name'), 'min' => 3])"
+      let id,
+        edit_modal = $("#customer_role_edit_modal"),
+        modal_target = document.querySelector("#customer_role_edit_modal_target"),
+        block_ui_modal_target = new KTBlockUI(modal_target),
+        validations = {
+          name: {
+            validators: {
+              notEmpty: {
+                message: "@lang('globals/validation_messages.required', ['field_name'  => __('globals/words.name')])"
+              },
+              stringLength: {
+                min: 3,
+                message: "@lang('globals/validation_messages.min', ['field_name' => __('globals/words.name'), 'min' => 3])"
+              }
             }
           }
-        }
-      };
-      const showAction = (e) => {
-        id = $(e.target).data('editId');
+        };
+      const showModalAction = (e) => {
+        id = $(e.target).data('itemId');
         $.ajax({
           url: "{{ route('customer_role.get') }}",
           data: {
@@ -38,16 +38,16 @@
           },
           type: "POST",
           beforeSend: () => {
-            block_ui_customer_role_edit_modal_container.block();
+            block_ui_modal_target.block();
           },
           success: function (data) {
             $(form).find('input[name="name"]').val(data.name);
-            block_ui_customer_role_edit_modal_container.release();
+            block_ui_modal_target.release();
           },
           error: {}
         });
       }
-      const formValidatedAction = (form) => {
+      const formValidated = (form) => {
         let data = $(form).serializeArray();
         data.push({
           name: "id",
@@ -57,21 +57,20 @@
           url: "{{ route('customer_role.update') }}",
           type: "POST",
           data: data,
-          success: function (data) {
+          success: function () {
             edit_modal.modal("hide");
             CustomerRoleIndexTemplate.initData();
             toastr.success("@lang('globals/success_messages.success', ['attr' => __('globals/words.customer_role')])");
           },
-          error: function (err) {
+          error: function () {
             toastr.error("@lang('globals/error_messages.edit_error', ['attr' => __('globals/words.customer_role')])");
           }
         });
       };
-      let {form} = validateBasicForm("customer_role_edit_form", validations, formValidatedAction);
-      return {customer_edit_modal: edit_modal, showAction};
+      let {form} = validateBasicForm("customer_role_edit_form", validations, formValidated);
+      edit_modal.on('shown.bs.modal', showModalAction);
+      return {};
     }();
-
-    $(CustomerRoleEditTemplate.customer_edit_modal).on('shown.bs.modal', CustomerRoleEditTemplate.showAction);
 
   </script>
 @endpush

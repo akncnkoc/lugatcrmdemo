@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700"/>
   <link href="{{asset('plugins/global/plugins.bundle.css')}}" rel="stylesheet" type="text/css"/>
   <link href="{{asset('css/style.css')}}" rel="stylesheet" type="text/css"/>
+
 </head>
 <body id="kt_body" class="bg-dark">
 <div class="d-flex flex-column flex-root">
@@ -20,7 +21,7 @@
         <img alt="Logo" src="{{asset('media/logos/logo.png')}}" class="h-40px"/>
       </a>
       <div class="w-lg-500px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
-        <form class="form w-100" novalidate="novalidate" id="sign_in_form" action="#">
+        <form class="form w-100" novalidate="novalidate" id="login_form" action="#">
           <div class="text-center mb-10">
             <h1 class="text-dark mb-3">@lang('globals/words.login')</h1>
           </div>
@@ -49,7 +50,7 @@
                    autocomplete="off"/>
           </div>
           <div class="text-center">
-            <button type="submit" id="sing_in_submit_button" class="btn btn-lg btn-primary w-100 mb-5">
+            <button type="submit" id="sing_in_submit_button" class="btn btn-lg btn-primary w-100 mb-5 submit">
               <span class="indicator-label">@lang('globals/words.login')</span>
               <span class="indicator-progress">@lang('globals/infos.loading')...
                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
@@ -63,76 +64,63 @@
 </div>
 <script src="{{asset('plugins/global/plugins.bundle.js')}}"></script>
 <script src="{{asset('js/scripts.bundle.js')}}"></script>
+<script src="{{asset('lugatjs/app.js')}}"></script>
 <script>
-  var form = document.querySelector('#sign_in_form');
-  var submitButton = document.querySelector('#sing_in_submit_button');
-  var validator;
-
-  validator = FormValidation.formValidation(
-    form,
-    {
-      fields: {
-        'email': {
-          validators: {
-            notEmpty: {
-              message: '@lang('globals/validation_messages.required', ['field_name' => __('globals/words.email')])'
-            },
-            emailAddress: {
-              message: '@lang('globals/validation_messages.email_provide_required_compatibility_message')'
-            }
-          }
-        },
-        'password': {
-          validators: {
-            notEmpty: {
-              message: '@lang('globals/validation_messages.required', ['field_name' => __('globals/words.password')])'
-            }
+  const LoginTemplate = function (){
+    let validations = {
+      'email': {
+        validators: {
+          notEmpty: {
+            message: '@lang('globals/validation_messages.required', ['field_name' => __('globals/words.email')])'
+          },
+          emailAddress: {
+            message: '@lang('globals/validation_messages.email_provide_required_compatibility_message')'
           }
         }
       },
-      plugins: {
-        trigger: new FormValidation.plugins.Trigger(),
-        bootstrap: new FormValidation.plugins.Bootstrap5({
-          rowSelector: '.fv-row',
-        })
+      'password': {
+        validators: {
+          notEmpty: {
+            message: '@lang('globals/validation_messages.required', ['field_name' => __('globals/words.password')])'
+          }
+        }
       }
     }
-  );
-
-  // Handle form submit
-  submitButton.addEventListener('click', function (e) {
-    e.preventDefault();
-    validator.validate().then(function (status) {
-      if (status == 'Valid') {
-        submitButton.setAttribute('data-kt-indicator', 'on');
-        submitButton.disabled = true;
-        $.ajax({
-          type: "POST",
-          url: "{{route('auth.authenticate')}}",
-          data: {
-            email: $("input[name='email']").val(),
-            password: $("input[name='password']").val(),
-            "_token": "{{csrf_token()}}"
-          },
-          success: function (data) {
-            localStorage.setItem("_api_token", data.token);
+    let formValidated = (form, submitButton) => {
+      submitButton.setAttribute('data-kt-indicator', 'on');
+      $.ajax({
+        type: "POST",
+        url: "{{route('auth.authenticate')}}",
+        data: {
+          email: $("input[name='email']").val(),
+          password: $("input[name='password']").val(),
+          "_token": "{{csrf_token()}}"
+        },
+        success: function (data) {
+          localStorage.setItem("_api_token", data.token);
+          setTimeout(() => {
             window.location.href = "{{route('dashboard.index')}}"
-          },
-          error: function (err) {
-            if (err.status === 500) {
-              toastr.error("@lang('globals/error_messages.server_error')")
-            } else {
-              toastr.error("@lang('globals/error_messages.login_error')")
-            }
-          },
-          complete: function () {
-            submitButton.setAttribute('data-kt-indicator', 'off');
-            submitButton.disabled = false;
+          },750)
+          toastr.success("Giriş yapıldı")
+        },
+        error: function (err) {
+          if (err.status === 500) {
+            toastr.error("@lang('globals/error_messages.server_error')")
+          } else {
+            toastr.error("@lang('globals/error_messages.login_error')")
           }
-        });
-      }
-    });
-  });
+        },
+        complete: function () {
+          submitButton.setAttribute('data-kt-indicator', 'off');
+          submitButton.disabled = false;
+        }
+      });
+    }
+    validateBasicForm("login_form", validations, formValidated)
+    return {};
+  }();
+
+
 </script>
 </body>
 </html>

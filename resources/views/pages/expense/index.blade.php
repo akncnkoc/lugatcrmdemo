@@ -97,7 +97,7 @@
               className: 'row-selected'
             },
             ajax: {
-              url: '{{ route('customer.table') }}',
+              url: "{{ route('customer.table') }}",
               type: 'POST',
               data: function (d) {
                 for (const [key, value] of Object.entries(data)) {
@@ -144,11 +144,7 @@
           loadingText: "@lang('globals/infos.loading')",
           deleteSuccessText: "@lang('globals/success_messages.deleted', ['attr' => __('globals/words.expense')])",
           deleteErrorText: "@lang('globals/error_messages.delete_error', ['attr'  => __('globals/words.expense')])",
-          afterLoad: datatableAfterLoad
         });
-      }
-      let datatableAfterLoad = () => {
-        KTMenu.createInstances();
       }
       return {table, initData};
     }();

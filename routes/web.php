@@ -17,7 +17,7 @@ use App\Http\Controllers\SupplierPaymentController;
 use App\Http\Controllers\SupplierRegularPaymentController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware([])
+Route::middleware(['auth:sanctum'])
   ->group(function () {
       Route::redirect('/', '/dashboard');
       Route::get('/dashboard', [

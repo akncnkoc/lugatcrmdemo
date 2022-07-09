@@ -9,37 +9,20 @@ class AppHelper
 {
   public const OUTPUT = 0;
   public const INPUT = 1;
-  public const CASH_REGISTER = 3;
   public const PRODUCT_IN = 1;
-  public const PRODUCT_OUT = 2;
-  public const PRODUCT_REBATE = 3;
-  public const PRODUCT_SOLD = 4;
-
-  public static function changeEnvironmentVariable($key, $value)
-  {
-    $path = base_path('.env');
-
-    if (is_bool(env($key))) {
-      $old = env($key) ? 'true' : 'false';
-    } elseif (env($key) === null) {
-      $old = 'null';
-    } else {
-      $old = env($key);
-    }
-
-    if (file_exists($path)) {
-      file_put_contents($path, str_replace(
-        "$key=" . $old,
-        "$key=" . $value,
-        file_get_contents($path)
-      ));
-    }
-  }
+  public const PRODUCT_OUTPUT = 2;
+  public const PRODUCT_CARGO_OUTPUT = 2;
+  public const CASH_REGISTER = 3;
+  public const PRODUCT_REBATE = 4;
+  public const PRODUCT_SOLD = 5;
+  public const EXPENSE_OUTPUT = 6;
+  public const STAFF_PAYMENT_OUTPUT = 7;
+  public const SUPPLIER_PAYMENT_OUTPUT = 7;
+  public const PAYMENT_OUTPUT = 7;
 
   public static function getPrimaryCurrency()
   {
-    return Currency::where('primary', true)
-      ->firstOrFail();
+    return Currency::where('primary', true)->firstOrFail();
   }
 
   public static function convertedPrice($model, $primaryCurrency, $column = "price")
@@ -67,35 +50,6 @@ class AppHelper
     return (float)$value;
   }
 
-  public static function group_by($key, $data)
-  {
-    $result = array();
-
-    foreach ($data as $val) {
-      if (array_key_exists($key, $val)) {
-        $result[$val[$key]][] = $val;
-      } else {
-        $result[""][] = $val;
-      }
-    }
-
-    return $result;
-  }
-
-  public static function seflink($text)
-  {
-    $find = array("/Ğ/", "/Ü/", "/Ş/", "/İ/", "/Ö/", "/Ç/", "/ğ/", "/ü/", "/ş/", "/ı/", "/ö/", "/ç/");
-    $degis = array("G", "U", "S", "I", "O", "C", "g", "u", "s", "i", "o", "c");
-    $text = preg_replace("/[^0-9a-zA-ZÄzÜŞİÖÇğüşıöç]/", " ", $text);
-    $text = preg_replace($find, $degis, $text);
-    $text = preg_replace("/ +/", " ", $text);
-    $text = preg_replace("/ /", "-", $text);
-    $text = preg_replace("/\s/", "", $text);
-    $text = strtolower($text);
-    $text = preg_replace("/^-/", "", $text);
-    $text = preg_replace("/-$/", "", $text);
-    return $text;
-  }
 
   public static function convertDate($date, $format = "d.m.Y H:i:s")
   {
@@ -106,55 +60,6 @@ class AppHelper
     }
   }
 
-  public static function convertDateGet($date = null, $format = "d.m.Y H:i:s")
-  {
-    if ($date != null) {
-      return Carbon::parse($date)->format($format);
-    }
-  }
-
-  public static function isValidTelephoneNumber(string $telephone, int $minDigits = 9, int $maxDigits = 14): bool
-  {
-    //remove white space, dots, hyphens and brackets
-    $telephone = str_replace([' ', '.', '-', '(', ')'], '', $telephone);
-
-    //are we left with digits only?
-    return self::isDigits($telephone, $minDigits, $maxDigits);
-  }
-
-  public static function isDigits(string $s, int $minDigits = 9, int $maxDigits = 14): bool
-  {
-    return preg_match('/^[0-9]{' . $minDigits . ',' . $maxDigits . '}\z/', $s);
-  }
-
-  public static function formatFileSizeUnits($bytes, $getNumber = false)
-  {
-    if ($bytes >= 1073741824) {
-      $bytes = !$getNumber ? number_format($bytes / 1073741824, 2) . ' GB' : number_format($bytes / 1073741824, 2);
-    } elseif ($bytes >= 1048576) {
-      $bytes = !$getNumber ? number_format($bytes / 1048576, 2) . ' MB' : number_format($bytes / 1048576, 2);
-    } elseif ($bytes >= 1024) {
-      $bytes = !$getNumber ? number_format($bytes / 1024, 2) . ' KB' : number_format($bytes / 1024, 2);
-    } elseif ($bytes > 1) {
-      $bytes = !$getNumber ? $bytes . ' bayt' : $bytes;
-    } elseif ($bytes == 1) {
-      $bytes = !$getNumber ? $bytes . ' bayt' : $bytes;
-    } else {
-      $bytes = !$getNumber ? '0 bayt' : 0;
-    }
-    return $bytes;
-  }
-
-  public static function setNumberToMonthName($number)
-  {
-    $months = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
-    return $months[$number - 1];
-  }
-
-  public static function truncateStr($string, $length, $dots = "...")
-  {
-    return (strlen($string) > $length) ? substr($string, 0, $length - strlen($dots)) . $dots : $string;
-  }
 
   public static function searchedDates($type = 'total' | 'today' | 'this_week' | 'this_month' | 'six_month' | 'year'
   | 'last_year')
@@ -222,15 +127,6 @@ class AppHelper
         break;
     }
     return $searchedDates;
-  }
-
-  public static function _group_by($array, $key)
-  {
-    $return = array();
-    foreach ($array as $val) {
-      $return[$val[$key]][] = $val;
-    }
-    return $return;
   }
 
   public static function _select2($request, $class, $key = "id", $text = "name", $limit = 5)
@@ -350,7 +246,7 @@ class AppHelper
       ],
       "toolbar"     => [
         "exportToSVG"   => __('globals/words.exporttosvg'),
-        "exportToCSV" => __('globals/words.exporttocsv'),
+        "exportToCSV"   => __('globals/words.exporttocsv'),
         "exportToPNG"   => __('globals/words.exporttopng'),
         "menu"          => __('globals/words.menu'),
         "selection"     => __('globals/words.selection'),
